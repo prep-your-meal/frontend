@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.2.1](https://github.com/prep-your-meal/frontend/compare/v1.2.0...v1.2.1) (2026-08-07)
+
+
+### Bug Fixes
+
+* include favicons in deployment pipeline ([6e413ea](https://github.com/prep-your-meal/frontend/commit/6e413ea22939fd73231921a1f816a173fd6f7e22))
+
 ## [1.2.0](https://github.com/prep-your-meal/frontend/compare/v1.1.1...v1.2.0) (2026-08-07)
 
 
