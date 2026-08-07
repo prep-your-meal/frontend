@@ -1,0 +1,32 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # ==========================================
+    # 1. API ROUTING
+    # ==========================================
+    
+    # Pass through static API assets (.png, .ico, Swagger-CSS)
+    RewriteCond %{REQUEST_URI} \.(ico|png|jpg|jpeg|gif|svg|css|js|woff|woff2|ttf|eot)$ [NC]
+    RewriteRule ^api/(.*)$ api/public/$1 [L]
+
+    # Send dynamic API routes (Swagger JSON, endpoints) to Laravel
+    RewriteRule ^api/(.*)$ api/public/index.php [L]
+
+
+    # ==========================================
+    # 2. PWA ROUTING
+    # ==========================================
+    
+    # If the requested file or directory physically exists (e.g., CSS/JS of the PWA), 
+    # serve it directly.
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    
+    # CRITICAL: Do NOT interfere if the URL starts with /api/! 
+    # This has already been handled in Block 1 above.
+    RewriteCond %{REQUEST_URI} !^/api/ [NC]
+    
+    # Route everything else (e.g., prepyourmeal.de/plan) to the PWA's index.html, 
+    # so Vue.js can take over the routing.
+    RewriteRule ^(.*)$ index.html [QSA,L]
+</IfModule>

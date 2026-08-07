@@ -1,0 +1,53 @@
+name: CI/CD Pipeline (Release & Deploy Routing)
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  release-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # IMPORTANT: Allows the bot to push the CHANGELOG and tag back
+
+    steps:
+      # === PART 1: RELEASE & CHANGELOG GENERATION ===
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 
+
+      - name: Setup Node.js (Only ephemerally for Changelog Generation)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Set Git Identity for Release Bot
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Generate SemVer, version.txt and CHANGELOG.md
+        run: npx --yes commit-and-tag-version
+
+      - name: Push new Release Commit and Tag
+        run: git push --follow-tags origin main
+
+
+      # === PART 2: DEPLOY INFRASTRUCTURE FILES TO STRATO ===
+      - name: Deploy .htaccess via SCP to Webspace
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          # Reuse the exact same Strato credentials from your backend repo
+          host: ${{ secrets.WEBSPACE_HOST }}
+          username: ${{ secrets.WEBSPACE_USER }}
+          password: ${{ secrets.WEBSPACE_PASSWORD }}
+          port: ${{ secrets.WEBSPACE_PORT || 22 }}
+          
+          # Temporarily ONLY upload the .htaccess file until the Vue app is ready
+          source: ".htaccess"
+          
+          # The root directory for the frontend (e.g. /var/www/.../htdocs/)
+          target: ${{ secrets.WEBSPACE_TARGET_DIR }}/..
