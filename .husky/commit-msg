@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+echo "📝 Validating commit message format..."
+
+if ! ./pym npx commitlint --edit "$1"; then
+    echo "❌ Invalid commit message format!"
+    echo "👉 Please use Conventional Commits (e.g., 'feat: add login page')"
+    exit 1
+fi

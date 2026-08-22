@@ -1,0 +1,14 @@
+services:
+  frontend:
+    image: node:22
+    working_dir: /app
+    user: '1001:1001'
+    environment:
+      - HOME=/tmp
+      - NO_UPDATE_NOTIFIER=true
+    volumes:
+      - .:/app
+    ports:
+      - '5174:5174'
+    command: npm run dev -- --host
+    tty: true

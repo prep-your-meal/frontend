@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+echo "🔍 Running pre-commit checks..."
+
+echo "🛡️  Scanning for secrets and vulnerabilities..."
+# Hier ist das korrekte Arbeitsverzeichnis (-w) und der safe.directory Bypass hinzugefügt
+if ! docker run --rm -v "$(pwd):/app" -w /app --user "$(id -u):$(id -g)" -e GIT_CONFIG_COUNT=1 -e GIT_CONFIG_KEY_0=safe.directory -e GIT_CONFIG_VALUE_0="*" zricethezav/gitleaks:latest protect -v --staged; then
+    echo "❌ Secret scan failed! Please remove secrets before committing."
+    exit 1
+fi
+
+echo "💅 Running linter and static code analysis..."
+if ! ./pym npx lint-staged; then
+    echo "❌ Code quality checks failed! Please fix the errors above."
+    exit 1
+fi
+
+echo "✅ All pre-commit checks passed!"

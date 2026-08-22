@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+# Check if Docker Compose plugin is installed and accessible
+if ! docker compose version > /dev/null 2>&1; then
+    echo "❌ Error: 'docker compose' is not installed or the Docker daemon is not running."
+    echo "Please ensure Docker and the Docker Compose plugin are properly installed."
+    exit 1
+fi
+
+# If no arguments are passed, show a short help menu
+if [ $# -eq 0 ]; then
+    echo "🥗 PrepYourMeal - Frontend CLI"
+    echo "Usage: ./pym [command]"
+    echo ""
+    echo "Examples:"
+    echo "  ./pym up              Starts the development server (Vite)"
+    echo "  ./pym down            Stops the containers"
+    echo "  ./pym npm install     Installs new NPM packages"
+    echo "  ./pym npm run dev     Starts the server (if not started via 'up')"
+    echo "  ./pym npm run lint    Runs the ESLint check"
+    echo "  ./pym npm run build   Builds the PWA for production"
+    exit 1
+fi
+
+# Intercept basic Docker Compose commands and execute them directly
+if [ "$1" == "up" ] || [ "$1" == "down" ] || [ "$1" == "restart" ] || [ "$1" == "logs" ] || [ "$1" == "build" ]; then
+    docker compose "$@"
+else
+    # Execute all other commands (like npm, npx, node) inside a temporary/running container
+    docker compose run --rm frontend "$@"
+fi
