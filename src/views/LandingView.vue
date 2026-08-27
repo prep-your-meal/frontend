@@ -12,6 +12,7 @@ interface Recipe {
   image?: string
   prep_time?: number
   cook_time?: number
+  categories?: string[] // <-- Hier haben wir die fehlenden Kategorien ergänzt
 }
 
 // State management for the API request
@@ -20,10 +21,10 @@ const isLoading = ref<boolean>(true)
 const error = ref<string | null>(null)
 
 // Helper: Assigns specific colors to categories
-const getCategoryBadgeClass = (category) => {
-  // Important: Always write out the full Tailwind class names
-  // so the compiler doesn't purge them during the build process.
-  const colorMap = {
+// <-- category als string definiert
+const getCategoryBadgeClass = (category: string) => {
+  // <-- Record<string, string> sagt TypeScript, dass hier mit Strings gesucht wird
+  const colorMap: Record<string, string> = {
     // Meals (Blue/Purple tones)
     breakfast: 'bg-sky-50 text-sky-700 border-sky-200',
     lunch: 'bg-blue-50 text-blue-700 border-blue-200',
@@ -46,7 +47,6 @@ const getCategoryBadgeClass = (category) => {
     'one-pot': 'bg-amber-50 text-amber-700 border-amber-200',
   }
 
-  // Fallback color (Gray) in case a category is missing from the list
   return colorMap[category] || 'bg-gray-50 text-gray-700 border-gray-200'
 }
 
