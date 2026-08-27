@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.5](https://github.com/prep-your-meal/frontend/compare/v0.0.4...v0.0.5) (2026-08-27)
+
+### Features
+
+* **frontend:** add bilingual legal pages (impressum/privacy) and global footer ([44f84f1](https://github.com/prep-your-meal/frontend/commit/44f84f1a8a9f3f3968e97c6f451fb7b3e698c958))
 ## [0.0.4](https://github.com/prep-your-meal/frontend/compare/v0.0.3...v0.0.4) (2026-08-27)
 
 ### Bug Fixes
