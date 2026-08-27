@@ -1,0 +1,47 @@
+{
+  "nav": {
+    "login": "Anmelden",
+    "dashboard": "Übersicht"
+  },
+  "categories": {
+    "breakfast": "Frühstück",
+    "low-carb": "Low-carb",
+    "dinner": "Abendessen",
+    "high-protein": "High Protein",
+    "bulking": "Bulking",
+    "cutting": "Cutting",
+    "vegan": "Vegan",
+    "vegetarian": "Vegetarisch",
+    "lunch": "Mittagessen",
+    "quick": "Schnell",
+    "one-pot": "One-Pot",
+    "meal-prep-friendly": "Meal Prep freundlich",
+    "snack": "Snack"
+  },
+  "landing": {
+    "hero_title": "Intelligente Essensplanung mit",
+    "hero_subtitle": "Organisiere deinen Alltag stressfrei. Plane Mahlzeiten, automatisiere Einkäufe und behalte deine Makros im Blick.",
+    "cta_button": "Anmelden & Loslegen",
+    "latest_recipes": "Zufällige Essensvorschläge",
+    "loading": "Lade köstliche Rezepte...",
+    "prep_time": "Zubereitung: {prep} Min.",
+    "cook_time": "Kochen: {cook} Min.",
+    "no_recipes": "Keine Rezepte gefunden."
+  },
+  "recipe_detail": {
+    "back_button": "Zurück zur Übersicht",
+    "no_image": "Kein Bild verfügbar",
+    "error_title": "Fehler",
+    "error_not_found": "Rezept konnte nicht geladen werden. Bitte überprüfe, ob es existiert.",
+    "error_fallback": "Ein unerwarteter Fehler ist aufgetreten.",
+    "ingredients": "Zutaten",
+    "prep_time": "Zubereitung: {prep} Min.",
+    "cook_time": "Kochen: {cook} Min.",
+    "macros": {
+      "calories": "Kalorien",
+      "protein": "Protein",
+      "carbs": "Kohlenhydrate",
+      "fat": "Fett"
+    }
+  }
+}

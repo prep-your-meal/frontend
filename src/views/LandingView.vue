@@ -10,7 +10,8 @@ interface Recipe {
   title: string
   description: string
   image?: string
-  prep_time_minutes?: number
+  prep_time?: number
+  cook_time?: number
 }
 
 // State management for the API request
@@ -18,11 +19,42 @@ const recipes = ref<Recipe[]>([])
 const isLoading = ref<boolean>(true)
 const error = ref<string | null>(null)
 
+// Helper: Assigns specific colors to categories
+const getCategoryBadgeClass = (category) => {
+  // Important: Always write out the full Tailwind class names
+  // so the compiler doesn't purge them during the build process.
+  const colorMap = {
+    // Meals (Blue/Purple tones)
+    breakfast: 'bg-sky-50 text-sky-700 border-sky-200',
+    lunch: 'bg-blue-50 text-blue-700 border-blue-200',
+    dinner: 'bg-indigo-50 text-indigo-700 border-indigo-200',
+    snack: 'bg-purple-50 text-purple-700 border-purple-200',
+
+    // Diets (Green tones)
+    vegan: 'bg-green-50 text-green-700 border-green-200',
+    vegetarian: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+    'low-carb': 'bg-lime-50 text-lime-700 border-lime-200',
+
+    // Fitness/Goals (Red/Orange tones)
+    'high-protein': 'bg-red-50 text-red-700 border-red-200',
+    bulking: 'bg-orange-50 text-orange-700 border-orange-200',
+    cutting: 'bg-rose-50 text-rose-700 border-rose-200',
+
+    // Misc/Logistics (Yellow/Teal tones)
+    quick: 'bg-yellow-50 text-yellow-700 border-yellow-200',
+    'meal-prep-friendly': 'bg-teal-50 text-teal-700 border-teal-200',
+    'one-pot': 'bg-amber-50 text-amber-700 border-amber-200',
+  }
+
+  // Fallback color (Gray) in case a category is missing from the list
+  return colorMap[category] || 'bg-gray-50 text-gray-700 border-gray-200'
+}
+
 // Fetch recipes automatically when the page loads
 onMounted(async () => {
   try {
     isLoading.value = true
-    const response = await api.get('/recipes?page=1&per_page=3')
+    const response = await api.get('/recipes?random=true&per_page=3')
     recipes.value = response.data.data || response.data
   } catch (err) {
     console.error('Failed to fetch recipes:', err)
@@ -34,233 +66,151 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="landing-page">
-    <!-- Hero Section (Styled like your Coming Soon Placeholder) -->
-    <header class="hero-container">
-      <img src="@/assets/images/prepyourmeal_logo.png" alt="PrepYourMeal Logo" class="logo" />
-      <h1>Intelligent meal planning with <span class="highlight">PrepYourMeal</span></h1>
-      <p>
-        Organize your daily food routines stress-free. Plan your meals, automate grocery runs, and
-        track your macros all in one place.
+  <div class="flex flex-col items-center gap-16 pb-16 w-full">
+    <!-- Hero Section -->
+    <header
+      class="max-w-3xl bg-white px-8 py-14 rounded-3xl shadow-[0_10px_30px_rgba(16,84,50,0.08)] w-full border-t-[6px] border-primary-green text-center mt-8"
+    >
+      <img
+        src="@/assets/images/prepyourmeal_logo.png"
+        alt="PrepYourMeal Logo"
+        class="max-w-[220px] h-auto mb-8 mx-auto block"
+      />
+
+      <h1 class="text-4xl md:text-5xl mb-5 text-dark-green tracking-tight font-bold">
+        {{ $t('landing.hero_title') }}
+        <span class="text-accent-gold">PrepYourMeal</span>
+      </h1>
+
+      <p class="text-lg md:text-xl leading-relaxed mb-8 text-gray-500">
+        {{ $t('landing.hero_subtitle') }}
       </p>
 
-      <div class="hero-actions">
-        <RouterLink to="/login" class="btn-primary">Login & Start Planning</RouterLink>
+      <div class="mt-4">
+        <RouterLink
+          to="/login"
+          class="inline-block bg-primary-green text-white font-bold py-3 px-8 rounded-xl hover:bg-dark-green transition-colors shadow-md hover:shadow-lg"
+        >
+          {{ $t('landing.cta_button') }}
+        </RouterLink>
       </div>
     </header>
 
     <!-- Recipes Section -->
-    <section class="recipes-section">
-      <h2>Latest Recipes</h2>
+    <section class="w-full max-w-6xl px-4">
+      <h2
+        class="text-3xl font-bold text-dark-green mb-6 border-b-[3px] border-primary-green inline-block pb-2"
+      >
+        {{ $t('landing.latest_recipes') }}
+      </h2>
 
       <!-- Loading State -->
-      <div v-if="isLoading" class="state-message">
-        <p>Loading delicious recipes...</p>
+      <div v-if="isLoading" class="text-center p-12 bg-white rounded-xl text-gray-500 shadow-sm">
+        <p>{{ $t('landing.loading') }}</p>
       </div>
 
       <!-- Error State -->
-      <div v-else-if="error" class="state-message error">
+      <div
+        v-else-if="error"
+        class="text-center p-12 bg-red-50 rounded-xl text-red-600 border border-red-200 shadow-sm"
+      >
         <p>{{ error }}</p>
       </div>
 
       <!-- Empty State -->
-      <div v-else-if="recipes.length === 0" class="state-message">
-        <p>No recipes found. Be the first to add one!</p>
+      <div
+        v-else-if="recipes.length === 0"
+        class="text-center p-12 bg-white rounded-xl text-gray-500 shadow-sm"
+      >
+        <p>{{ $t('landing.loading') }}</p>
       </div>
 
       <!-- Recipe Grid -->
-      <div v-else class="recipe-grid">
-        <article v-for="recipe in recipes" :key="recipe.slug" class="recipe-card">
-          <div class="card-image">
-            <img v-if="recipe.image" :src="recipe.image" :alt="recipe.title" />
-            <div v-else class="image-placeholder">🍽️</div>
+      <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <RouterLink
+          v-for="recipe in recipes"
+          :key="recipe.slug"
+          :to="`/recipe/${recipe.slug}`"
+          class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex flex-col h-full"
+        >
+          <!-- Image Section -->
+          <div class="h-52 bg-bg-cream flex items-center justify-center flex-shrink-0">
+            <img
+              v-if="recipe.image"
+              :src="recipe.image"
+              :alt="recipe.title"
+              class="w-full h-full object-cover"
+            />
+            <div v-else class="text-5xl">🍽️</div>
           </div>
 
-          <div class="card-content">
-            <h3>{{ recipe.title }}</h3>
-            <p class="description">{{ recipe.description }}</p>
+          <!-- Content Section -->
+          <div class="p-6 flex-grow flex flex-col">
+            <h3 class="text-xl mb-2 text-dark-green font-bold">{{ recipe.title }}</h3>
 
-            <div class="card-meta">
-              <span v-if="recipe.prep_time_minutes" class="badge-small">
-                ⏱️ {{ recipe.prep_time_minutes }} min
-              </span>
+            <!-- Removed flex-grow from the description so it doesn't artificially stretch -->
+            <p class="text-gray-500 text-sm leading-relaxed mb-4 line-clamp-3">
+              {{ recipe.description }}
+            </p>
+
+            <!-- Bottom Wrapper: mt-auto pushes this entire block to the bottom of the card -->
+            <div class="mt-auto flex flex-col gap-4">
+              <!-- Category Badges -->
+              <div
+                v-if="recipe.categories && recipe.categories.length > 0"
+                class="flex flex-wrap gap-2"
+              >
+                <span
+                  v-for="category in recipe.categories"
+                  :key="category"
+                  :class="[
+                    'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border shadow-sm',
+                    getCategoryBadgeClass(category),
+                  ]"
+                >
+                  <!-- Render category translated via i18n -->
+                  {{ $t(`categories.${category}`) }}
+                </span>
+              </div>
+
+              <!-- Detailed Time Section (visually anchored at the absolute bottom with a subtle top border) -->
+              <div
+                v-if="recipe.prep_time || recipe.cook_time"
+                class="flex items-center text-sm text-gray-500 space-x-2 border-t border-gray-100 pt-3"
+              >
+                <!-- Clock Icon -->
+                <svg
+                  class="w-4 h-4 mr-1 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                  ></path>
+                </svg>
+
+                <!-- Only show prep time if it exists -->
+                <span v-if="recipe.prep_time">
+                  {{ $t('landing.prep_time', { prep: recipe.prep_time }) }}
+                </span>
+
+                <!-- Only show the divider IF BOTH exist -->
+                <span v-if="recipe.prep_time && recipe.cook_time" class="text-gray-300">|</span>
+
+                <!-- Only show cook time if it exists -->
+                <span v-if="recipe.cook_time">
+                  {{ $t('landing.cook_time', { cook: recipe.cook_time }) }}
+                </span>
+              </div>
             </div>
+            <!-- End of Bottom Wrapper -->
           </div>
-        </article>
+        </RouterLink>
       </div>
     </section>
   </div>
 </template>
-
-<style scoped>
-.landing-page {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4rem;
-  padding-bottom: 4rem;
-  width: 100%;
-}
-
-/* --- Hero Card (Imported from Placeholder) --- */
-.hero-container {
-  max-width: 750px;
-  background: #ffffff;
-  padding: 3.5rem 2.5rem;
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(16, 84, 50, 0.08);
-  width: 100%;
-  border-top: 6px solid var(--primary-green);
-  text-align: center;
-  margin-top: 2rem;
-}
-
-.logo {
-  max-width: 220px;
-  height: auto;
-  margin-bottom: 2rem;
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
-  image-rendering: -webkit-optimize-contrast;
-}
-
-.badge-accent {
-  display: inline-block;
-  background-color: var(--accent-gold);
-  color: white;
-  padding: 0.4rem 1rem;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 1.5rem;
-}
-
-.hero-container h1 {
-  font-size: 2.4rem;
-  margin-bottom: 1.2rem;
-  color: var(--dark-green);
-  letter-spacing: -0.02em;
-}
-
-.hero-container p {
-  font-size: 1.15rem;
-  line-height: 1.6;
-  margin-bottom: 2rem;
-  color: var(--text-muted);
-}
-
-.highlight {
-  font-weight: 700;
-  color: var(--accent-gold);
-}
-
-.hero-actions {
-  margin-top: 1rem;
-}
-
-/* --- Recipe Section & Grid --- */
-.recipes-section {
-  width: 100%;
-  max-width: 1200px;
-  padding: 0 1rem;
-}
-
-.recipes-section h2 {
-  font-size: 1.8rem;
-  color: var(--dark-green);
-  margin-bottom: 1.5rem;
-  border-bottom: 3px solid var(--primary-green);
-  display: inline-block;
-  padding-bottom: 0.5rem;
-}
-
-.recipe-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 2rem;
-}
-
-.recipe-card {
-  background: white;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-  display: flex;
-  flex-direction: column;
-}
-
-.recipe-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-}
-
-.card-image {
-  height: 200px;
-  background-color: var(--bg-cream);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.card-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.image-placeholder {
-  font-size: 3rem;
-}
-
-.card-content {
-  padding: 1.5rem;
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.card-content h3 {
-  font-size: 1.25rem;
-  margin-bottom: 0.5rem;
-  color: var(--dark-green);
-}
-
-.description {
-  color: var(--text-muted);
-  font-size: 0.95rem;
-  line-height: 1.5;
-  margin-bottom: 1.5rem;
-  flex-grow: 1;
-}
-
-.badge-small {
-  background-color: var(--bg-cream);
-  color: var(--dark-green);
-  padding: 0.3rem 0.6rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-
-/* State Messages */
-.state-message {
-  text-align: center;
-  padding: 3rem;
-  background: white;
-  border-radius: 12px;
-  color: var(--text-muted);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-}
-
-.state-message.error {
-  color: #e53e3e;
-  background: #fff5f5;
-  border: 1px solid #feb2b2;
-}
-</style>

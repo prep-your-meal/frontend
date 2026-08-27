@@ -1,6 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 
+import DashboardView from '../views/DashboardView.vue'
+import LandingView from '../views/LandingView.vue'
+import LoginView from '../views/LoginView.vue'
+import RecipeDetailView from '../views/RecipeDetailView.vue'
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -8,20 +13,26 @@ const router = createRouter({
       path: '/',
       name: 'landing',
       // Lazy-loading: The component is only loaded when the user visits the route
-      component: () => import('../views/LandingView.vue'),
+      component: LandingView,
       meta: { requiresAuth: false },
+    },
+    {
+      // The :id parameter will be captured and available in route.params.id
+      path: '/recipe/:id',
+      name: 'recipe-detail',
+      component: RecipeDetailView,
     },
     {
       path: '/login',
       name: 'login',
-      component: () => import('../views/LoginView.vue'),
+      component: LoginView,
       // 'guestOnly' ensures logged-in users cannot access the login page again
       meta: { requiresAuth: false, guestOnly: true },
     },
     {
       path: '/dashboard',
       name: 'dashboard',
-      component: () => import('../views/DashboardView.vue'),
+      component: DashboardView,
       // This explicitly protects the route
       meta: { requiresAuth: true },
     },

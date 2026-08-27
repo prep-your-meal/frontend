@@ -1,0 +1,47 @@
+{
+  "nav": {
+    "login": "Login",
+    "dashboard": "Dashboard"
+  },
+  "categories": {
+    "breakfast": "Breakfast",
+    "low-carb": "Low-carb",
+    "dinner": "Dinner",
+    "high-protein": "High Protein",
+    "bulking": "Bulking",
+    "cutting": "Cutting",
+    "vegan": "Vegan",
+    "vegetarian": "Vegetarian",
+    "lunch": "Lunch",
+    "quick": "Quick",
+    "one-pot": "One-Pot",
+    "meal-prep-friendly": "Meal Prep friendly",
+    "snack": "Snack"
+  },
+  "landing": {
+    "hero_title": "Intelligent meal planning with",
+    "hero_subtitle": "Organize your daily food routines stress-free. Plan your meals, automate grocery runs, and track your macros all in one place.",
+    "cta_button": "Login & Start Planning",
+    "latest_recipes": "Random Meal Inspirations",
+    "loading": "Loading delicious recipes...",
+    "prep_time": "Prep: {prep} min.",
+    "cook_time": "Cook: {cook} min.",
+    "no_recipes": "No recipes found."
+  },
+  "recipe_detail": {
+    "back_button": "Back to Overview",
+    "no_image": "No image available",
+    "error_title": "Error",
+    "error_not_found": "Failed to load recipe details. Please check if the recipe exists.",
+    "error_fallback": "An unexpected error occurred while fetching data.",
+    "ingredients": "Ingredients",
+    "prep_time": "Prep: {prep} min.",
+    "cook_time": "Cook: {cook} min.",
+    "macros": {
+      "calories": "Calories",
+      "protein": "Protein",
+      "carbs": "Carbs",
+      "fat": "Fat"
+    }
+  }
+}
