@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.3](https://github.com/prep-your-meal/frontend/compare/v0.0.2...v0.0.3) (2026-08-27)
+
+### Features
+
+* **frontend:** improve UI with dynamic category badges, recipe times, and aligned grid cards ([a89734f](https://github.com/prep-your-meal/frontend/commit/a89734fd7ede7a95b02f07237c9d52611c94bba6))
 ## [0.0.2](https://github.com/prep-your-meal/frontend/compare/v0.0.1...v0.0.2) (2026-08-27)
 ## [0.0.1](https://github.com/prep-your-meal/frontend/compare/v1.2.1...v0.0.1) (2026-08-27)
 
