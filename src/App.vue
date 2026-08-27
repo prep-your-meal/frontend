@@ -10,17 +10,16 @@ import { RouterView } from 'vue-router'
   <footer class="w-full mt-12 py-8 text-center text-sm text-gray-500 border-t border-gray-100">
     <div class="flex justify-center space-x-6 mb-2">
       <!-- Legal Notice Link -->
-      <RouterLink to="/impressum" class="hover:text-dark-green transition-colors">
+      <RouterLink to="/impressum" class="hover:text-primary-green transition-colors duration-200">
         {{ $t('footer.impressum') }}
       </RouterLink>
 
       <!-- Privacy Policy Link -->
-      <RouterLink to="/privacy" class="hover:text-dark-green transition-colors">
+      <RouterLink to="/privacy" class="hover:text-primary-green transition-colors duration-200">
         {{ $t('footer.privacy') }}
       </RouterLink>
     </div>
 
-    <!-- Copyright info with dynamic year -->
     <p>&copy; {{ new Date().getFullYear() }} PrepYourMeal. {{ $t('footer.rights') }}</p>
   </footer>
 </template>

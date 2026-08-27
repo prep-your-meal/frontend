@@ -2,10 +2,10 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-  --color-primary-green: #105432;
-  --color-dark-green: #0a3620;
-  --color-accent-gold: #d4af37;
-  --color-bg-cream: #f9f9f6;
+  --color-primary-green: #4A9D52;
+  --color-dark-green: #1A5632;
+  --color-accent-gold: #C98B26;
+  --color-bg-cream: #F5F1E1;
 }
 
 @layer base {

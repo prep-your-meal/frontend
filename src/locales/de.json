@@ -42,6 +42,7 @@
     "ingredients": "Zutaten",
     "prep_time": "Zubereitung: {prep} Min.",
     "cook_time": "Kochen: {cook} Min.",
+    "instructions": "Zubereitungsschritte",
     "macros": {
       "calories": "Kalorien",
       "protein": "Protein",

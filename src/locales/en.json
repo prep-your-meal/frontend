@@ -42,6 +42,7 @@
     "ingredients": "Ingredients",
     "prep_time": "Prep: {prep} min.",
     "cook_time": "Cook: {cook} min.",
+    "instructions": "Instructions",
     "macros": {
       "calories": "Calories",
       "protein": "Protein",

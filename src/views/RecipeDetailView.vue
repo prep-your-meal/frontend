@@ -3,7 +3,7 @@
     <!-- Back Navigation -->
     <button
       @click="goBack"
-      class="mb-6 flex items-center text-blue-600 hover:text-blue-800 transition-colors font-medium cursor-pointer"
+      class="mb-6 flex items-center text-primary-green hover:text-dark-green transition-colors font-medium cursor-pointer"
     >
       <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path
@@ -19,7 +19,7 @@
     <!-- Loading State -->
     <div v-if="isLoading" class="flex justify-center py-20 text-gray-500">
       <svg
-        class="animate-spin h-8 w-8 text-blue-600"
+        class="animate-spin h-8 w-8 text-primary-green"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
@@ -98,8 +98,9 @@
           <div class="flex flex-wrap items-center gap-6 mb-8 text-gray-600">
             <!-- Prep Time -->
             <div v-if="recipe.prep_time" class="flex items-center">
+              <!-- Icon in primary-green -->
               <svg
-                class="w-5 h-5 mr-2 text-gray-400"
+                class="w-5 h-5 mr-2 text-primary-green"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -111,15 +112,16 @@
                   d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                 ></path>
               </svg>
-              <span class="text-sm font-medium">
-                {{ t('recipe_detail.prep_time', { prep: recipe.prep_time }) }}
-              </span>
+              <span class="text-sm font-medium">{{
+                $t('recipe_detail.prep_time', { cook: recipe.prep_time })
+              }}</span>
             </div>
 
             <!-- Cook Time -->
             <div v-if="recipe.cook_time" class="flex items-center">
+              <!-- Icon in primary-green -->
               <svg
-                class="w-5 h-5 mr-2 text-gray-400"
+                class="w-5 h-5 mr-2 text-primary-green"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -145,36 +147,44 @@
 
           <!-- Macro Nutrients Grid -->
           <div class="grid grid-cols-2 gap-4">
-            <div class="bg-gray-50 p-4 rounded-xl border border-gray-100 text-center">
+            <!-- Kalorien (Neutral/Cream) -->
+            <div class="bg-bg-cream p-4 rounded-2xl border border-gray-100 text-center">
               <span class="block text-sm text-gray-500 font-medium uppercase tracking-wider mb-1">{{
                 $t('recipe_detail.macros.calories')
               }}</span>
-              <span class="block text-2xl font-bold text-gray-900">{{
+              <span class="block text-2xl font-bold text-dark-green">{{
                 recipe.nutrition?.calories || recipe.calories || 0
               }}</span>
             </div>
-            <div class="bg-blue-50 p-4 rounded-xl border border-blue-100 text-center">
-              <span class="block text-sm text-blue-500 font-medium uppercase tracking-wider mb-1">{{
-                $t('recipe_detail.macros.protein')
-              }}</span>
-              <span class="block text-2xl font-bold text-blue-900"
+            <!-- Protein (Primary Green) -->
+            <div
+              class="bg-primary-green/10 p-4 rounded-2xl border border-primary-green/20 text-center"
+            >
+              <span
+                class="block text-sm text-primary-green font-medium uppercase tracking-wider mb-1"
+                >{{ $t('recipe_detail.macros.protein') }}</span
+              >
+              <span class="block text-2xl font-bold text-dark-green"
                 >{{ recipe.nutrition?.protein_g || recipe.protein || 0 }}g</span
               >
             </div>
-            <div class="bg-yellow-50 p-4 rounded-xl border border-yellow-100 text-center">
+            <!-- Kohlenhydrate (Accent Gold) -->
+            <div class="bg-accent-gold/10 p-4 rounded-2xl border border-accent-gold/20 text-center">
               <span
-                class="block text-sm text-yellow-600 font-medium uppercase tracking-wider mb-1"
+                class="block text-sm text-accent-gold font-medium uppercase tracking-wider mb-1"
                 >{{ $t('recipe_detail.macros.carbs') }}</span
               >
-              <span class="block text-2xl font-bold text-yellow-900"
+              <span class="block text-2xl font-bold text-dark-green"
                 >{{ recipe.nutrition?.carbs_g || recipe.carbs || 0 }}g</span
               >
             </div>
-            <div class="bg-red-50 p-4 rounded-xl border border-red-100 text-center">
-              <span class="block text-sm text-red-500 font-medium uppercase tracking-wider mb-1">{{
-                $t('recipe_detail.macros.fat')
-              }}</span>
-              <span class="block text-2xl font-bold text-red-900"
+            <!-- Fett (Dark Green) -->
+            <div class="bg-dark-green/10 p-4 rounded-2xl border border-dark-green/20 text-center">
+              <span
+                class="block text-sm text-dark-green font-medium uppercase tracking-wider mb-1"
+                >{{ $t('recipe_detail.macros.fat') }}</span
+              >
+              <span class="block text-2xl font-bold text-dark-green"
                 >{{ recipe.nutrition?.fat_g || recipe.fat || 0 }}g</span
               >
             </div>
@@ -185,19 +195,21 @@
       <!-- Bottom Section: Ingredients & Instructions -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-0 border-t border-gray-100">
         <!-- Ingredients List -->
-        <div class="lg:col-span-1 p-6 lg:p-10 bg-gray-50 border-r border-gray-100">
-          <h2 class="text-xl font-bold text-gray-900 mb-6">
+        <div class="lg:col-span-1 p-6 lg:p-10 bg-bg-cream/40 border-r border-gray-100">
+          <h2 class="text-xl font-bold text-dark-green mb-6">
             {{ $t('recipe_detail.ingredients') }}
           </h2>
-          <ul class="space-y-3">
+          <!-- space-y-3 entfernt, flex-col hinzugefügt für sauberen Aufbau -->
+          <ul class="flex flex-col">
             <li
               v-for="(item, index) in recipe.ingredients"
               :key="index"
-              class="flex justify-between items-center py-2 border-b border-gray-200 last:border-0"
+              class="flex justify-between items-center py-3 border-b border-gray-200 last:border-0"
             >
-              <span class="text-gray-700">{{ item.name }}</span>
+              <span class="text-gray-600 pr-4 leading-relaxed">{{ item.name }}</span>
+
               <span
-                class="font-semibold text-gray-900 bg-white px-3 py-1 rounded-md shadow-sm text-sm"
+                class="shrink-0 whitespace-nowrap font-medium text-dark-green bg-white px-3 py-1 rounded-md shadow-sm border border-gray-100 text-sm"
               >
                 {{ formatAmount(item.amount) }} {{ item.unit }}
               </span>
@@ -207,8 +219,11 @@
 
         <!-- Instructions (Parsed Markdown) -->
         <div class="lg:col-span-2 p-6 lg:p-10">
+          <h2 class="text-xl font-bold text-dark-green mb-6">
+            {{ $t('recipe_detail.instructions') }}
+          </h2>
           <div
-            class="prose prose-blue max-w-none text-gray-700"
+            class="prose prose-green max-w-none text-gray-700 marker:text-primary-green"
             v-html="parsedInstructionsHtml"
           ></div>
         </div>

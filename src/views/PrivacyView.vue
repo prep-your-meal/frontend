@@ -1,10 +1,10 @@
 <template>
   <div class="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
-    <!-- Back Link (Outside Content Box) -->
+    <!-- Back Link (Hover is now accent-gold) -->
     <div class="mb-6">
       <RouterLink
         to="/"
-        class="inline-flex items-center text-primary-green hover:text-dark-green transition-colors font-medium cursor-pointer"
+        class="inline-flex items-center text-primary-green hover:text-accent-gold transition-colors font-medium cursor-pointer"
       >
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
@@ -21,7 +21,7 @@
 
     <!-- Content Box -->
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 lg:p-12">
-      <!-- Header Row: Title on the left, Logo on the right -->
+      <!-- Header Row -->
       <div class="flex justify-between items-center mb-8 border-b border-gray-100 pb-6 gap-4">
         <h1
           class="text-3xl font-bold text-dark-green border-b-[3px] border-primary-green pb-2 mb-0"
@@ -43,8 +43,9 @@
       <!-- GERMAN VERSION                             -->
       <!-- ========================================== -->
       <div v-if="locale === 'de'">
-        <div class="prose prose-blue max-w-none text-gray-700">
-          <h3 class="text-xl font-bold text-gray-900 mt-4 mb-4">1. Allgemeine Hinweise</h3>
+        <!-- changed prose-blue to prose-green -->
+        <div class="prose prose-green max-w-none text-gray-700">
+          <h3 class="text-xl font-bold text-dark-green mt-4 mb-4">1. Allgemeine Hinweise</h3>
           <p>
             Wir freuen uns über dein Interesse an <strong>PrepYourMeal</strong>. Der Schutz deiner
             persönlichen Daten ist uns ein sehr wichtiges Anliegen. Die folgenden Hinweise geben
@@ -52,7 +53,7 @@
             du diese Website besuchst.
           </p>
 
-          <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4">2. Hosting</h3>
+          <h3 class="text-xl font-bold text-dark-green mt-8 mb-4">2. Hosting</h3>
           <p>
             Wir hosten die Inhalte unserer Website bei folgendem Anbieter:<br /><br />
             <strong>Strato</strong><br />
@@ -67,7 +68,7 @@
             geschlossen.
           </p>
 
-          <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4">
+          <h3 class="text-xl font-bold text-dark-green mt-8 mb-4">
             3. Registrierung und Login (Nutzerkonto)
           </h3>
           <p>
@@ -84,15 +85,16 @@
       <!-- ENGLISH VERSION                            -->
       <!-- ========================================== -->
       <div v-else>
-        <div class="prose prose-blue max-w-none text-gray-700">
-          <h3 class="text-xl font-bold text-gray-900 mt-4 mb-4">1. General Information</h3>
+        <!-- changed prose-blue to prose-green -->
+        <div class="prose prose-green max-w-none text-gray-700">
+          <h3 class="text-xl font-bold text-dark-green mt-4 mb-4">1. General Information</h3>
           <p>
             Thank you for your interest in <strong>PrepYourMeal</strong>. The protection of your
             personal data is very important to us. The following notes provide a simple overview of
             what happens to your personal data when you visit this website.
           </p>
 
-          <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4">2. Hosting</h3>
+          <h3 class="text-xl font-bold text-dark-green mt-8 mb-4">2. Hosting</h3>
           <p>
             We host the content of our website with the following provider:<br /><br />
             <strong>Strato</strong><br />
@@ -106,7 +108,7 @@
             (DPA) with Strato.
           </p>
 
-          <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4">
+          <h3 class="text-xl font-bold text-dark-green mt-8 mb-4">
             3. Registration and Login (User Account)
           </h3>
           <p>
@@ -122,15 +124,16 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, watch } from 'vue'
+import { onMounted, onUnmounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { RouterLink } from 'vue-router'
 
 const { locale } = useI18n()
+const originalPageTitle = document.title
 
 const updateTitle = () => {
   document.title =
-    locale.value === 'de' ? 'Datenschutz | PrepMyMeal' : 'Privacy Policy | PrepMyMeal'
+    locale.value === 'de' ? 'Datenschutz | PrepYourMeal' : 'Privacy Policy | PrepYourMeal'
 }
 
 onMounted(() => {
@@ -139,5 +142,9 @@ onMounted(() => {
 
 watch(locale, () => {
   updateTitle()
+})
+
+onUnmounted(() => {
+  document.title = originalPageTitle
 })
 </script>
