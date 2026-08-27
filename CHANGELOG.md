@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.1](https://github.com/prep-your-meal/frontend/compare/v1.2.1...v0.0.1) (2026-08-27)
+
+### Bug Fixes
+
+* **lint:** resolve typescript 'any' type errors in store and views ([a10fb8b](https://github.com/prep-your-meal/frontend/commit/a10fb8b3fc044479643c1701979bd07f05a5c42e))
 ## [1.2.1](https://github.com/prep-your-meal/frontend/compare/v1.2.0...v1.2.1) (2026-08-07)
 
 
