@@ -52,6 +52,7 @@ const getCategoryBadgeClass = (category: string) => {
 
 // Fetch recipes automatically when the page loads
 onMounted(async () => {
+  document.title = 'PrepYourMeal 🥗'
   try {
     isLoading.value = true
     const response = await api.get('/recipes?random=true&per_page=3')

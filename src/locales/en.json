@@ -3,6 +3,11 @@
     "login": "Login",
     "dashboard": "Dashboard"
   },
+  "footer": {
+    "impressum": "Legal Notice",
+    "privacy": "Privacy Policy",
+    "rights": "All rights reserved."
+  },
   "categories": {
     "breakfast": "Breakfast",
     "low-carb": "Low-carb",

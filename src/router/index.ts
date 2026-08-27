@@ -5,6 +5,8 @@ import DashboardView from '../views/DashboardView.vue'
 import LandingView from '../views/LandingView.vue'
 import LoginView from '../views/LoginView.vue'
 import RecipeDetailView from '../views/RecipeDetailView.vue'
+import ImpressumView from '../views/ImpressumView.vue'
+import PrivacyView from '../views/PrivacyView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -21,6 +23,16 @@ const router = createRouter({
       path: '/recipe/:id',
       name: 'recipe-detail',
       component: RecipeDetailView,
+    },
+    {
+      path: '/impressum',
+      name: 'impressum',
+      component: ImpressumView,
+    },
+    {
+      path: '/privacy',
+      name: 'privacy',
+      component: PrivacyView,
     },
     {
       path: '/login',

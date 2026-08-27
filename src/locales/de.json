@@ -3,6 +3,11 @@
     "login": "Anmelden",
     "dashboard": "Übersicht"
   },
+  "footer": {
+    "impressum": "Impressum",
+    "privacy": "Datenschutz",
+    "rights": "Alle Rechte vorbehalten."
+  },
   "categories": {
     "breakfast": "Frühstück",
     "low-carb": "Low-carb",
