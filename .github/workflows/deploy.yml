@@ -17,12 +17,12 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 
+          fetch-depth: 0
 
-      - name: Setup Node.js (Only ephemerally for Changelog Generation)
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: '22' # Updated to match your local Docker setup
 
       - name: Set Git Identity for Release Bot
         run: |
@@ -35,19 +35,31 @@ jobs:
       - name: Push new Release Commit and Tag
         run: git push --follow-tags origin main
 
+      # === PART 2: BUILD THE VUE APP ===
+      - name: Install Dependencies
+        run: npm ci
 
-      # === PART 2: DEPLOY INFRASTRUCTURE FILES TO STRATO ===
+      - name: Build Vue App for Production
+        run: npm run build
+        env:
+          # Injects the live Laravel API URL into the frontend build.
+          # Make sure to add PROD_API_URL to your GitHub Repository Secrets!
+          VITE_API_BASE_URL: ${{ secrets.API_URL }}
+
+      # === PART 3: DEPLOY INFRASTRUCTURE FILES TO STRATO ===
       - name: Deploy static files via SCP to Webspace
         uses: appleboy/scp-action@v0.1.7
         with:
-          # Reuse the exact same Strato credentials from your backend repo
           host: ${{ secrets.WEBSPACE_HOST }}
           username: ${{ secrets.WEBSPACE_USER }}
           password: ${{ secrets.WEBSPACE_PASSWORD }}
           port: ${{ secrets.WEBSPACE_PORT || 22 }}
-          
-          # Upload the .htaccess, the landing page, and the logo
-          source: ".htaccess,index.html,assets/,favicon.ico,favicon-16x16.png,favicon-32x32.png,apple-touch-icon.png,android-chrome-192x192.png,android-chrome-512x512.png"
-          
-          # The root directory for the frontend (using /.. to move up from the api folder)
+
+          # Only upload the compiled 'dist' folder
+          source: 'dist/'
+
+          # strip_components: 1 ensures the contents of /dist are placed
+          # directly into the target folder, without creating a "dist" folder on Strato
+          strip_components: 1
+
           target: ${{ secrets.WEBSPACE_TARGET_DIR }}/..
