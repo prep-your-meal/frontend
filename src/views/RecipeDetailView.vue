@@ -113,15 +113,15 @@
                 ></path>
               </svg>
               <span class="text-sm font-medium">{{
-                $t('recipe_detail.prep_time', { cook: recipe.prep_time })
+                $t('recipe_detail.prep_time', { prep: recipe.prep_time })
               }}</span>
             </div>
 
             <!-- Cook Time -->
             <div v-if="recipe.cook_time" class="flex items-center">
-              <!-- Icon in primary-green -->
+              <!-- Flammen-Icon in secondary-rust -->
               <svg
-                class="w-5 h-5 mr-2 text-primary-green"
+                class="w-5 h-5 mr-2 text-secondary-rust"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -147,8 +147,7 @@
 
           <!-- Macro Nutrients Grid -->
           <div class="grid grid-cols-2 gap-4">
-            <!-- Kalorien (Neutral/Cream) -->
-            <div class="bg-bg-cream p-4 rounded-2xl border border-gray-100 text-center">
+            <div class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm text-center">
               <span class="block text-sm text-gray-500 font-medium uppercase tracking-wider mb-1">{{
                 $t('recipe_detail.macros.calories')
               }}</span>
@@ -156,7 +155,6 @@
                 recipe.nutrition?.calories || recipe.calories || 0
               }}</span>
             </div>
-            <!-- Protein (Primary Green) -->
             <div
               class="bg-primary-green/10 p-4 rounded-2xl border border-primary-green/20 text-center"
             >
@@ -168,7 +166,6 @@
                 >{{ recipe.nutrition?.protein_g || recipe.protein || 0 }}g</span
               >
             </div>
-            <!-- Kohlenhydrate (Accent Gold) -->
             <div class="bg-accent-gold/10 p-4 rounded-2xl border border-accent-gold/20 text-center">
               <span
                 class="block text-sm text-accent-gold font-medium uppercase tracking-wider mb-1"
@@ -178,10 +175,11 @@
                 >{{ recipe.nutrition?.carbs_g || recipe.carbs || 0 }}g</span
               >
             </div>
-            <!-- Fett (Dark Green) -->
-            <div class="bg-dark-green/10 p-4 rounded-2xl border border-dark-green/20 text-center">
+            <div
+              class="bg-secondary-rust/10 p-4 rounded-2xl border border-secondary-rust/20 text-center"
+            >
               <span
-                class="block text-sm text-dark-green font-medium uppercase tracking-wider mb-1"
+                class="block text-sm text-secondary-rust font-medium uppercase tracking-wider mb-1"
                 >{{ $t('recipe_detail.macros.fat') }}</span
               >
               <span class="block text-2xl font-bold text-dark-green"
@@ -236,6 +234,7 @@
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { getCategoryBadgeClass } from '../utils/theme'
 import api from '../services/api'
 import axios from 'axios'
 import { marked } from 'marked'
@@ -295,35 +294,6 @@ const goBack = () => {
 const formatAmount = (amount: number | string) => {
   if (!amount) return ''
   return Number(amount)
-}
-
-// Helper: Assigns specific colors to category badges
-const getCategoryBadgeClass = (category: string) => {
-  // Important: Always write out full Tailwind class names
-  const colorMap: Record<string, string> = {
-    // Meals
-    breakfast: 'bg-sky-50 text-sky-700 border-sky-200',
-    lunch: 'bg-blue-50 text-blue-700 border-blue-200',
-    dinner: 'bg-indigo-50 text-indigo-700 border-indigo-200',
-    snack: 'bg-purple-50 text-purple-700 border-purple-200',
-
-    // Diets
-    vegan: 'bg-green-50 text-green-700 border-green-200',
-    vegetarian: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-    'low-carb': 'bg-lime-50 text-lime-700 border-lime-200',
-
-    // Fitness/Goals
-    'high-protein': 'bg-red-50 text-red-700 border-red-200',
-    bulking: 'bg-orange-50 text-orange-700 border-orange-200',
-    cutting: 'bg-rose-50 text-rose-700 border-rose-200',
-
-    // Misc/Logistics
-    quick: 'bg-yellow-50 text-yellow-700 border-yellow-200',
-    'meal-prep-friendly': 'bg-teal-50 text-teal-700 border-teal-200',
-    'one-pot': 'bg-amber-50 text-amber-700 border-amber-200',
-  }
-
-  return colorMap[category] || 'bg-gray-50 text-gray-700 border-gray-200'
 }
 
 // --- Computed Properties ---

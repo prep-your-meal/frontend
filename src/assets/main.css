@@ -6,6 +6,9 @@
   --color-dark-green: #1A5632;
   --color-accent-gold: #C98B26;
   --color-bg-cream: #F5F1E1;
+  --color-secondary-rust: #D9734E;
+  --color-secondary-ocean: #3A6B7E;
+  --color-secondary-berry: #8A4F7D;
 }
 
 @layer base {

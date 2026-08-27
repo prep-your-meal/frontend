@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import api from '../services/api'
+import { getCategoryBadgeClass } from '../utils/theme'
 
 // Define the TypeScript interface for a Recipe
 interface Recipe {
@@ -19,36 +20,6 @@ interface Recipe {
 const recipes = ref<Recipe[]>([])
 const isLoading = ref<boolean>(true)
 const error = ref<string | null>(null)
-
-// Helper: Assigns specific colors to categories
-// <-- category als string definiert
-const getCategoryBadgeClass = (category: string) => {
-  // <-- Record<string, string> sagt TypeScript, dass hier mit Strings gesucht wird
-  const colorMap: Record<string, string> = {
-    // Meals (Blue/Purple tones)
-    breakfast: 'bg-sky-50 text-sky-700 border-sky-200',
-    lunch: 'bg-blue-50 text-blue-700 border-blue-200',
-    dinner: 'bg-indigo-50 text-indigo-700 border-indigo-200',
-    snack: 'bg-purple-50 text-purple-700 border-purple-200',
-
-    // Diets (Green tones)
-    vegan: 'bg-green-50 text-green-700 border-green-200',
-    vegetarian: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-    'low-carb': 'bg-lime-50 text-lime-700 border-lime-200',
-
-    // Fitness/Goals (Red/Orange tones)
-    'high-protein': 'bg-red-50 text-red-700 border-red-200',
-    bulking: 'bg-orange-50 text-orange-700 border-orange-200',
-    cutting: 'bg-rose-50 text-rose-700 border-rose-200',
-
-    // Misc/Logistics (Yellow/Teal tones)
-    quick: 'bg-yellow-50 text-yellow-700 border-yellow-200',
-    'meal-prep-friendly': 'bg-teal-50 text-teal-700 border-teal-200',
-    'one-pot': 'bg-amber-50 text-amber-700 border-amber-200',
-  }
-
-  return colorMap[category] || 'bg-gray-50 text-gray-700 border-gray-200'
-}
 
 // Fetch recipes automatically when the page loads
 onMounted(async () => {
