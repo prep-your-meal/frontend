@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.4](https://github.com/prep-your-meal/frontend/compare/v0.0.3...v0.0.4) (2026-08-27)
+
+### Bug Fixes
+
+* **frontend:** add missing TypeScript type definitions for recipe categories in LandingView ([6c6227e](https://github.com/prep-your-meal/frontend/commit/6c6227ea12c21a0468efe75dc815f9037f03aab3))
 ## [0.0.3](https://github.com/prep-your-meal/frontend/compare/v0.0.2...v0.0.3) (2026-08-27)
 
 ### Features
