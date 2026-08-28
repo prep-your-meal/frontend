@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.10](https://github.com/prep-your-meal/frontend/compare/v0.0.9...v0.0.10) (2026-08-28)
+
+### Features
+
+* **landing:** overhaul landing page design with editorial vision, rotating recipes, and bottom CTA ([f538136](https://github.com/prep-your-meal/frontend/commit/f5381364ec03bf0eb80cd9e0563767a6007bb6ee))
+* **layout:** implement responsive pwa app shell and navigation ([5078ca8](https://github.com/prep-your-meal/frontend/commit/5078ca8c7f7333ff84151e3093cfd5d5ae7982e4))
 ## [0.0.9](https://github.com/prep-your-meal/frontend/compare/v0.0.8...v0.0.9) (2026-08-28)
 
 ### Features
