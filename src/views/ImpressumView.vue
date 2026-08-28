@@ -53,7 +53,7 @@
           </p>
 
           <h3 class="text-xl font-bold text-dark-green mt-8 mb-4">Kontakt</h3>
-          <p>E-Mail: [Deine E-Mail-Adresse, z.B. hello@prep-my-meal.de]<br /></p>
+          <p>E-Mail: hello@prepyourmeal.de<br /></p>
 
           <h3 class="text-xl font-bold text-dark-green mt-8 mb-4">
             Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV
@@ -89,7 +89,7 @@
           </p>
 
           <h3 class="text-xl font-bold text-dark-green mt-8 mb-4">Contact</h3>
-          <p>E-Mail: [Your E-Mail Address]<br /></p>
+          <p>E-Mail: hello@prepyourmeal.de<br /></p>
 
           <h3 class="text-xl font-bold text-dark-green mt-8 mb-4">
             Responsible for content according to § 18 para. 2 MStV
