@@ -152,7 +152,7 @@ onMounted(async () => {
                 v-if="recipe.prep_time || recipe.cook_time"
                 class="flex items-center text-sm text-gray-500 space-x-3 border-t border-gray-100 pt-4"
               >
-                <!-- Prep Time (Grüne Uhr) -->
+                <!-- Prep Time -->
                 <div v-if="recipe.prep_time" class="flex items-center">
                   <svg
                     class="w-4 h-4 mr-1.5 text-primary-green shrink-0"
@@ -173,7 +173,7 @@ onMounted(async () => {
                 <!-- Divider -->
                 <span v-if="recipe.prep_time && recipe.cook_time" class="text-gray-300">|</span>
 
-                <!-- Cook Time (Rote Flamme) -->
+                <!-- Cook Time -->
                 <div v-if="recipe.cook_time" class="flex items-center">
                   <svg
                     class="w-4 h-4 mr-1.5 text-secondary-rust shrink-0"

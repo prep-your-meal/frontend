@@ -49,5 +49,22 @@
       "carbs": "Carbs",
       "fat": "Fat"
     }
+  },
+  "login": {
+    "title": "Welcome back",
+    "subtitle": "Log in to plan your meal preps.",
+    "email": "Email Address",
+    "email_placeholder": "mail@example.com",
+    "password": "Password",
+    "forgot_password": "Forgot password?",
+    "submit": "Log In",
+    "loading": "Loading...",
+    "no_account": "Don't have an account yet?",
+    "register": "Register for free now"
+  },
+  "register": {
+    "title": "Closed-Beta",
+    "thanks": "Thank you for your interest! PrepYourMeal is currently in a closed beta phase. To get an account, please send us a short email at:",
+    "back_to_login": "Back to Login"
   }
 }

@@ -4,6 +4,7 @@ import { useAuthStore } from '../stores/auth'
 import DashboardView from '../views/DashboardView.vue'
 import LandingView from '../views/LandingView.vue'
 import LoginView from '../views/LoginView.vue'
+import RegisterView from '../views/RegisterView.vue'
 import RecipeDetailView from '../views/RecipeDetailView.vue'
 import ImpressumView from '../views/ImpressumView.vue'
 import PrivacyView from '../views/PrivacyView.vue'
@@ -39,6 +40,13 @@ const router = createRouter({
       name: 'login',
       component: LoginView,
       // 'guestOnly' ensures logged-in users cannot access the login page again
+      meta: { requiresAuth: false, guestOnly: true },
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: RegisterView,
+      // 'guestOnly' ensures logged-in users cannot access the register page again
       meta: { requiresAuth: false, guestOnly: true },
     },
     {

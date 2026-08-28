@@ -49,5 +49,22 @@
       "carbs": "Kohlenhydrate",
       "fat": "Fett"
     }
+  },
+  "login": {
+    "title": "Willkommen zurück",
+    "subtitle": "Logge dich ein, um deine Meal-Preps zu planen.",
+    "email": "E-Mail Adresse",
+    "email_placeholder": "mail@beispiel.de",
+    "password": "Passwort",
+    "forgot_password": "Passwort vergessen?",
+    "submit": "Einloggen",
+    "loading": "Lädt...",
+    "no_account": "Noch kein Account?",
+    "register": "Jetzt kostenlos registrieren"
+  },
+  "register": {
+    "title": "Closed-Beta",
+    "thanks": "Vielen Dank für dein Interesse! Momentan befindet sich PrepYourMeal in einer geschlossenen Beta-Phase. Um einen Account zu erhalten, schreibe uns eine kurze E-Mail an:",
+    "back_to_login": "Zurück zum Login"
   }
 }
