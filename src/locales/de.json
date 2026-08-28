@@ -80,7 +80,7 @@
     "title": "Willkommen zurück",
     "subtitle": "Logge dich ein, um deine Meal-Preps zu planen.",
     "email": "E-Mail Adresse",
-    "email_placeholder": "mail@beispiel.de",
+    "email_placeholder": "mail@@beispiel.de",
     "password": "Passwort",
     "forgot_password": "Passwort vergessen?",
     "submit": "Einloggen",
