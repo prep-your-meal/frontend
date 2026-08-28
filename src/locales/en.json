@@ -29,14 +29,35 @@
     "snack": "Snack"
   },
   "landing": {
-    "hero_title": "Intelligent meal planning with",
-    "hero_subtitle": "Organize your daily food routines stress-free. Plan your meals, automate grocery runs, and track your macros all in one place.",
-    "cta_button": "Login & Start Planning",
-    "latest_recipes": "Random Meal Inspirations",
-    "loading": "Loading delicious recipes...",
+    "hero_title": "Plan your week with",
+    "hero_subtitle": "Plan your week. Cook relaxed. Eat healthy.",
+    "cta_button": "Start for free",
+    "latest_recipes": "Discover new favorite recipes",
+    "loading": "Loading recipes...",
+    "error_loading": "Could not load recipes.",
+    "empty": "No recipes found.",
     "prep_time": "Prep: {prep} min.",
     "cook_time": "Cook: {cook} min.",
-    "no_recipes": "No recipes found."
+    "vision": {
+      "tag": "Our Vision",
+      "title": "Eating healthy shouldn't be a full-time job.",
+      "text": "We created PrepYourMeal to take the mental chaos out of your daily routine. No more daily guessing at the fridge, no more wandering aimlessly in the supermarket. Just a clear, elegant plan for your week – making cooking what it should be: a relaxing pleasure."
+    },
+    "features": {
+      "tag": "Your Toolkit",
+      "title": "Everything you need for your week",
+      "planner_title": "Weekly Planner",
+      "planner_desc": "Plan your meals for the whole week. Structured, clear, and stress-free.",
+      "shopping_title": "Smart Shopping List",
+      "shopping_desc": "Ingredients from your plan automatically end up sorted on your digital shopping list.",
+      "healthy_title": "Healthy Cooking",
+      "healthy_desc": "Achieve your nutritional goals effortlessly through proactive planning."
+    },
+    "bottom_cta": {
+      "title": "Ready for your new kitchen routine?",
+      "subtitle": "Start for free now and experience how relaxed and organized meal prepping can be.",
+      "button": "Register for free"
+    }
   },
   "recipe_detail": {
     "back_button": "Back to Overview",

@@ -29,14 +29,35 @@
     "snack": "Snack"
   },
   "landing": {
-    "hero_title": "Intelligente Essensplanung mit",
-    "hero_subtitle": "Organisiere deinen Alltag stressfrei. Plane Mahlzeiten, automatisiere Einkäufe und behalte deine Makros im Blick.",
-    "cta_button": "Anmelden & Loslegen",
-    "latest_recipes": "Zufällige Essensvorschläge",
-    "loading": "Lade köstliche Rezepte...",
+    "hero_title": "Plane deine Woche mit",
+    "hero_subtitle": "Plane deine Woche. Koche entspannt. Iss gesund.",
+    "latest_recipes": "Entdecke neue Lieblingsrezepte",
+    "cta_button": "Kostenlos starten",
+    "loading": "Lade Rezepte...",
+    "error_loading": "Rezepte konnten nicht geladen werden.",
+    "empty": "Keine Rezepte gefunden.",
     "prep_time": "Zubereitung: {prep} Min.",
     "cook_time": "Kochen: {cook} Min.",
-    "no_recipes": "Keine Rezepte gefunden."
+    "vision": {
+      "tag": "Unsere Vision",
+      "title": "Gesund ernähren darf kein Fulltime-Job sein.",
+      "text": "Wir haben PrepYourMeal entwickelt, um das mentale Chaos aus dem Alltag zu nehmen. Kein tägliches Rätselraten am Kühlschrank, kein sinnloses Herumirren im Supermarkt. Sondern ein klarer, eleganter Plan für deine Woche – damit Kochen wieder das wird, was es sein soll: Ein entspannter Genuss."
+    },
+    "features": {
+      "tag": "Dein Werkzeugkasten",
+      "title": "Alles, was du für deine Woche brauchst",
+      "planner_title": "Wochenplaner",
+      "planner_desc": "Plane deine Mahlzeiten für die ganze Woche. Strukturiert, übersichtlich und stressfrei.",
+      "shopping_title": "Smarte Einkaufsliste",
+      "shopping_desc": "Zutaten aus deinem Plan landen automatisch sortiert auf deiner digitalen Einkaufsliste.",
+      "healthy_title": "Gesund Kochen",
+      "healthy_desc": "Erreiche deine Ernährungsziele ganz nebenbei durch vorausschauende Planung."
+    },
+    "bottom_cta": {
+      "title": "Bereit für deinen neuen Küchen-Rhythmus?",
+      "subtitle": "Starte jetzt kostenlos und erlebe, wie entspannt und übersichtlich Meal Prepping sein kann.",
+      "button": "Kostenlos registrieren"
+    }
   },
   "recipe_detail": {
     "back_button": "Zurück zur Übersicht",

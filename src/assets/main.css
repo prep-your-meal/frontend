@@ -1,14 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&display=swap');
 @import 'tailwindcss';
 @plugin "@tailwindcss/typography";
 
 @theme {
-  --color-primary-green: #4A9D52;
-  --color-dark-green: #1A5632;
-  --color-accent-gold: #C98B26;
-  --color-bg-cream: #F5F1E1;
-  --color-secondary-rust: #D9734E;
-  --color-secondary-ocean: #3A6B7E;
-  --color-secondary-berry: #8A4F7D;
+  --color-primary-green: #4a9d52;
+  --color-dark-green: #1a5632;
+  --color-accent-gold: #c98b26;
+  --color-bg-cream: #f5f1e1;
+  --color-secondary-rust: #d9734e;
+  --color-secondary-ocean: #3a6b7e;
+  --color-secondary-berry: #8a4f7d;
+  --font-signature: 'Cinzel', serif;
+
+  --text-secondary-rust: var(--color-secondary-rust);
 }
 
 @layer base {

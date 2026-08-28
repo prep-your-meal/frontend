@@ -1,55 +1,63 @@
 <template>
-  <!-- Hidden on mobile (hidden), visible on tablet/desktop (md:block) -->
+  <!--
+    Dynamic Classes:
+    - Always 'fixed' to overlay the video
+    - If on landing page AND not scrolled down, it hides (opacity-0, -translate-y-full)
+    - Otherwise, it slides in smoothly
+  -->
   <header
-    class="hidden md:block sticky top-0 z-50 w-full bg-white border-b border-gray-100 shadow-sm"
+    class="hidden md:block fixed top-0 z-50 w-full transition-all duration-500 ease-in-out shadow-sm"
+    :class="[
+      isLandingAndAtTop
+        ? 'opacity-0 -translate-y-full pointer-events-none bg-transparent'
+        : 'opacity-100 translate-y-0 bg-white border-b border-gray-100',
+    ]"
   >
-    <!-- Fixed height (h-16) ensures child elements can properly inherit 100% height -->
-    <div class="max-w-6xl w-full mx-auto px-4 flex items-center justify-between h-16">
+    <div class="max-w-6xl w-full mx-auto px-4 flex items-center justify-between h-20">
       <!-- Brand Logo -->
       <RouterLink to="/" class="flex items-center hover:opacity-90 transition-opacity">
         <img
           src="@/assets/images/prepyourmeal_logo.png"
           alt="PrepYourMeal Logo"
-          class="h-10 w-auto"
+          class="h-14 w-auto"
         />
-        <span class="ml-2 font-bold text-dark-green tracking-wide lowercase">prepyourmeal</span>
+        <BrandName class="ml-2" />
       </RouterLink>
 
       <!-- App Navigation Links (Only visible if the user is authenticated) -->
       <nav v-if="authStore.isAuthenticated" class="flex space-x-8 h-full">
-        <!-- 'inline-flex items-center h-full' perfectly centers the text internally -->
         <RouterLink
           to="/"
           class="inline-flex items-center h-full px-1 text-sm font-medium text-gray-500 hover:text-primary-green transition-colors border-b-2 border-transparent"
           active-class="!text-primary-green border-primary-green"
           exact
         >
-          {{ $t('nav.discover') }}
+          {{ $t('nav.discover', 'Entdecken') }}
         </RouterLink>
         <RouterLink
           to="/dashboard"
           class="inline-flex items-center h-full px-1 text-sm font-medium text-gray-500 hover:text-primary-green transition-colors border-b-2 border-transparent"
           active-class="!text-primary-green border-primary-green"
         >
-          {{ $t('nav.plan') }}
+          {{ $t('nav.plan', 'Planer') }}
         </RouterLink>
         <RouterLink
           to="/shopping"
           class="inline-flex items-center h-full px-1 text-sm font-medium text-gray-500 hover:text-primary-green transition-colors border-b-2 border-transparent"
           active-class="!text-primary-green border-primary-green"
         >
-          {{ $t('nav.shopping') }}
+          {{ $t('nav.shopping', 'Einkauf') }}
         </RouterLink>
         <RouterLink
           to="/profile"
           class="inline-flex items-center h-full px-1 text-sm font-medium text-gray-500 hover:text-primary-green transition-colors border-b-2 border-transparent"
           active-class="!text-primary-green border-primary-green"
         >
-          {{ $t('nav.profile') }}
+          {{ $t('nav.profile', 'Profil') }}
         </RouterLink>
       </nav>
 
-      <!-- Guest Actions (Only visible if the user is NOT authenticated) -->
+      <!-- Guest Actions -->
       <div v-else class="flex items-center space-x-6">
         <RouterLink
           to="/login"
@@ -69,8 +77,32 @@
 </template>
 
 <script setup lang="ts">
-// Import the auth store to check the user's login status
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import BrandName from '@/components/ui/BrandName.vue'
 
 const authStore = useAuthStore()
+const route = useRoute()
+
+// Scroll Logic
+const isScrolled = ref(false)
+
+// Check if we are on the landing page AND haven't scrolled down yet
+const isLandingAndAtTop = computed(() => {
+  return route.name === 'landing' && !isScrolled.value
+})
+
+const handleScroll = () => {
+  // If we scroll down more than 50px, trigger the navbar
+  isScrolled.value = window.scrollY > 50
+}
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
+})
 </script>

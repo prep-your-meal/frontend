@@ -14,7 +14,7 @@
           alt="PrepYourMeal Logo"
           class="w-24 md:w-32 h-auto block drop-shadow-sm mb-2"
         />
-        <span class="text-xl font-bold text-accent-gold tracking-wide">PrepYourMeal</span>
+        <BrandName class="text-xl" />
       </RouterLink>
 
       <!-- Header -->
@@ -131,6 +131,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import api from '../services/api'
+import BrandName from '@/components/ui/BrandName.vue'
 import axios from 'axios'
 
 const email = ref('')
