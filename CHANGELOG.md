@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.13](https://github.com/prep-your-meal/frontend/compare/v0.0.12...v0.0.13) (2026-08-28)
+
+### Bug Fixes
+
+* **router:** configure meta information for landing route ([457cb51](https://github.com/prep-your-meal/frontend/commit/457cb519723ff72c04ac622513fc169d3ce941ed))
 ## [0.0.12](https://github.com/prep-your-meal/frontend/compare/v0.0.11...v0.0.12) (2026-08-28)
 
 ### Bug Fixes
