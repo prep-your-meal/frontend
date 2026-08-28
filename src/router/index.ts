@@ -17,7 +17,7 @@ const router = createRouter({
       name: 'landing',
       // Lazy-loading: The component is only loaded when the user visits the route
       component: LandingView,
-      meta: { requiresAuth: false },
+      meta: { requiresAuth: false, guestOnly: true },
     },
     {
       // The :id parameter will be captured and available in route.params.id
@@ -58,17 +58,12 @@ const router = createRouter({
     },
   ],
   scrollBehavior(to, from, savedPosition) {
-    // Wenn der Nutzer den "Zurück"-Button nutzt, alte Position wiederherstellen
     if (savedPosition) {
       return savedPosition
-    }
-    // Wenn ein Anker (Hash) in der URL ist (z.B. #discover), dorthin scrollen
-    else if (to.hash) {
+    } else if (to.hash) {
       return { el: to.hash, behavior: 'smooth' }
-    }
-    // Ansonsten immer sauber nach oben an den Anfang springen
-    else {
-      return { top: 0, behavior: 'smooth' } // 'smooth' sorgt für ein sanftes Gleiten, 'auto' für einen harten Sprung
+    } else {
+      return { top: 0, behavior: 'smooth' }
     }
   },
 })
