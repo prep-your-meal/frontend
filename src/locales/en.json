@@ -80,7 +80,7 @@
     "title": "Welcome back",
     "subtitle": "Log in to plan your meal preps.",
     "email": "Email Address",
-    "email_placeholder": "mail@@example.com",
+    "email_placeholder": "mail{at}example.com",
     "password": "Password",
     "forgot_password": "Forgot password?",
     "submit": "Log In",

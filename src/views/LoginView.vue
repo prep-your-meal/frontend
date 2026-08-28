@@ -48,7 +48,7 @@
             type="email"
             required
             class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-bg-cream/30 text-dark-green focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-green/50 focus:border-primary-green transition-all"
-            :placeholder="$t('login.email_placeholder', 'mail@example.com')"
+            :placeholder="$t('login.email_placeholder', { at: '@' })"
           />
         </div>
 
