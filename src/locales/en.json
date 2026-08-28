@@ -1,7 +1,12 @@
 {
   "nav": {
     "login": "Login",
-    "dashboard": "Dashboard"
+    "register": "Register",
+    "dashboard": "Dashboard",
+    "discover": "Discover",
+    "plan": "Planner",
+    "shopping": "Shopping",
+    "profile": "Profile"
   },
   "footer": {
     "impressum": "Legal Notice",

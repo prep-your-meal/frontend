@@ -1,7 +1,12 @@
 {
   "nav": {
     "login": "Anmelden",
-    "dashboard": "Übersicht"
+    "register": "Registrieren",
+    "dashboard": "Übersicht",
+    "discover": "Entdecken",
+    "plan": "Planer",
+    "shopping": "Einkauf",
+    "profile": "Profil"
   },
   "footer": {
     "impressum": "Impressum",
