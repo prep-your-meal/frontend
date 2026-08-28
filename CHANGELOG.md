@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.11](https://github.com/prep-your-meal/frontend/compare/v0.0.10...v0.0.11) (2026-08-28)
+
+### Bug Fixes
+
+* **i18n:** escape email placeholders to prevent SyntaxError ([655b258](https://github.com/prep-your-meal/frontend/commit/655b2589bc73dfc00e234d542c3e7235f7746ecc))
 ## [0.0.10](https://github.com/prep-your-meal/frontend/compare/v0.0.9...v0.0.10) (2026-08-28)
 
 ### Features
