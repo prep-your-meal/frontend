@@ -11,6 +11,11 @@ const route = useRoute()
 const showAppNav = computed(() => {
   return !route.meta.guestOnly
 })
+
+const showFooter = computed(() => {
+  const publicPages = ['landing', 'impressum', 'privacy', 'recipe-detail']
+  return publicPages.includes(route.name as string) || !showAppNav.value
+})
 </script>
 
 <template>
@@ -28,8 +33,8 @@ const showAppNav = computed(() => {
     <!-- Global Footer -->
     <!-- We hide the footer on logged-in app views if desired, but keep it on marketing pages. -->
     <footer
-      v-if="!showAppNav || route.name === 'landing'"
-      class="w-full mt-12 py-8 text-center text-sm text-gray-500 border-t border-gray-100"
+      v-if="showFooter"
+      class="w-full mt-4 py-8 text-center text-sm text-gray-500 border-t border-gray-100"
     >
       <div class="flex justify-center space-x-6 mb-2">
         <RouterLink to="/impressum" class="hover:text-primary-green transition-colors duration-200">
