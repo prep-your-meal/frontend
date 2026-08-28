@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.9](https://github.com/prep-your-meal/frontend/compare/v0.0.8...v0.0.9) (2026-08-28)
+
+### Features
+
+* **auth:** wire up axios login, add beta register placeholder, and setup i18n ([6fd03c4](https://github.com/prep-your-meal/frontend/commit/6fd03c47de1500b987cdde64fbd2b0a49d016fd5))
 ## [0.0.8](https://github.com/prep-your-meal/frontend/compare/v0.0.7...v0.0.8) (2026-08-28)
 ## [0.0.7](https://github.com/prep-your-meal/frontend/compare/v0.0.6...v0.0.7) (2026-08-27)
 
