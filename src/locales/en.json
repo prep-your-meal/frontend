@@ -57,6 +57,9 @@
       "title": "Ready for your new kitchen routine?",
       "subtitle": "Start for free now and experience how relaxed and organized meal prepping can be.",
       "button": "Register for free"
+    },
+    "aria": {
+      "scroll_to_vision": "Scroll to vision"
     }
   },
   "recipe_detail": {

@@ -3,15 +3,15 @@
   <div class="flex flex-col w-full min-h-screen">
     <!-- 1. Hero Section (Full Screen) -->
     <section class="relative h-screen w-full flex items-center justify-center overflow-hidden">
-      <!-- Background Video -->
+      <!-- Background Video mit Poster und Media Fragment (#t=90 für Start bei 1:30 Min) -->
       <video
         autoplay
         loop
         muted
         playsinline
+        poster="@/assets/images/video-placeholder.png"
         class="absolute inset-0 w-full h-full object-cover z-0"
       >
-        <!-- Temporary royalty-free cooking video placeholder -->
         <source src="@/assets/videos/Cinematic_slow_motion_tracking_wowm.mp4" type="video/mp4" />
       </video>
 
@@ -23,7 +23,7 @@
         class="relative z-20 bg-white/90 backdrop-blur-md px-10 py-12 rounded-3xl shadow-2xl text-center max-w-lg mx-4 flex flex-col items-center"
       >
         <img
-          src="@/assets/images/prepyourmeal_logo.png"
+          src="@/assets/images/prepyourmeal_logo.svg"
           alt="PrepYourMeal Logo"
           class="h-28 md:h-32 w-auto mb-4 drop-shadow-sm"
         />
@@ -43,10 +43,11 @@
         </div>
       </div>
 
-      <!-- Scroll Down Indicator (Bouncing Arrow) -->
+      <!-- Scroll Down Indicator (Bouncing Arrow) mit aria-label für Accessibility -->
       <a
         href="#vision"
         @click.prevent="scrollToVision"
+        :aria-label="$t('landing.aria.scroll_to_vision')"
         class="absolute bottom-8 z-20 text-white animate-bounce cursor-pointer hover:text-primary-green transition-colors"
       >
         <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -124,8 +125,13 @@
         <p>{{ $t('landing.loading') }}</p>
       </div>
 
-      <!-- API Recipe Grid with Fade Transition -->
-      <div v-else class="relative min-h-[400px]">
+      <!-- API Recipe Grid with Fade Transition & Pause on Hover -->
+      <div
+        v-else
+        class="relative min-h-[400px]"
+        @mouseenter="pauseRotation"
+        @mouseleave="startRotation"
+      >
         <transition name="fade" mode="out-in">
           <div
             :key="currentIndex"
@@ -315,6 +321,7 @@
         </div>
       </div>
     </section>
+
     <!-- 5. Final Bottom CTA Banner -->
     <section class="w-full bg-dark-green py-24 px-4 relative overflow-hidden">
       <div
@@ -365,9 +372,8 @@ const displayedRecipes = ref<Recipe[]>([])
 const isLoading = ref<boolean>(true)
 const error = ref<string | null>(null)
 
-// Steuerung für die Rotation
 const currentIndex = ref(0)
-let rotationInterval: ReturnType<typeof setInterval>
+let rotationInterval: ReturnType<typeof setInterval> | null = null
 
 const scrollToVision = () => {
   const element = document.getElementById('vision')
@@ -387,6 +393,19 @@ const rotateRecipes = () => {
   }
 }
 
+const startRotation = () => {
+  if (!rotationInterval) {
+    rotationInterval = setInterval(rotateRecipes, 8000)
+  }
+}
+
+const pauseRotation = () => {
+  if (rotationInterval) {
+    clearInterval(rotationInterval)
+    rotationInterval = null
+  }
+}
+
 onMounted(async () => {
   document.title = 'PrepYourMeal 🥗'
   try {
@@ -395,8 +414,7 @@ onMounted(async () => {
     allRecipes.value = response.data.data || response.data
 
     updateDisplayedRecipes()
-
-    rotationInterval = setInterval(rotateRecipes, 8000)
+    startRotation()
   } catch (err) {
     console.error('Failed to fetch recipes:', err)
     error.value = 'Could not load recipes at this time.'
@@ -406,7 +424,7 @@ onMounted(async () => {
 })
 
 onUnmounted(() => {
-  if (rotationInterval) clearInterval(rotationInterval)
+  pauseRotation()
 })
 </script>
 <style scoped>

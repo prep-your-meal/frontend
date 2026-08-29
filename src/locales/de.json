@@ -57,6 +57,9 @@
       "title": "Bereit für deinen neuen Küchen-Rhythmus?",
       "subtitle": "Starte jetzt kostenlos und erlebe, wie entspannt und übersichtlich Meal Prepping sein kann.",
       "button": "Kostenlos registrieren"
+    },
+    "aria": {
+      "scroll_to_vision": "Nach unten zur Vision scrollen"
     }
   },
   "recipe_detail": {

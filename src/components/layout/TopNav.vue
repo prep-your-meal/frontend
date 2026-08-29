@@ -1,30 +1,22 @@
 <template>
-  <!--
-    Dynamic Classes:
-    - Always 'fixed' to overlay the video
-    - If on landing page AND not scrolled down, it hides (opacity-0, -translate-y-full)
-    - Otherwise, it slides in smoothly
-  -->
   <header
-    class="hidden md:block fixed top-0 z-50 w-full transition-all duration-500 ease-in-out shadow-sm"
+    class="hidden md:block fixed top-0 left-0 w-full z-[100] transition-all duration-500 ease-in-out"
     :class="[
       isLandingAndAtTop
-        ? 'opacity-0 -translate-y-full pointer-events-none bg-transparent'
-        : 'opacity-100 translate-y-0 bg-white border-b border-gray-100',
+        ? 'opacity-0 -translate-y-full pointer-events-none bg-transparent shadow-none'
+        : 'opacity-100 translate-y-0 bg-white border-b border-gray-100 shadow-sm',
     ]"
   >
     <div class="max-w-6xl w-full mx-auto px-4 flex items-center justify-between h-20">
-      <!-- Brand Logo -->
       <RouterLink to="/" class="flex items-center hover:opacity-90 transition-opacity">
         <img
-          src="@/assets/images/prepyourmeal_logo.png"
+          src="@/assets/images/prepyourmeal_logo.svg"
           alt="PrepYourMeal Logo"
-          class="h-14 w-auto"
+          class="h-10 w-auto"
         />
         <BrandName class="ml-2" />
       </RouterLink>
 
-      <!-- App Navigation Links (Only visible if the user is authenticated) -->
       <nav v-if="authStore.isAuthenticated" class="flex space-x-8 h-full">
         <RouterLink
           to="/"
@@ -57,7 +49,6 @@
         </RouterLink>
       </nav>
 
-      <!-- Guest Actions -->
       <div v-else class="flex items-center space-x-6">
         <RouterLink
           to="/login"
@@ -85,21 +76,20 @@ import BrandName from '@/components/ui/BrandName.vue'
 const authStore = useAuthStore()
 const route = useRoute()
 
-// Scroll Logic
 const isScrolled = ref(false)
 
-// Check if we are on the landing page AND haven't scrolled down yet
 const isLandingAndAtTop = computed(() => {
   return route.name === 'landing' && !isScrolled.value
 })
 
 const handleScroll = () => {
-  // If we scroll down more than 50px, trigger the navbar
-  isScrolled.value = window.scrollY > 50
+  isScrolled.value = window.scrollY > 50 || document.documentElement.scrollTop > 50
 }
 
 onMounted(() => {
-  window.addEventListener('scroll', handleScroll)
+  handleScroll()
+
+  window.addEventListener('scroll', handleScroll, { passive: true })
 })
 
 onUnmounted(() => {

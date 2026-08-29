@@ -6,35 +6,42 @@ import BottomNav from '@/components/layout/BottomNav.vue'
 
 const route = useRoute()
 
-// Computed property to decide when to show the main app navigation.
-// We hide it on guestOnly pages (like login/register) so the user focuses on the form.
-const showAppNav = computed(() => {
-  return !route.meta.guestOnly
+// Central definition of public pages (Marketing/Legal)
+const publicPages = ['landing', 'impressum', 'privacy', 'recipe-detail']
+
+const showTopNav = computed(() => {
+  const hiddenNavPages = ['login', 'register']
+  return !hiddenNavPages.includes(route.name as string)
 })
 
+// 2. BottomNav (PWA): ONLY displayed in internal app views!
+// The mobile app bar must not appear on the landing page or legal pages.
+const showBottomNav = computed(() => {
+  return !route.meta.guestOnly && !publicPages.includes(route.name as string)
+})
+
+// 3. Footer: Only displayed on public pages or auth pages
 const showFooter = computed(() => {
-  const publicPages = ['landing', 'impressum', 'privacy', 'recipe-detail']
-  return publicPages.includes(route.name as string) || !showAppNav.value
+  return publicPages.includes(route.name as string) || route.meta.guestOnly
 })
 </script>
 
 <template>
   <div class="min-h-screen flex flex-col bg-bg-cream">
-    <!-- Desktop Navigation (hidden on mobile) -->
-    <TopNav v-if="showAppNav" />
-
+    <!-- Desktop Navigation -->
+    <TopNav v-if="showTopNav" />
     <!-- Main Content Area -->
-    <!-- pb-20 adds bottom padding on mobile so the content isn't hidden behind the fixed BottomNav -->
-    <main class="flex-grow flex flex-col w-full relative" :class="{ 'pb-20 md:pb-0': showAppNav }">
-      <!-- The dynamic placeholder for views (LandingView, LoginView, DashboardView, etc.) -->
+    <main
+      class="flex-grow flex flex-col w-full relative"
+      :class="{ 'pb-20 md:pb-0': showBottomNav }"
+    >
       <RouterView />
     </main>
 
     <!-- Global Footer -->
-    <!-- We hide the footer on logged-in app views if desired, but keep it on marketing pages. -->
     <footer
       v-if="showFooter"
-      class="w-full mt-auto py-8 text-center text-sm text-gray-500 border-t border-gray-100"
+      class="w-full mt-auto py-6 text-center text-sm text-gray-500 border-t border-gray-100 bg-white/40"
     >
       <div class="flex justify-center space-x-6 mb-2">
         <RouterLink to="/impressum" class="hover:text-primary-green transition-colors duration-200">
@@ -47,9 +54,7 @@ const showFooter = computed(() => {
       <p>&copy; {{ new Date().getFullYear() }} PrepYourMeal. {{ $t('footer.rights') }}</p>
     </footer>
 
-    <!-- Mobile Navigation (hidden on desktop) -->
-    <BottomNav v-if="showAppNav" />
+    <!-- Mobile Navigation (PWA Tab-Bar) -->
+    <BottomNav v-if="showBottomNav" />
   </div>
 </template>
-
-<style scoped></style>
