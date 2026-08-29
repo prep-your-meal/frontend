@@ -4,11 +4,11 @@
     class="flex md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 z-50 pb-[env(safe-area-inset-bottom)]"
   >
     <div class="flex justify-around items-center h-16 w-full px-2">
+      <!-- 1. Discover (Route geändert auf /recipes) -->
       <RouterLink
-        to="/"
+        to="/recipes"
         class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-primary-green transition-colors"
         active-class="text-primary-green font-medium"
-        exact
       >
         <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
@@ -21,6 +21,7 @@
         <span class="text-[10px] uppercase tracking-wider">{{ $t('nav.discover') }}</span>
       </RouterLink>
 
+      <!-- 2. Planner -->
       <RouterLink
         to="/dashboard"
         class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-primary-green transition-colors"
@@ -37,6 +38,7 @@
         <span class="text-[10px] uppercase tracking-wider">{{ $t('nav.plan') }}</span>
       </RouterLink>
 
+      <!-- 3. Shopping list -->
       <RouterLink
         to="/shopping"
         class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-primary-green transition-colors"
@@ -53,6 +55,7 @@
         <span class="text-[10px] uppercase tracking-wider">{{ $t('nav.shopping') }}</span>
       </RouterLink>
 
+      <!-- 4. Profile -->
       <RouterLink
         to="/profile"
         class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-primary-green transition-colors"
