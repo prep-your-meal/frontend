@@ -6,23 +6,28 @@ import BottomNav from '@/components/layout/BottomNav.vue'
 
 const route = useRoute()
 
-// Central definition of public pages (Marketing/Legal)
-const publicPages = ['landing', 'impressum', 'privacy', 'recipe-detail']
-
+// 1. TopNav: Visible everywhere except on pure auth pages
 const showTopNav = computed(() => {
   const hiddenNavPages = ['login', 'register']
   return !hiddenNavPages.includes(route.name as string)
 })
 
-// 2. BottomNav (PWA): ONLY displayed in internal app views!
-// The mobile app bar must not appear on the landing page or legal pages.
+// 2. BottomNav (PWA): Visible on mobile except for landing and auth pages
 const showBottomNav = computed(() => {
-  return !route.meta.guestOnly && !publicPages.includes(route.name as string)
+  const hiddenBottomNavPages = ['landing', 'login', 'register']
+  return !hiddenBottomNavPages.includes(route.name as string)
 })
 
-// 3. Footer: Only displayed on public pages or auth pages
+// 3. Footer: Rendered everywhere in the DOM.
 const showFooter = computed(() => {
-  return publicPages.includes(route.name as string) || route.meta.guestOnly
+  return true
+})
+
+// 4. Mobile Footer Display logic:
+// Show the footer on mobile ONLY on the landing page.
+// For all other pages (impressum, privacy, auth, app views), hide it on mobile to favor the PWA BottomNav.
+const alwaysShowFooterOnMobile = computed(() => {
+  return route.name === 'landing'
 })
 </script>
 
@@ -30,6 +35,7 @@ const showFooter = computed(() => {
   <div class="min-h-screen flex flex-col bg-bg-cream">
     <!-- Desktop Navigation -->
     <TopNav v-if="showTopNav" />
+
     <!-- Main Content Area -->
     <main
       class="flex-grow flex flex-col w-full relative"
@@ -41,7 +47,8 @@ const showFooter = computed(() => {
     <!-- Global Footer -->
     <footer
       v-if="showFooter"
-      class="w-full mt-auto py-6 text-center text-sm text-gray-500 border-t border-gray-100 bg-white/40"
+      class="w-full mt-auto py-6 text-center text-sm text-gray-500 border-t border-gray-100"
+      :class="!alwaysShowFooterOnMobile ? 'hidden md:block' : ''"
     >
       <div class="flex justify-center space-x-6 mb-2">
         <RouterLink to="/impressum" class="hover:text-primary-green transition-colors duration-200">
