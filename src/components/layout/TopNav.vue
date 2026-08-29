@@ -8,6 +8,7 @@
     ]"
   >
     <div class="max-w-6xl w-full mx-auto px-4 flex items-center justify-between h-20">
+      <!-- Left side: Brand Logo -->
       <RouterLink to="/" class="flex items-center hover:opacity-90 transition-opacity">
         <img
           src="@/assets/images/prepyourmeal_logo.svg"
@@ -17,51 +18,63 @@
         <BrandName class="ml-2" />
       </RouterLink>
 
-      <nav v-if="authStore.isAuthenticated" class="flex space-x-8 h-full">
-        <RouterLink
-          to="/"
-          class="inline-flex items-center h-full px-1 text-sm font-medium text-gray-500 hover:text-primary-green transition-colors border-b-2 border-transparent"
-          active-class="!text-primary-green border-primary-green"
-          exact
-        >
-          {{ $t('nav.discover', 'Entdecken') }}
-        </RouterLink>
-        <RouterLink
-          to="/dashboard"
-          class="inline-flex items-center h-full px-1 text-sm font-medium text-gray-500 hover:text-primary-green transition-colors border-b-2 border-transparent"
-          active-class="!text-primary-green border-primary-green"
-        >
-          {{ $t('nav.plan', 'Planer') }}
-        </RouterLink>
-        <RouterLink
-          to="/shopping"
-          class="inline-flex items-center h-full px-1 text-sm font-medium text-gray-500 hover:text-primary-green transition-colors border-b-2 border-transparent"
-          active-class="!text-primary-green border-primary-green"
-        >
-          {{ $t('nav.shopping', 'Einkauf') }}
-        </RouterLink>
-        <RouterLink
-          to="/profile"
-          class="inline-flex items-center h-full px-1 text-sm font-medium text-gray-500 hover:text-primary-green transition-colors border-b-2 border-transparent"
-          active-class="!text-primary-green border-primary-green"
-        >
-          {{ $t('nav.profile', 'Profil') }}
-        </RouterLink>
-      </nav>
+      <!-- Right side: Navigation & Auth Actions -->
+      <div class="flex items-center h-full">
+        <!-- App Navigation Links (Mixed visibility) -->
+        <nav class="flex space-x-8 h-full">
+          <!-- 1. Discover -->
+          <RouterLink
+            to="/recipes"
+            class="inline-flex items-center h-full px-1 text-sm font-medium text-gray-500 hover:text-primary-green transition-colors border-b-2 border-transparent"
+            active-class="!text-primary-green border-primary-green"
+          >
+            {{ $t('nav.discover') }}
+          </RouterLink>
 
-      <div v-else class="flex items-center space-x-6">
-        <RouterLink
-          to="/login"
-          class="text-sm font-medium text-dark-green hover:text-primary-green transition-colors"
+          <!-- 2. Auth-Only Links (Planner, Shopping, Profile) -->
+          <template v-if="authStore.isAuthenticated">
+            <RouterLink
+              to="/dashboard"
+              class="inline-flex items-center h-full px-1 text-sm font-medium text-gray-500 hover:text-primary-green transition-colors border-b-2 border-transparent"
+              active-class="!text-primary-green border-primary-green"
+            >
+              {{ $t('nav.plan', 'Planer') }}
+            </RouterLink>
+            <RouterLink
+              to="/shopping"
+              class="inline-flex items-center h-full px-1 text-sm font-medium text-gray-500 hover:text-primary-green transition-colors border-b-2 border-transparent"
+              active-class="!text-primary-green border-primary-green"
+            >
+              {{ $t('nav.shopping', 'Einkauf') }}
+            </RouterLink>
+            <RouterLink
+              to="/profile"
+              class="inline-flex items-center h-full px-1 text-sm font-medium text-gray-500 hover:text-primary-green transition-colors border-b-2 border-transparent"
+              active-class="!text-primary-green border-primary-green"
+            >
+              {{ $t('nav.profile', 'Profil') }}
+            </RouterLink>
+          </template>
+        </nav>
+
+        <!-- Guest Actions (Login/Register) -->
+        <div
+          v-if="!authStore.isAuthenticated"
+          class="flex items-center space-x-6 ml-8 pl-8 border-l border-gray-100 h-8"
         >
-          {{ $t('nav.login', 'Login') }}
-        </RouterLink>
-        <RouterLink
-          to="/register"
-          class="text-sm font-bold text-white bg-primary-green px-5 py-2.5 rounded-xl hover:bg-accent-gold transition-colors shadow-sm"
-        >
-          {{ $t('nav.register', 'Registrieren') }}
-        </RouterLink>
+          <RouterLink
+            to="/login"
+            class="text-sm font-medium text-dark-green hover:text-primary-green transition-colors"
+          >
+            {{ $t('nav.login', 'Login') }}
+          </RouterLink>
+          <RouterLink
+            to="/register"
+            class="text-sm font-bold text-white bg-primary-green px-5 py-2.5 rounded-xl hover:bg-accent-gold transition-colors shadow-sm"
+          >
+            {{ $t('nav.register', 'Registrieren') }}
+          </RouterLink>
+        </div>
       </div>
     </div>
   </header>
@@ -88,7 +101,6 @@ const handleScroll = () => {
 
 onMounted(() => {
   handleScroll()
-
   window.addEventListener('scroll', handleScroll, { passive: true })
 })
 
