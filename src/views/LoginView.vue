@@ -5,17 +5,34 @@
       class="w-full max-w-md bg-white px-8 py-10 rounded-3xl shadow-sm border-t-[8px] border-primary-green relative"
     >
       <!-- Logo & name as backlink to home -->
-      <RouterLink
-        to="/"
-        class="flex flex-col items-center mb-8 hover:opacity-90 transition-opacity"
-      >
-        <img
-          src="@/assets/images/prepyourmeal_logo.svg"
-          alt="PrepYourMeal Logo"
-          class="w-24 md:w-32 h-auto block drop-shadow-sm mb-2"
-        />
-        <BrandName class="text-xl" />
-      </RouterLink>
+      <!-- Unified Header with integrated Back Button -->
+      <div class="relative flex justify-center items-center mb-8 z-10">
+        <!-- Native-style Back Button -->
+        <button
+          @click="goBack"
+          class="absolute left-0 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 bg-bg-cream/50 text-dark-green rounded-full border border-gray-100 shadow-sm hover:bg-primary-green hover:text-white hover:border-primary-green transition-all"
+          :aria-label="$t('login.back', 'Zurück')"
+        >
+          <svg class="w-6 h-6 pr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+        </button>
+
+        <!-- Centered Logo & Brand -->
+        <div class="flex flex-col items-center">
+          <img
+            src="@/assets/images/prepyourmeal_logo.svg"
+            alt="PrepYourMeal Logo"
+            class="h-16 w-auto drop-shadow-sm mb-2"
+          />
+          <BrandName class="text-xl text-primary-green" />
+        </div>
+      </div>
 
       <!-- Header -->
       <div class="text-center mb-8">
@@ -120,6 +137,14 @@ const password = ref('')
 const isLoading = ref(false)
 const errorMessage = ref('')
 const router = useRouter()
+
+const goBack = () => {
+  if (window.history.length > 2) {
+    router.back()
+  } else {
+    router.push('/')
+  }
+}
 
 const handleLogin = async () => {
   isLoading.value = true
