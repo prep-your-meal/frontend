@@ -102,12 +102,11 @@
       </div>
 
       <!-- Loading State -->
-      <div
+      <LoadingState
         v-if="isLoading"
-        class="text-center p-12 bg-white rounded-2xl text-gray-500 shadow-sm border border-gray-100"
-      >
-        <p>{{ $t('landing.loading') }}</p>
-      </div>
+        :text="$t('landing.loading')"
+        containerClass="py-12 bg-white rounded-2xl shadow-sm border border-gray-100"
+      />
 
       <!-- Error State -->
       <div
@@ -355,6 +354,7 @@ import { RouterLink } from 'vue-router'
 import api from '../services/api'
 import { getCategoryBadgeClass } from '../utils/theme'
 import BrandName from '@/components/ui/BrandName.vue'
+import LoadingState from '@/components/ui/LoadingState.vue'
 
 interface Recipe {
   id?: number
