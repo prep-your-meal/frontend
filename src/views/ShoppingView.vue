@@ -32,7 +32,6 @@
         v-else
         class="flex-grow flex flex-col items-center justify-center text-center max-w-lg mx-auto py-12"
       >
-        <!-- Icon/Illustration (in Akzent-Gold) -->
         <div
           class="w-24 h-24 bg-accent-gold/10 text-accent-gold rounded-full flex items-center justify-center mb-8"
         >
