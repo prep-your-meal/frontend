@@ -1,10 +1,15 @@
 <template>
-  <div class="max-w-5xl mx-auto px-4 py-8 sm:py-12 w-full flex-grow flex flex-col justify-between">
+  <div
+    class="max-w-5xl mx-auto px-4 py-4 md:py-8 sm:py-12 w-full flex-grow flex flex-col justify-between"
+  >
     <div>
-      <!-- Back Navigation -->
+      <!-- Mobile Branding Component with integrated back button -->
+      <MobileHeader :showBack="true" />
+
+      <!-- Back Navigation (Desktop only) -->
       <button
         @click="goBack"
-        class="mb-6 flex items-center text-primary-green hover:text-dark-green transition-colors font-medium cursor-pointer"
+        class="hidden md:flex mb-6 items-center text-primary-green hover:text-dark-green transition-colors font-medium cursor-pointer"
       >
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
@@ -220,6 +225,7 @@ import { useI18n } from 'vue-i18n'
 import { getCategoryBadgeClass } from '../utils/theme'
 import api from '../services/api'
 import LoadingState from '@/components/ui/LoadingState.vue'
+import MobileHeader from '@/components/ui/MobileHeader.vue'
 import axios from 'axios'
 import { marked } from 'marked'
 import DOMPurify from 'dompurify'
