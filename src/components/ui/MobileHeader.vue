@@ -1,12 +1,14 @@
 <template>
-  <div class="md:hidden flex flex-col items-center justify-center w-full pb-6 relative">
+  <div class="md:hidden flex flex-col items-center justify-center w-full pb-6 pt-1 relative">
+    <!-- PWA Native-Style Back Button (Top-Left) -->
+    <!-- UI Polish: Removed vertical centering. It now sits cleanly in the top left corner. -->
     <button
       v-if="showBack"
       @click="handleBack"
-      class="absolute left-0 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary-green p-2 transition-colors"
+      class="absolute left-0 top-0 flex items-center justify-center w-10 h-10 bg-white text-dark-green rounded-full border border-gray-100 shadow-sm active:scale-95 transition-all z-20"
       aria-label="Zurück"
     >
-      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg class="w-6 h-6 pr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path
           stroke-linecap="round"
           stroke-linejoin="round"
@@ -16,14 +18,14 @@
       </svg>
     </button>
 
-    <div class="flex flex-col items-center justify-center gap-1 mt-2">
-      <!-- UI Polish: Increased logo size from h-8 to h-12 for better brand visibility -->
+    <!-- Centered Brand -->
+    <!-- UI Polish: mt-4 pushes the logo down slightly so it doesn't collide with the back button's horizontal axis -->
+    <div class="flex flex-col items-center justify-center gap-2 mt-4">
       <img
         src="@/assets/images/prepyourmeal_logo.svg"
         alt="PrepYourMeal Logo"
-        class="h-12 w-auto drop-shadow-sm"
+        class="w-20 h-20 object-contain drop-shadow-sm"
       />
-      <!-- UI Polish: Increased brand name size to match new logo scale -->
       <BrandName class="text-2xl text-dark-green" />
     </div>
   </div>

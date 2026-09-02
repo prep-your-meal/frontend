@@ -1,50 +1,37 @@
 <template>
-  <!-- UI Polish: Adjusted top padding to match RecipesView structure -->
-  <div
-    class="max-w-5xl mx-auto px-4 pt-4 pb-8 md:pt-8 md:pb-12 w-full flex-grow flex flex-col justify-between"
-  >
-    <div class="flex flex-col">
-      <!-- Header Area (Consistently matched to RecipesView) -->
-      <!-- UI Polish: Wrapped navigation in a white box to match the clean aesthetic of other views -->
-      <div
-        class="bg-white px-6 sm:px-10 pt-6 md:pt-10 pb-4 border-t border-x border-gray-100 rounded-t-3xl z-10 relative"
-      >
-        <!-- Mobile Branding Component with integrated back button -->
-        <MobileHeader :showBack="true" />
+  <div class="max-w-5xl mx-auto px-4 pb-8 sm:pb-12 w-full flex-grow flex flex-col">
+    <!-- 1. Spacer (Clears the PWA Notch / iOS Status Bar) -->
+    <div class="w-full h-8 md:h-16 shrink-0"></div>
 
-        <!-- Back Navigation (Desktop only) -->
-        <button
-          @click="goBack"
-          class="hidden md:flex mb-2 items-center text-primary-green hover:text-dark-green transition-colors font-medium cursor-pointer"
-        >
-          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M10 19l-7-7m0 0l7-7m-7 7h18"
-            ></path>
-          </svg>
-          {{ $t('recipe_detail.back_button') }}
-        </button>
+    <div class="flex flex-col">
+      <!-- Header Area -->
+      <!-- UI Polish: Removed the desktop back button. This wrapper now only exists for the MobileHeader. -->
+      <div
+        class="md:hidden bg-white px-4 pt-8 pb-2 border-t border-x border-gray-100 rounded-t-3xl z-10 relative"
+      >
+        <MobileHeader :showBack="true" />
       </div>
 
       <!-- Loading State -->
-      <LoadingState v-if="isLoading" containerClass="py-20" spinnerSize="h-8 w-8" />
+      <LoadingState
+        v-if="isLoading"
+        containerClass="py-20 bg-white md:rounded-3xl rounded-b-3xl border-x border-b md:border-t border-t-0 border-gray-100 shadow-sm"
+        spinnerSize="h-8 w-8"
+      />
 
       <!-- Error State -->
       <div
         v-else-if="error"
-        class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded shadow-sm"
+        class="bg-red-50 border-x border-b md:border-t border-t-0 border-red-200 text-red-700 p-8 md:rounded-3xl rounded-b-3xl shadow-sm text-center"
       >
-        <p class="font-bold">{{ $t('recipe_detail.error_title') }}</p>
+        <p class="font-bold text-xl mb-2">{{ $t('recipe_detail.error_title') }}</p>
         <p>{{ error }}</p>
       </div>
 
       <!-- Recipe Content -->
       <div
         v-else-if="recipe"
-        class="bg-white rounded-b-3xl shadow-sm border-x border-b border-t-0 border-gray-100 overflow-hidden"
+        class="bg-white md:rounded-3xl rounded-b-3xl shadow-sm border-x border-b md:border-t border-t-0 border-gray-100 overflow-hidden"
       >
         <!-- Top Section: Image & Basic Info -->
         <div class="flex flex-col md:flex-row">
@@ -69,10 +56,11 @@
             <!-- Title & Description -->
             <h1 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">{{ recipe.title }}</h1>
             <p class="text-gray-600 mb-6 leading-relaxed">{{ recipe.description }}</p>
+
             <!-- Category Badges -->
             <div
               v-if="recipe.categories && recipe.categories.length > 0"
-              class="flex flex-wrap gap-2 mb-3"
+              class="flex flex-wrap gap-2 mb-8"
             >
               <span
                 v-for="category in recipe.categories"
@@ -87,10 +75,11 @@
             </div>
 
             <!-- Times Section -->
-            <div class="flex flex-wrap items-center gap-6 mb-8 text-gray-600">
+            <div
+              class="flex flex-wrap items-center md:justify-center gap-6 mb-8 text-gray-600 border-y border-gray-100 py-6"
+            >
               <!-- Prep Time -->
               <div v-if="recipe.prep_time" class="flex items-center">
-                <!-- Icon in primary-green -->
                 <svg
                   class="w-5 h-5 mr-2 text-primary-green"
                   fill="none"
@@ -111,7 +100,6 @@
 
               <!-- Cook Time -->
               <div v-if="recipe.cook_time" class="flex items-center">
-                <!-- Flammen-Icon in secondary-rust -->
                 <svg
                   class="w-5 h-5 mr-2 text-secondary-rust"
                   fill="none"
@@ -123,12 +111,6 @@
                     stroke-linejoin="round"
                     stroke-width="2"
                     d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"
-                  ></path>
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z"
                   ></path>
                 </svg>
                 <span class="text-sm font-medium">{{
@@ -199,7 +181,6 @@
                 class="flex justify-between items-center py-3 border-b border-gray-200 last:border-0"
               >
                 <span class="text-gray-600 pr-4 leading-relaxed">{{ item.name }}</span>
-
                 <span
                   class="shrink-0 whitespace-nowrap font-medium text-dark-green bg-white px-3 py-1 rounded-md shadow-sm border border-gray-100 text-sm"
                 >
@@ -227,7 +208,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { getCategoryBadgeClass } from '../utils/theme'
 import api from '../services/api'
@@ -237,7 +218,6 @@ import axios from 'axios'
 import { marked } from 'marked'
 import DOMPurify from 'dompurify'
 
-// --- Type Definitions ---
 interface RecipeIngredient {
   name: string
   amount: number | string
@@ -269,37 +249,26 @@ interface Recipe {
   instructions?: string
 }
 
-// --- Router & i18n Setup ---
 const route = useRoute()
-const router = useRouter()
 const { t } = useI18n()
 
-// --- State Management ---
 const recipe = ref<Recipe | null>(null)
 const isLoading = ref<boolean>(false)
 const error = ref<string | null>(null)
 
-// Store the original page title to restore it later
 const originalPageTitle = document.title
-
-// --- Methods & Helpers ---
-const goBack = () => {
-  router.back()
-}
 
 const formatAmount = (amount: number | string) => {
   if (!amount) return ''
   return Number(amount)
 }
 
-// --- Computed Properties ---
 const parsedInstructionsHtml = computed(() => {
   if (!recipe.value?.instructions) return ''
   const rawHtml = marked.parse(recipe.value.instructions) as string
   return DOMPurify.sanitize(rawHtml)
 })
 
-// --- Lifecycle Hooks ---
 onMounted(async () => {
   const recipeId = route.params.id
 
