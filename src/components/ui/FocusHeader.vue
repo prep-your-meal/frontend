@@ -13,7 +13,7 @@
     <!-- Centered Logo & Brand -->
     <button
       @click="goBack"
-      class="flex flex-col items-center hover:opacity-90 transition-opacity focus:outline-none"
+      class="flex flex-col items-center hover:opacity-90 hover:scale-105 transition-all duration-300 focus:outline-none cursor-pointer"
     >
       <img
         src="@/assets/images/prepyourmeal_logo.svg"
