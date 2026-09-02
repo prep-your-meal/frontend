@@ -1,11 +1,10 @@
 <template>
-  <div class="max-w-5xl mx-auto px-4 pb-8 sm:pb-12 w-full flex-grow flex flex-col">
-    <!-- 1. Spacer (Clears the PWA Notch / iOS Status Bar) -->
-    <div class="w-full h-8 md:h-16 shrink-0"></div>
+  <div class="max-w-6xl w-full mx-auto px-4 pb-8 sm:pb-12 flex-grow flex flex-col">
+    <!-- 1. Spacer (Clears the PWA Notch / iOS Status Bar & Desktop TopNav) -->
+    <div class="w-full h-4 md:h-28 shrink-0"></div>
 
     <div class="flex flex-col">
       <!-- Header Area -->
-
       <div
         class="md:hidden bg-white px-4 pt-3 pb-2 border-t border-x border-gray-100 rounded-t-3xl z-10 relative"
       >
