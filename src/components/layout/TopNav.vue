@@ -7,15 +7,15 @@
         : 'opacity-100 translate-y-0 bg-white border-b border-gray-100 shadow-sm',
     ]"
   >
-    <div class="max-w-6xl w-full mx-auto px-4 flex items-center justify-between h-20">
+    <div class="max-w-6xl w-full mx-auto px-4 flex items-center justify-between h-24">
       <!-- Left side: Brand Logo -->
       <RouterLink to="/" class="flex items-center hover:opacity-90 transition-opacity">
         <img
           src="@/assets/images/prepyourmeal_logo.svg"
           alt="PrepYourMeal Logo"
-          class="h-10 w-auto"
+          class="h-20 w-auto drop-shadow-sm"
         />
-        <BrandName class="ml-2" />
+        <BrandName class="ml-4 text-2xl" />
       </RouterLink>
 
       <!-- Right side: Navigation & Auth Actions -->
