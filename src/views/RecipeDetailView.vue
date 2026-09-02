@@ -1,26 +1,33 @@
 <template>
+  <!-- UI Polish: Adjusted top padding to match RecipesView structure -->
   <div
-    class="max-w-5xl mx-auto px-4 py-4 md:py-8 sm:py-12 w-full flex-grow flex flex-col justify-between"
+    class="max-w-5xl mx-auto px-4 pt-4 pb-8 md:pt-8 md:pb-12 w-full flex-grow flex flex-col justify-between"
   >
-    <div>
-      <!-- Mobile Branding Component with integrated back button -->
-      <MobileHeader :showBack="true" />
-
-      <!-- Back Navigation (Desktop only) -->
-      <button
-        @click="goBack"
-        class="hidden md:flex mb-6 items-center text-primary-green hover:text-dark-green transition-colors font-medium cursor-pointer"
+    <div class="flex flex-col">
+      <!-- Header Area (Consistently matched to RecipesView) -->
+      <!-- UI Polish: Wrapped navigation in a white box to match the clean aesthetic of other views -->
+      <div
+        class="bg-white px-6 sm:px-10 pt-6 md:pt-10 pb-4 border-t border-x border-gray-100 rounded-t-3xl z-10 relative"
       >
-        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M10 19l-7-7m0 0l7-7m-7 7h18"
-          ></path>
-        </svg>
-        {{ $t('recipe_detail.back_button') }}
-      </button>
+        <!-- Mobile Branding Component with integrated back button -->
+        <MobileHeader :showBack="true" />
+
+        <!-- Back Navigation (Desktop only) -->
+        <button
+          @click="goBack"
+          class="hidden md:flex mb-2 items-center text-primary-green hover:text-dark-green transition-colors font-medium cursor-pointer"
+        >
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M10 19l-7-7m0 0l7-7m-7 7h18"
+            ></path>
+          </svg>
+          {{ $t('recipe_detail.back_button') }}
+        </button>
+      </div>
 
       <!-- Loading State -->
       <LoadingState v-if="isLoading" containerClass="py-20" spinnerSize="h-8 w-8" />
@@ -37,7 +44,7 @@
       <!-- Recipe Content -->
       <div
         v-else-if="recipe"
-        class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
+        class="bg-white rounded-b-3xl shadow-sm border-x border-b border-t-0 border-gray-100 overflow-hidden"
       >
         <!-- Top Section: Image & Basic Info -->
         <div class="flex flex-col md:flex-row">

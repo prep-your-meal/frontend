@@ -1,13 +1,12 @@
 <template>
   <div class="md:hidden flex flex-col items-center justify-center w-full pb-6 relative">
-    <!-- Optional: Wenn eine Zurück-Aktion gewünscht ist (wie in der Detailansicht) -->
     <button
       v-if="showBack"
       @click="handleBack"
-      class="absolute left-0 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary-green p-2"
+      class="absolute left-0 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary-green p-2 transition-colors"
       aria-label="Zurück"
     >
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path
           stroke-linecap="round"
           stroke-linejoin="round"
@@ -17,13 +16,15 @@
       </svg>
     </button>
 
-    <div class="flex items-center justify-center">
+    <div class="flex flex-col items-center justify-center gap-1 mt-2">
+      <!-- UI Polish: Increased logo size from h-8 to h-12 for better brand visibility -->
       <img
         src="@/assets/images/prepyourmeal_logo.svg"
         alt="PrepYourMeal Logo"
-        class="h-8 w-auto mr-2 drop-shadow-sm"
+        class="h-12 w-auto drop-shadow-sm"
       />
-      <BrandName class="text-xl text-dark-green" />
+      <!-- UI Polish: Increased brand name size to match new logo scale -->
+      <BrandName class="text-2xl text-dark-green" />
     </div>
   </div>
 </template>
