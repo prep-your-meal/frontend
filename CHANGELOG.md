@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.14](https://github.com/prep-your-meal/frontend/compare/v0.0.13...v0.0.14) (2026-09-02)
+
+### Features
+
+* **recipes:** externalize filter strings to language files ([324ff47](https://github.com/prep-your-meal/frontend/commit/324ff47e97311969ede63ce927349b56045f07fb))
+* **recipes:** implement multi-select category filtering ([20b0a51](https://github.com/prep-your-meal/frontend/commit/20b0a512d4f9e831993c79ef56c4affff5257881))
+* **recipes:** implement quick picks UX pattern and global filter toggle ([f1e2c86](https://github.com/prep-your-meal/frontend/commit/f1e2c86c9245fbe8824921f77dfdfdd3f73bff18))
+* **recipes:** remove remaining hardcoded strings in error states ([c5827fb](https://github.com/prep-your-meal/frontend/commit/c5827fb6d1811ea7a67aab85725c467b51366d7c))
+* **ux:** pivot landing page flow to product-led growth strategy ([0606ba0](https://github.com/prep-your-meal/frontend/commit/0606ba08604466a631ab254647b015477d9c8b44))
+
+### Bug Fixes
+
+* **layout:** hide footer on mobile for legal pages ([5df68f0](https://github.com/prep-your-meal/frontend/commit/5df68f0c210414018758176ae2d68f0ae958cb8e))
+* **layout:** render TopNav on landing page ([55e7243](https://github.com/prep-your-meal/frontend/commit/55e724399e2f36c93565aa1ab8db1ef51da4f9f9))
+* **recipes:** resolve sticky positioning bug for search bar ([b026b9d](https://github.com/prep-your-meal/frontend/commit/b026b9da23e6c1eeefb3171d12b4b247e01c0877))
+* **recipes:** restore sticky positioning for breakaway search island ([d1f09be](https://github.com/prep-your-meal/frontend/commit/d1f09bebe7d4254cbe066d696a825849138762d3))
 ## [0.0.13](https://github.com/prep-your-meal/frontend/compare/v0.0.12...v0.0.13) (2026-08-28)
 
 ### Bug Fixes
