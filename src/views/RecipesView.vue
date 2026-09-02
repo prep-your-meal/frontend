@@ -3,153 +3,150 @@
     <!-- 1. Spacer -->
     <div class="w-full h-24 md:h-28 shrink-0"></div>
 
-    <!-- 2. Combined Header & Search Area -->
-    <div class="relative w-full mb-8 flex flex-col">
-      <div
-        class="bg-white px-6 sm:px-10 pt-8 sm:pt-10 pb-4 border-t border-x border-gray-100 rounded-t-3xl z-10 transition-opacity duration-300 relative"
-      >
-        <h1 class="text-4xl md:text-5xl font-extrabold text-dark-green mb-3 tracking-tight">
-          {{ $t('recipes.title') }}
-        </h1>
-        <p class="text-dark-green/60 text-lg max-w-xl font-medium">
-          {{ $t('recipes.subtitle') }}
-        </p>
-      </div>
+    <!-- 2. Header Text (Top Half - Scrolls normally) -->
+    <div
+      class="bg-white px-6 sm:px-10 pt-8 sm:pt-10 pb-4 border-t border-x border-gray-100 rounded-t-3xl z-10 transition-opacity duration-300 relative"
+    >
+      <h1 class="text-4xl md:text-5xl font-extrabold text-dark-green mb-3 tracking-tight">
+        {{ $t('recipes.title') }}
+      </h1>
+      <p class="text-dark-green/60 text-lg max-w-xl font-medium">
+        {{ $t('recipes.subtitle') }}
+      </p>
+    </div>
 
-      <!-- 3. Sticky Search Island -->
-      <div
-        class="sticky top-4 md:top-[104px] z-40 mb-10 bg-white/95 backdrop-blur-xl px-4 sm:px-6 py-5 border transition-all duration-500"
-        :class="[
-          isScrolled
-            ? 'rounded-3xl border-gray-100 shadow-xl shadow-dark-green/5'
-            : 'rounded-b-3xl border-t-transparent border-b-gray-100 border-x-gray-100 shadow-sm',
-        ]"
-      >
-        <div class="flex flex-col gap-4 w-full">
-          <!-- Search Input & Filter Toggle Button -->
-          <div class="flex gap-3 w-full items-center">
-            <div class="relative w-full shrink group">
-              <svg
-                class="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-primary-green transition-colors pointer-events-none"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                ></path>
-              </svg>
-              <input
-                v-model="searchQuery"
-                @keyup.enter="fetchRecipes"
-                type="text"
-                :placeholder="$t('recipes.search_placeholder')"
-                class="block w-full pl-12 pr-4 py-3.5 border border-gray-200 rounded-2xl leading-5 bg-bg-cream/30 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-primary-green focus:bg-white transition-all shadow-inner text-dark-green"
-              />
-            </div>
-
-            <!-- Filter Toggle Button -->
-            <button
-              @click="isFilterOpen = !isFilterOpen"
-              class="shrink-0 flex items-center justify-center h-[52px] px-4 md:px-6 bg-bg-cream/50 text-dark-green rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-green transition-colors relative gap-2.5"
-              :class="{
-                'bg-primary-green text-white border-primary-green':
-                  isFilterOpen || activeFilterCount > 0,
-              }"
+    <!-- 3. Sticky Search Island (Bottom Half - Detaches and sticks infinitely) -->
+    <div
+      class="sticky top-4 md:top-[104px] z-40 mb-10 bg-white/95 backdrop-blur-xl px-4 sm:px-6 py-5 border transition-all duration-500"
+      :class="[
+        isScrolled
+          ? 'rounded-3xl border-gray-100 shadow-xl shadow-dark-green/5'
+          : 'rounded-b-3xl border-t-transparent border-b-gray-100 border-x-gray-100 shadow-sm',
+      ]"
+    >
+      <div class="flex flex-col gap-4 w-full">
+        <!-- Search Input & Filter Toggle Button -->
+        <div class="flex gap-3 w-full items-center">
+          <div class="relative w-full shrink group">
+            <svg
+              class="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-primary-green transition-colors pointer-events-none"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
             >
-              <div
-                v-if="activeFilterCount > 0 && !isFilterOpen"
-                class="absolute top-2 right-2 md:right-3 w-3 h-3 bg-secondary-rust rounded-full border-2 border-white flex items-center justify-center"
-              ></div>
-              <span
-                v-if="activeFilterCount > 0 && !isFilterOpen"
-                class="absolute -top-2 -right-2 bg-secondary-rust text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white md:hidden"
-              >
-                {{ activeFilterCount }}
-              </span>
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
-                ></path>
-              </svg>
-              <span class="hidden md:block font-bold text-sm">Filter</span>
-            </button>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              ></path>
+            </svg>
+            <input
+              v-model="searchQuery"
+              @keyup.enter="fetchRecipes"
+              type="text"
+              :placeholder="$t('recipes.search_placeholder')"
+              class="block w-full pl-12 pr-4 py-3.5 border border-gray-200 rounded-2xl leading-5 bg-bg-cream/30 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-primary-green focus:bg-white transition-all shadow-inner text-dark-green"
+            />
           </div>
 
-          <!-- Quick Filters Row (Visible when full menu is CLOSED) -->
-          <div
-            v-show="!isFilterOpen"
-            class="flex gap-2.5 overflow-x-auto scrollbar-hide w-full pt-1 pb-1"
+          <!-- Filter Toggle Button -->
+          <button
+            @click="isFilterOpen = !isFilterOpen"
+            class="shrink-0 flex items-center justify-center h-[52px] px-4 md:px-6 bg-bg-cream/50 text-dark-green rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-green transition-colors relative gap-2.5"
+            :class="{
+              'bg-primary-green text-white border-primary-green':
+                isFilterOpen || activeFilterCount > 0,
+            }"
           >
-            <button
-              v-for="cat in quickFilters"
-              :key="cat.value"
-              @click="toggleCategory(cat.value)"
-              :class="[
-                'whitespace-nowrap shrink-0 px-4 py-2 rounded-2xl text-sm font-semibold transition-all duration-300 border flex items-center gap-2',
-                isCategoryActive(cat.value)
-                  ? 'bg-primary-green text-white border-primary-green shadow-md scale-105'
-                  : 'bg-white text-dark-green/70 border-gray-200 hover:border-primary-green hover:text-primary-green hover:shadow-sm',
-              ]"
+            <div
+              v-if="activeFilterCount > 0 && !isFilterOpen"
+              class="absolute top-2 right-2 md:right-3 w-3 h-3 bg-secondary-rust rounded-full border-2 border-white flex items-center justify-center"
+            ></div>
+            <span
+              v-if="activeFilterCount > 0 && !isFilterOpen"
+              class="absolute -top-2 -right-2 bg-secondary-rust text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white md:hidden"
             >
-              <span>{{ cat.icon }}</span>
-              <span>{{ $t(cat.labelKey) }}</span>
-            </button>
-          </div>
+              {{ activeFilterCount }}
+            </span>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+              ></path>
+            </svg>
+            <span class="hidden md:block font-bold text-sm">Filter</span>
+          </button>
+        </div>
 
-          <!-- Full Grouped Category Grid (Visible when full menu is OPEN) -->
-          <div
-            v-show="isFilterOpen"
-            class="flex w-full flex-col gap-6 pt-4 pb-2 transition-all duration-300 border-t border-gray-100/50 mt-2"
+        <!-- Quick Filters Row (Visible when full menu is CLOSED) -->
+        <div
+          v-show="!isFilterOpen"
+          class="flex gap-2.5 overflow-x-auto scrollbar-hide w-full pt-1 pb-1"
+        >
+          <button
+            v-for="cat in quickFilters"
+            :key="cat.value"
+            @click="toggleCategory(cat.value)"
+            :class="[
+              'whitespace-nowrap shrink-0 px-4 py-2 rounded-2xl text-sm font-semibold transition-all duration-300 border flex items-center gap-2',
+              isCategoryActive(cat.value)
+                ? 'bg-primary-green text-white border-primary-green shadow-md scale-105'
+                : 'bg-white text-dark-green/70 border-gray-200 hover:border-primary-green hover:text-primary-green hover:shadow-sm',
+            ]"
           >
-            <div class="flex flex-col md:flex-row md:flex-wrap gap-8">
-              <div
-                v-for="group in categoryGroups"
-                :key="group.titleKey"
-                class="flex flex-col gap-3 w-full md:w-auto"
-              >
-                <div class="flex items-center gap-3 px-1">
-                  <h4 class="text-xs font-bold text-dark-green/60 uppercase tracking-wider">
-                    {{ $t(group.titleKey) }}
-                  </h4>
-                  <div class="h-px flex-grow bg-gray-200/60 rounded-full md:hidden"></div>
-                </div>
+            <span>{{ cat.icon }}</span>
+            <span>{{ $t(cat.labelKey) }}</span>
+          </button>
+        </div>
 
-                <div class="flex flex-wrap gap-2.5">
-                  <button
-                    v-for="cat in group.items"
-                    :key="cat.value"
-                    @click="toggleCategory(cat.value)"
-                    :class="[
-                      'whitespace-nowrap shrink-0 px-4 py-2 rounded-2xl text-sm font-semibold transition-all duration-300 border flex items-center gap-2',
-                      isCategoryActive(cat.value)
-                        ? 'bg-primary-green text-white border-primary-green shadow-md scale-105'
-                        : 'bg-white text-dark-green/70 border-gray-200 hover:border-primary-green hover:text-primary-green hover:shadow-sm',
-                    ]"
-                  >
-                    <span>{{ cat.icon }}</span>
-                    <span>{{ $t(cat.labelKey) }}</span>
-                  </button>
-                </div>
+        <!-- Full Grouped Category Grid (Visible when full menu is OPEN) -->
+        <div
+          v-show="isFilterOpen"
+          class="flex w-full flex-col gap-6 pt-4 pb-2 transition-all duration-300 border-t border-gray-100/50 mt-2"
+        >
+          <div class="flex flex-col md:flex-row md:flex-wrap gap-8">
+            <div
+              v-for="group in categoryGroups"
+              :key="group.titleKey"
+              class="flex flex-col gap-3 w-full md:w-auto"
+            >
+              <div class="flex items-center gap-3 px-1">
+                <h4 class="text-xs font-bold text-dark-green/60 uppercase tracking-wider">
+                  {{ $t(group.titleKey) }}
+                </h4>
+                <div class="h-px flex-grow bg-gray-200/60 rounded-full md:hidden"></div>
+              </div>
+
+              <div class="flex flex-wrap gap-2.5">
+                <button
+                  v-for="cat in group.items"
+                  :key="cat.value"
+                  @click="toggleCategory(cat.value)"
+                  :class="[
+                    'whitespace-nowrap shrink-0 px-4 py-2 rounded-2xl text-sm font-semibold transition-all duration-300 border flex items-center gap-2',
+                    isCategoryActive(cat.value)
+                      ? 'bg-primary-green text-white border-primary-green shadow-md scale-105'
+                      : 'bg-white text-dark-green/70 border-gray-200 hover:border-primary-green hover:text-primary-green hover:shadow-sm',
+                  ]"
+                >
+                  <span>{{ cat.icon }}</span>
+                  <span>{{ $t(cat.labelKey) }}</span>
+                </button>
               </div>
             </div>
+          </div>
 
-            <!-- Filter Actions -->
-            <div class="flex justify-end pt-4 border-t border-gray-100/50">
-              <!-- UI Polish: Integrated translation key -->
-              <button
-                @click="resetFilters"
-                class="text-sm font-bold text-gray-400 hover:text-dark-green transition-colors px-4 py-2"
-              >
-                {{ $t('recipes.filters.clear') }}
-              </button>
-            </div>
+          <!-- Filter Actions -->
+          <div class="flex justify-end pt-4 border-t border-gray-100/50">
+            <button
+              @click="resetFilters"
+              class="text-sm font-bold text-gray-400 hover:text-dark-green transition-colors px-4 py-2"
+            >
+              {{ $t('recipes.filters.clear') }}
+            </button>
           </div>
         </div>
       </div>
