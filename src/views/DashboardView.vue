@@ -13,10 +13,10 @@ const handleLogout = async () => {
 
 <template>
   <div class="dashboard">
-    <h2>Dashboard 🔒</h2>
-    <p>This is the protected area. Only authenticated users can see this.</p>
+    <h2>{{ $t('dashboard.title') }} 🔒</h2>
+    <p>{{ $t('dashboard.protected_text') }}</p>
 
-    <button @click="handleLogout" class="btn-primary">Logout</button>
+    <button @click="handleLogout" class="btn-primary">{{ $t('dashboard.logout') }}</button>
   </div>
 </template>
 

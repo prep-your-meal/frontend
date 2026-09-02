@@ -39,6 +39,38 @@
     "lactose": "Lactose",
     "gluten": "Gluten"
   },
+  "dashboard": {
+    "title": "Dashboard",
+    "protected_text": "This is a protected area. Only authenticated users can see this.",
+    "logout": "Log out"
+  },
+  "impressum": {
+    "title": "Legal Notice",
+    "back": "Back to Home",
+    "ddg": "Information pursuant to § 5 DDG",
+    "contact": "Contact",
+    "email": "Email:",
+    "mstv": "Responsible for content according to § 18 para. 2 MStV",
+    "copyright": "Copyright",
+    "copyright_text": "The content and works published on this website are governed by the copyright laws of Germany. Any duplication, processing, distribution, or any form of utilization beyond the scope of copyright law requires prior written consent."
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "back": "Back to Home",
+    "general": {
+      "title": "General Information",
+      "text": "Thank you for your interest in {brand}. Protecting your personal data is a priority. The following information provides an overview of how your data is handled when visiting this website."
+    },
+    "hosting": {
+      "title": "Hosting",
+      "text1": "We host the content of our website with:",
+      "text2": "When you visit our site, Strato collects log files including IP addresses. This is based on Art. 6(1)(f) GDPR. A Data Processing Agreement (DPA) is in place."
+    },
+    "account": {
+      "title": "Registration and User Account",
+      "text": "When creating an account, submitted data (email address and encrypted password) is used strictly to provide your profile and store meal plans (Art. 6(1)(b) GDPR)."
+    }
+  },
   "landing": {
     "hero_title": "Plan your week with",
     "hero_subtitle": "Plan your week. Cook relaxed. Eat healthy.",

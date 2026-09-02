@@ -39,6 +39,38 @@
     "lactose": "Laktose",
     "gluten": "Gluten"
   },
+  "dashboard": {
+    "title": "Dashboard",
+    "protected_text": "Dies ist ein geschützter Bereich. Nur angemeldete Nutzer können ihn sehen.",
+    "logout": "Abmelden"
+  },
+  "impressum": {
+    "title": "Impressum",
+    "back": "Zurück zur Startseite",
+    "ddg": "Angaben gemäß § 5 DDG",
+    "contact": "Kontakt",
+    "email": "E-Mail:",
+    "mstv": "Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV",
+    "copyright": "Urheberrecht",
+    "copyright_text": "Die durch den Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers."
+  },
+  "privacy": {
+    "title": "Datenschutzerklärung",
+    "back": "Zurück zur Startseite",
+    "general": {
+      "title": "Allgemeine Hinweise",
+      "text": "Wir freuen uns über dein Interesse an {brand}. Der Schutz deiner persönlichen Daten ist uns ein wichtiges Anliegen. Die folgenden Hinweise geben einen einfachen Überblick darüber, was mit deinen personenbezogenen Daten passiert, wenn du diese Website besuchst."
+    },
+    "hosting": {
+      "title": "Hosting",
+      "text1": "Wir hosten die Inhalte unserer Website bei folgendem Anbieter:",
+      "text2": "Wenn du unsere Website besuchst, erfasst Strato Server-Logfiles inklusive deiner IP-Adresse. Die Nutzung erfolgt auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO aufgrund unseres berechtigten Interesses an einer zuverlässigen Bereitstellung. Ein Vertrag über Auftragsverarbeitung (AVV) liegt vor."
+    },
+    "account": {
+      "title": "Registrierung und Nutzerkonto",
+      "text": "Bei einer Registrierung werden die eingegebenen Daten (E-Mail-Adresse und verschlüsseltes Passwort) ausschließlich zur Bereitstellung deines Accounts und zur Speicherung deiner Rezepte verarbeitet (Art. 6 Abs. 1 lit. b DSGVO)."
+    }
+  },
   "landing": {
     "hero_title": "Plane deine Woche mit",
     "hero_subtitle": "Plane deine Woche. Koche entspannt. Iss gesund.",
