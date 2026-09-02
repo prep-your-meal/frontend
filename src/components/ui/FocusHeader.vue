@@ -18,9 +18,9 @@
       <img
         src="@/assets/images/prepyourmeal_logo.svg"
         alt="PrepYourMeal Logo"
-        class="h-16 w-auto drop-shadow-sm mb-2"
+        class="h-20 md:h-24 w-auto drop-shadow-sm mb-3"
       />
-      <BrandName class="text-xl text-primary-green" />
+      <BrandName class="text-2xl text-primary-green" />
     </button>
   </div>
 </template>
