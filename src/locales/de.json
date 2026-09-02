@@ -76,6 +76,7 @@
     "hero_subtitle": "Plane deine Woche. Koche entspannt. Iss gesund.",
     "latest_recipes": "Entdecke neue Lieblingsrezepte",
     "cta_button": "Kostenlos starten",
+    "cta_discover": "Kostenlos entdecken",
     "loading": "Lade Rezepte...",
     "error_loading": "Rezepte konnten nicht geladen werden.",
     "retry": "Erneut versuchen",
@@ -98,9 +99,9 @@
       "healthy_desc": "Erreiche deine Ernährungsziele ganz nebenbei durch vorausschauende Planung."
     },
     "bottom_cta": {
-      "title": "Bereit für deinen neuen Küchen-Rhythmus?",
-      "subtitle": "Starte jetzt kostenlos und erlebe, wie entspannt und übersichtlich Meal Prepping sein kann.",
-      "button": "Kostenlos registrieren"
+      "title": "Bereit für dein nächstes Meal Prep?",
+      "subtitle": "Entdecke gesunde Rezepte und plane deine Woche.",
+      "button": "Jetzt Rezepte durchstöbern"
     },
     "aria": {
       "scroll_to_vision": "Nach unten zur Vision scrollen"

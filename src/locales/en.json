@@ -75,6 +75,7 @@
     "hero_title": "Plan your week with",
     "hero_subtitle": "Plan your week. Cook relaxed. Eat healthy.",
     "cta_button": "Start for free",
+    "cta_discover": "Start Exploring",
     "latest_recipes": "Discover new favorite recipes",
     "loading": "Loading recipes...",
     "error_loading": "Could not load recipes.",
@@ -98,9 +99,9 @@
       "healthy_desc": "Achieve your nutritional goals effortlessly through proactive planning."
     },
     "bottom_cta": {
-      "title": "Ready for your new kitchen routine?",
-      "subtitle": "Start for free now and experience how relaxed and organized meal prepping can be.",
-      "button": "Register for free"
+      "title": "Ready for your next meal prep?",
+      "subtitle": "Discover healthy recipes and plan your week.",
+      "button": "Browse Recipes Now"
     },
     "aria": {
       "scroll_to_vision": "Scroll to vision"

@@ -35,15 +35,14 @@
         </p>
         <div class="w-full pt-6">
           <RouterLink
-            to="/register"
+            to="/recipes"
             class="w-full flex justify-center items-center bg-primary-green text-white font-bold text-lg py-4 px-8 rounded-xl hover:bg-accent-gold transition-all duration-300 shadow-lg hover:-translate-y-1 hover:shadow-xl"
           >
-            {{ $t('landing.cta_button') }}
+            {{ $t('landing.cta_discover') }}
           </RouterLink>
         </div>
       </div>
 
-      <!-- Scroll Down Indicator (Bouncing Arrow) mit aria-label für Accessibility -->
       <a
         href="#vision"
         @click.prevent="scrollToVision"
@@ -338,7 +337,7 @@
           {{ $t('landing.bottom_cta.subtitle') }}
         </p>
         <RouterLink
-          to="/register"
+          to="/recipes"
           class="bg-primary-green text-white font-bold text-lg py-4 px-10 rounded-xl hover:bg-accent-gold transition-all duration-300 shadow-xl hover:-translate-y-1 hover:shadow-2xl"
         >
           {{ $t('landing.bottom_cta.button') }}
