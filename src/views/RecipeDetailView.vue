@@ -5,9 +5,9 @@
 
     <div class="flex flex-col">
       <!-- Header Area -->
-      <!-- UI Polish: Removed the desktop back button. This wrapper now only exists for the MobileHeader. -->
+
       <div
-        class="md:hidden bg-white px-4 pt-8 pb-2 border-t border-x border-gray-100 rounded-t-3xl z-10 relative"
+        class="md:hidden bg-white px-4 pt-3 pb-2 border-t border-x border-gray-100 rounded-t-3xl z-10 relative"
       >
         <MobileHeader :showBack="true" />
       </div>

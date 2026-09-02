@@ -4,9 +4,9 @@
     <div class="w-full h-4 md:h-28 shrink-0"></div>
 
     <!-- 2. Header Text (Top Half - Scrolls normally) -->
-    <!-- UI Polish: Centered text alignment (text-center) and layout (items-center) -->
+
     <div
-      class="bg-white px-6 sm:px-10 pt-6 md:pt-10 pb-6 border-t border-x border-gray-100 rounded-t-3xl z-10 transition-opacity duration-300 relative flex flex-col items-center text-center"
+      class="bg-white px-6 sm:px-10 pt-3 md:pt-10 pb-6 border-t border-x border-gray-100 rounded-t-3xl z-10 transition-opacity duration-300 relative flex flex-col items-center text-center"
     >
       <!-- Mobile Branding Component -->
       <MobileHeader />
@@ -86,10 +86,8 @@
         </div>
 
         <!-- Quick Filters Row (Visible when full menu is CLOSED) -->
-        <div
-          v-show="!isFilterOpen"
-          class="flex gap-2.5 overflow-x-auto scrollbar-hide w-full pt-1 pb-1"
-        >
+
+        <div v-show="!isFilterOpen" class="flex flex-wrap gap-2.5 w-full pt-1 pb-1">
           <button
             v-for="cat in quickFilters"
             :key="cat.value"
@@ -109,9 +107,12 @@
         <!-- Full Grouped Category Grid (Visible when full menu is OPEN) -->
         <div
           v-show="isFilterOpen"
-          class="flex w-full flex-col gap-6 pt-4 pb-2 transition-all duration-300 border-t border-gray-100/50 mt-2"
+          class="flex w-full flex-col transition-all duration-300 border-t border-gray-100/50 mt-2 pt-4"
         >
-          <div class="flex flex-col md:flex-row md:flex-wrap gap-8">
+          <!-- UI Polish: Inner scrollable container with max-h-[55vh] to prevent overflowing behind the BottomNav -->
+          <div
+            class="flex flex-col md:flex-row md:flex-wrap gap-8 overflow-y-auto max-h-[55vh] scrollbar-hide pb-4"
+          >
             <div
               v-for="group in categoryGroups"
               :key="group.titleKey"
@@ -143,8 +144,8 @@
             </div>
           </div>
 
-          <!-- Filter Actions -->
-          <div class="flex justify-end pt-4 border-t border-gray-100/50">
+          <!-- Filter Actions (Pinned to the bottom of the open menu) -->
+          <div class="flex justify-end pt-4 border-t border-gray-100/50 shrink-0 mt-2">
             <button
               @click="resetFilters"
               class="text-sm font-bold text-gray-400 hover:text-dark-green transition-colors px-4 py-2"
@@ -166,7 +167,7 @@
     >
       <div class="text-4xl mb-3">😕</div>
       <p class="font-medium">{{ error }}</p>
-      <!-- UI Polish: Use i18n for the retry button -->
+
       <button
         @click="fetchRecipes"
         class="mt-4 px-6 py-2 bg-red-100 text-red-700 rounded-xl font-bold hover:bg-red-200 transition-colors"
@@ -315,7 +316,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
-import { useI18n } from 'vue-i18n' // <-- Importiere useI18n
+import { useI18n } from 'vue-i18n'
 import api from '../services/api'
 import { getCategoryBadgeClass } from '../utils/theme'
 import LoadingState from '@/components/ui/LoadingState.vue'
@@ -364,7 +365,7 @@ const isCategoryActive = (value: string) => {
   return selectedCategories.value.includes(value)
 }
 
-// "All" is removed. These are the default top filters.
+// Default top filters
 const quickFilterKeys = ['vegan', 'high-protein', 'quick', 'meal-prep-friendly']
 
 const quickFilters = computed(() => {
@@ -373,7 +374,7 @@ const quickFilters = computed(() => {
 
   selectedCategories.value.forEach((cat) => {
     if (!keysToShow.includes(cat)) {
-      keysToShow.splice(0, 0, cat) // Puts active custom filters at the very beginning of the row
+      keysToShow.splice(0, 0, cat)
     }
   })
 
@@ -430,7 +431,6 @@ const fetchCategories = async () => {
     const response = await api.get('/meta/categories')
     const data = response.data.data || response.data
 
-    // The "Basis" group is completely removed
     const groups: FilterGroup[] = []
 
     for (const [groupKey, itemsArray] of Object.entries(data)) {
@@ -451,7 +451,6 @@ const fetchCategories = async () => {
   }
 }
 
-// Standard multi-select toggle
 const toggleCategory = (value: string) => {
   const index = selectedCategories.value.indexOf(value)
   if (index > -1) {
@@ -502,7 +501,6 @@ const fetchRecipes = async () => {
     recipes.value = response.data.data || response.data
   } catch (err) {
     console.error('Failed to fetch recipes:', err)
-    // UI Polish: Use i18n for the error message
     error.value = t('landing.error_loading')
   } finally {
     isLoading.value = false
@@ -522,13 +520,6 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
 .recipe-list-move,
 .recipe-list-enter-active,
 .recipe-list-leave-active {
@@ -538,5 +529,13 @@ onUnmounted(() => {
 .recipe-list-leave-to {
   opacity: 0;
   transform: translateY(20px);
+}
+/* Optional: Removing scrollbar-hide since we no longer use overflow-x-auto, but keeping it is harmless */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 </style>

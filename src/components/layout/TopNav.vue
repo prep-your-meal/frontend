@@ -23,7 +23,7 @@
         <!-- App Navigation Links (Mixed visibility) -->
         <nav class="flex space-x-8 h-full">
           <!-- 1. Discover -->
-          <!-- UI Polish: Changed text-gray-500 to text-dark-green to match the Login action -->
+
           <RouterLink
             to="/recipes"
             class="inline-flex items-center h-full px-1 text-sm font-medium text-dark-green hover:text-primary-green transition-colors border-b-2 border-transparent"
