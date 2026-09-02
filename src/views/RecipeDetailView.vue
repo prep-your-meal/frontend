@@ -33,25 +33,28 @@
         class="bg-white md:rounded-3xl rounded-b-3xl shadow-sm border-x border-b md:border-t border-t-0 border-gray-100 overflow-hidden"
       >
         <!-- Top Section: Image & Basic Info -->
-        <div class="flex flex-col md:flex-row">
+        <!-- UI Polish: items-stretch forces both columns to the exact same height. Added a bottom border to cleanly separate the top section from the ingredients. -->
+        <div class="flex flex-col md:flex-row items-stretch border-b border-gray-100">
           <!-- Recipe Image -->
-          <div class="md:w-1/2">
+          <!-- UI Polish: Container is relative. Height on mobile is h-72, on desktop it stretches to match text. No padding, no rounded corners. -->
+          <div class="relative w-full md:w-1/2 h-72 md:h-auto shrink-0 bg-gray-100">
+            <!-- UI Polish: Image is absolute inset-0. It completely fills the space dictated by the text column without pushing anything down. -->
             <img
               v-if="recipe.image_url || recipe.image"
               :src="recipe.image_url || recipe.image"
               :alt="recipe.title"
-              class="w-full h-72 md:h-full object-cover"
+              class="absolute inset-0 w-full h-full object-cover"
             />
             <div
               v-else
-              class="w-full h-72 md:h-full bg-gray-100 flex items-center justify-center text-gray-400"
+              class="absolute inset-0 w-full h-full flex items-center justify-center text-gray-400"
             >
               {{ $t('recipe_detail.no_image') }}
             </div>
           </div>
 
           <!-- Recipe Title, Times & Macros -->
-          <div class="md:w-1/2 p-6 lg:p-10 flex flex-col justify-center">
+          <div class="w-full md:w-1/2 p-6 lg:p-10 flex flex-col justify-center">
             <!-- Title & Description -->
             <h1 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">{{ recipe.title }}</h1>
             <p class="text-gray-600 mb-6 leading-relaxed">{{ recipe.description }}</p>
