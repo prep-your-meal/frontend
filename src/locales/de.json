@@ -61,6 +61,21 @@
       "scroll_to_vision": "Nach unten zur Vision scrollen"
     }
   },
+  "recipes": {
+    "title": "Entdecken",
+    "subtitle": "Lass dich inspirieren und finde neue Lieblingsrezepte für deine Woche.",
+    "search_placeholder": "Rezepte oder Zutaten suchen...",
+    "no_results": "Keine Rezepte gefunden",
+    "no_results_desc": "Probiere es mit einem anderen Suchbegriff oder passe deine Filter an.",
+    "filters": {
+      "groups": {
+        "basis": "Basis",
+        "diet": "Ernährungsform",
+        "macros": "Makros & Zeit"
+      },
+      "all": "Alle"
+    }
+  },
   "recipe_detail": {
     "back_button": "Zurück zur Übersicht",
     "no_image": "Kein Bild verfügbar",

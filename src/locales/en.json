@@ -61,6 +61,21 @@
       "scroll_to_vision": "Scroll to vision"
     }
   },
+  "recipes": {
+    "title": "Discover",
+    "subtitle": "Get inspired and find new favorite recipes for your week.",
+    "search_placeholder": "Search recipes or ingredients...",
+    "no_results": "No recipes found",
+    "no_results_desc": "Try a different search term or adjust your filters.",
+    "filters": {
+      "groups": {
+        "basis": "Basic",
+        "diet": "Diet",
+        "macros": "Macros & Time"
+      },
+      "all": "All"
+    }
+  },
   "recipe_detail": {
     "back_button": "Back to Overview",
     "no_image": "No image available",

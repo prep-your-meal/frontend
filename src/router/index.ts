@@ -6,6 +6,7 @@ import LandingView from '../views/LandingView.vue'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import RecipeDetailView from '../views/RecipeDetailView.vue'
+import RecipesView from '../views/RecipesView.vue'
 import ImpressumView from '../views/ImpressumView.vue'
 import PrivacyView from '../views/PrivacyView.vue'
 
@@ -15,12 +16,16 @@ const router = createRouter({
     {
       path: '/',
       name: 'landing',
-      // Lazy-loading: The component is only loaded when the user visits the route
       component: LandingView,
       meta: { requiresAuth: false, guestOnly: true },
     },
     {
-      // The :id parameter will be captured and available in route.params.id
+      // NEUE ROUTE: Für alle sichtbar
+      path: '/recipes',
+      name: 'recipes',
+      component: RecipesView,
+    },
+    {
       path: '/recipe/:id',
       name: 'recipe-detail',
       component: RecipeDetailView,
@@ -39,21 +44,18 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: LoginView,
-      // 'guestOnly' ensures logged-in users cannot access the login page again
       meta: { requiresAuth: false, guestOnly: true },
     },
     {
       path: '/register',
       name: 'register',
       component: RegisterView,
-      // 'guestOnly' ensures logged-in users cannot access the register page again
       meta: { requiresAuth: false, guestOnly: true },
     },
     {
       path: '/dashboard',
       name: 'dashboard',
       component: DashboardView,
-      // This explicitly protects the route
       meta: { requiresAuth: true },
     },
   ],
@@ -72,18 +74,13 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore()
 
-  // 1. Route requires authentication, but user is NOT logged in
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
     console.warn('Access denied. Redirecting to login.')
     next({ name: 'login' })
-  }
-  // 2. Route is for guests only (e.g., login), but user IS already logged in
-  else if (to.meta.guestOnly && authStore.isAuthenticated) {
+  } else if (to.meta.guestOnly && authStore.isAuthenticated) {
     console.info('User already logged in. Redirecting to dashboard.')
     next({ name: 'dashboard' })
-  }
-  // 3. All checks passed, allow navigation
-  else {
+  } else {
     next()
   }
 })
