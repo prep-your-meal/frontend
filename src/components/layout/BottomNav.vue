@@ -4,7 +4,7 @@
     class="flex md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 z-50 pb-[env(safe-area-inset-bottom)]"
   >
     <div class="flex justify-around items-center h-16 w-full px-2">
-      <!-- 1. Discover (Route geändert auf /recipes) -->
+      <!-- 1. Discover -->
       <RouterLink
         to="/recipes"
         class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-primary-green transition-colors"
@@ -55,8 +55,9 @@
         <span class="text-[10px] uppercase tracking-wider">{{ $t('nav.shopping') }}</span>
       </RouterLink>
 
-      <!-- 4. Profile -->
+      <!-- 4. Profile (Hidden for guests) -->
       <RouterLink
+        v-if="authStore.isAuthenticated"
         to="/profile"
         class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-primary-green transition-colors"
         active-class="text-primary-green font-medium"
@@ -74,3 +75,8 @@
     </div>
   </nav>
 </template>
+
+<script setup lang="ts">
+import { useAuthStore } from '@/stores/auth'
+const authStore = useAuthStore()
+</script>
