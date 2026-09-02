@@ -5,9 +5,8 @@
 
     <!-- 2. Combined Header & Search Area -->
     <div class="relative w-full mb-8 flex flex-col">
-      <!-- Top Half: Header Text -->
       <div
-        class="bg-white px-6 sm:px-10 pt-8 sm:pt-10 pb-4 border-t border-x border-gray-100 rounded-t-3xl z-10 transition-opacity duration-300"
+        class="bg-white px-6 sm:px-10 pt-8 sm:pt-10 pb-4 border-t border-x border-gray-100 rounded-t-3xl z-10 transition-opacity duration-300 relative"
       >
         <h1 class="text-4xl md:text-5xl font-extrabold text-dark-green mb-3 tracking-tight">
           {{ $t('recipes.title') }}
@@ -17,9 +16,9 @@
         </p>
       </div>
 
-      <!-- Bottom Half: Sticky Search Island -->
+      <!-- 3. Sticky Search Island -->
       <div
-        class="sticky top-4 md:top-[104px] z-40 bg-white/95 backdrop-blur-xl px-4 sm:px-6 py-5 border transition-all duration-500"
+        class="sticky top-4 md:top-[104px] z-40 mb-10 bg-white/95 backdrop-blur-xl px-4 sm:px-6 py-5 border transition-all duration-500"
         :class="[
           isScrolled
             ? 'rounded-3xl border-gray-100 shadow-xl shadow-dark-green/5'
@@ -52,7 +51,7 @@
               />
             </div>
 
-            <!-- Filter Toggle Button (Now visible on Desktop too!) -->
+            <!-- Filter Toggle Button -->
             <button
               @click="isFilterOpen = !isFilterOpen"
               class="shrink-0 flex items-center justify-center h-[52px] px-4 md:px-6 bg-bg-cream/50 text-dark-green rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-green transition-colors relative gap-2.5"
@@ -63,8 +62,15 @@
             >
               <div
                 v-if="activeFilterCount > 0 && !isFilterOpen"
-                class="absolute top-2 right-2 md:right-3 w-3 h-3 bg-secondary-rust rounded-full border-2 border-white"
+                class="absolute top-2 right-2 md:right-3 w-3 h-3 bg-secondary-rust rounded-full border-2 border-white flex items-center justify-center"
               ></div>
+              <!-- Optional UI Polish: Display the count of active filters as a small badge on desktop -->
+              <span
+                v-if="activeFilterCount > 0 && !isFilterOpen"
+                class="absolute -top-2 -right-2 bg-secondary-rust text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white md:hidden"
+              >
+                {{ activeFilterCount }}
+              </span>
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"
@@ -77,7 +83,7 @@
             </button>
           </div>
 
-          <!-- The "Mittelweg": Quick Filters Row (Visible when full menu is CLOSED) -->
+          <!-- Quick Filters Row (Visible when full menu is CLOSED) -->
           <div
             v-show="!isFilterOpen"
             class="flex gap-2.5 overflow-x-auto scrollbar-hide w-full pt-1 pb-1"
@@ -88,7 +94,7 @@
               @click="toggleCategory(cat.value)"
               :class="[
                 'whitespace-nowrap shrink-0 px-4 py-2 rounded-2xl text-sm font-semibold transition-all duration-300 border flex items-center gap-2',
-                selectedCategory === cat.value
+                isCategoryActive(cat.value)
                   ? 'bg-primary-green text-white border-primary-green shadow-md scale-105'
                   : 'bg-white text-dark-green/70 border-gray-200 hover:border-primary-green hover:text-primary-green hover:shadow-sm',
               ]"
@@ -123,7 +129,7 @@
                     @click="toggleCategory(cat.value)"
                     :class="[
                       'whitespace-nowrap shrink-0 px-4 py-2 rounded-2xl text-sm font-semibold transition-all duration-300 border flex items-center gap-2',
-                      selectedCategory === cat.value
+                      isCategoryActive(cat.value)
                         ? 'bg-primary-green text-white border-primary-green shadow-md scale-105'
                         : 'bg-white text-dark-green/70 border-gray-200 hover:border-primary-green hover:text-primary-green hover:shadow-sm',
                     ]"
@@ -134,12 +140,22 @@
                 </div>
               </div>
             </div>
+
+            <!-- Filter Actions -->
+            <div class="flex justify-end pt-4 border-t border-gray-100/50">
+              <button
+                @click="resetFilters"
+                class="text-sm font-bold text-gray-400 hover:text-dark-green transition-colors px-4 py-2"
+              >
+                Alle Filter löschen
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 3. States: Loading -->
+    <!-- 4. States: Loading -->
     <div
       v-if="isLoading"
       class="flex flex-col justify-center items-center py-24 text-dark-green/50"
@@ -167,7 +183,7 @@
       <p class="font-medium animate-pulse">Lade Rezepte...</p>
     </div>
 
-    <!-- 3. States: Error -->
+    <!-- 4. States: Error -->
     <div
       v-else-if="error"
       class="text-center p-8 bg-red-50 rounded-2xl text-red-600 border border-red-100 shadow-sm max-w-2xl mx-auto mt-10"
@@ -182,7 +198,7 @@
       </button>
     </div>
 
-    <!-- 3. States: Empty Results -->
+    <!-- 4. States: Empty Results -->
     <div
       v-else-if="recipes.length === 0"
       class="text-center py-20 px-4 bg-white rounded-3xl border border-gray-100 shadow-sm"
@@ -202,7 +218,7 @@
       </button>
     </div>
 
-    <!-- 4. Recipe Grid -->
+    <!-- 5. Recipe Grid -->
     <TransitionGroup
       v-else
       name="recipe-list"
@@ -354,37 +370,38 @@ const isLoading = ref<boolean>(true)
 const error = ref<string | null>(null)
 
 const searchQuery = ref('')
-const selectedCategory = ref<string>('all')
+// State is now an Array to support multiple selections. Empty array implies "All".
+const selectedCategories = ref<string[]>([])
 
 const isFilterOpen = ref(false)
 const isScrolled = ref(false)
 
-const activeFilterCount = computed(() => {
-  return selectedCategory.value !== 'all' ? 1 : 0
-})
+const activeFilterCount = computed(() => selectedCategories.value.length)
 
-// --- Der UX Trick: Quick Filters ---
-// Diese Filter werden standardmäßig als Vorschlag in der eingeklappten Ansicht gezeigt.
+// Helper to determine if a specific filter pill should be highlighted
+const isCategoryActive = (value: string) => {
+  if (value === 'all') return selectedCategories.value.length === 0
+  return selectedCategories.value.includes(value)
+}
+
 const quickFilterKeys = ['all', 'vegan', 'high-protein', 'quick', 'meal-prep-friendly']
 
+// Computes the Quick Picks list. Automatically injects any selected filter that isn't already a default quick pick.
 const quickFilters = computed(() => {
   const items: FilterItem[] = []
   const keysToShow = [...quickFilterKeys]
 
-  // Wenn der Nutzer einen Filter gewählt hat, der NICHT in den Quick Picks ist,
-  // fügen wir ihn temporär in die Quick-Pick-Leiste (nach 'Alle') ein, damit er sichtbar bleibt!
-  if (selectedCategory.value !== 'all' && !keysToShow.includes(selectedCategory.value)) {
-    keysToShow.splice(1, 0, selectedCategory.value)
-  }
+  selectedCategories.value.forEach((cat) => {
+    if (!keysToShow.includes(cat)) {
+      keysToShow.splice(1, 0, cat)
+    }
+  })
 
-  // Suchen der dazugehörigen Icons und Übersetzungen aus den API-geladenen Gruppen
   keysToShow.forEach((key) => {
     for (const group of categoryGroups.value) {
       const found = group.items.find((i) => i.value === key)
-      if (found) {
-        if (!items.some((item) => item.value === found.value)) {
-          items.push(found)
-        }
+      if (found && !items.some((item) => item.value === found.value)) {
+        items.push(found)
         break
       }
     }
@@ -452,21 +469,33 @@ const fetchCategories = async () => {
         items: mappedItems,
       })
     }
-
     categoryGroups.value = groups
   } catch (err) {
     console.error('Failed to fetch meta categories:', err)
   }
 }
 
+// Handles Multi-Selection Logic and Implicit Reset
 const toggleCategory = (value: string) => {
-  selectedCategory.value = value
+  if (value === 'all') {
+    // Implicit reset: Clicking 'All' clears all specific filters
+    selectedCategories.value = []
+  } else {
+    const index = selectedCategories.value.indexOf(value)
+    if (index > -1) {
+      // Remove if already selected
+      selectedCategories.value.splice(index, 1)
+    } else {
+      // Add if not selected
+      selectedCategories.value.push(value)
+    }
+  }
   fetchRecipes()
 }
 
 const resetFilters = () => {
   searchQuery.value = ''
-  selectedCategory.value = 'all'
+  selectedCategories.value = []
   fetchRecipes()
 }
 
@@ -493,8 +522,12 @@ const fetchRecipes = async () => {
     if (searchQuery.value.trim()) {
       endpoint += `search=${encodeURIComponent(searchQuery.value.trim())}&`
     }
-    if (selectedCategory.value !== 'all') {
-      endpoint += `category=${selectedCategory.value}&`
+
+    // Convert array to Laravel-friendly query params (e.g., category[]=vegan&category[]=quick)
+    if (selectedCategories.value.length > 0) {
+      selectedCategories.value.forEach((cat) => {
+        endpoint += `category[]=${encodeURIComponent(cat)}&`
+      })
     }
 
     const response = await api.get(endpoint)
@@ -520,7 +553,6 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-/* Erhält die native Scroll-Fähigkeit für die Quick Picks, versteckt aber den Balken */
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
@@ -528,13 +560,11 @@ onUnmounted(() => {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-
 .recipe-list-move,
 .recipe-list-enter-active,
 .recipe-list-leave-active {
   transition: all 0.4s ease;
 }
-
 .recipe-list-enter-from,
 .recipe-list-leave-to {
   opacity: 0;
