@@ -88,7 +88,7 @@
         "logistics": "Zubereitung & Alltag",
         "allergies": "Allergene (ohne)"
       },
-      "all": "Alle"
+      "clear": "Alle Filter löschen"
     }
   },
   "recipe_detail": {

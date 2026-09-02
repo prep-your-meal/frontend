@@ -64,7 +64,6 @@
                 v-if="activeFilterCount > 0 && !isFilterOpen"
                 class="absolute top-2 right-2 md:right-3 w-3 h-3 bg-secondary-rust rounded-full border-2 border-white flex items-center justify-center"
               ></div>
-              <!-- Optional UI Polish: Display the count of active filters as a small badge on desktop -->
               <span
                 v-if="activeFilterCount > 0 && !isFilterOpen"
                 class="absolute -top-2 -right-2 bg-secondary-rust text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white md:hidden"
@@ -143,11 +142,12 @@
 
             <!-- Filter Actions -->
             <div class="flex justify-end pt-4 border-t border-gray-100/50">
+              <!-- UI Polish: Integrated translation key -->
               <button
                 @click="resetFilters"
                 class="text-sm font-bold text-gray-400 hover:text-dark-green transition-colors px-4 py-2"
               >
-                Alle Filter löschen
+                {{ $t('recipes.filters.clear') }}
               </button>
             </div>
           </div>
@@ -214,7 +214,7 @@
         @click="resetFilters"
         class="mt-8 px-6 py-2.5 bg-primary-green text-white font-bold rounded-xl hover:bg-dark-green transition-colors"
       >
-        Filter zurücksetzen
+        {{ $t('recipes.filters.clear') }}
       </button>
     </div>
 
@@ -370,7 +370,6 @@ const isLoading = ref<boolean>(true)
 const error = ref<string | null>(null)
 
 const searchQuery = ref('')
-// State is now an Array to support multiple selections. Empty array implies "All".
 const selectedCategories = ref<string[]>([])
 
 const isFilterOpen = ref(false)
@@ -378,22 +377,21 @@ const isScrolled = ref(false)
 
 const activeFilterCount = computed(() => selectedCategories.value.length)
 
-// Helper to determine if a specific filter pill should be highlighted
+// Evaluates true if a category is actively selected
 const isCategoryActive = (value: string) => {
-  if (value === 'all') return selectedCategories.value.length === 0
   return selectedCategories.value.includes(value)
 }
 
-const quickFilterKeys = ['all', 'vegan', 'high-protein', 'quick', 'meal-prep-friendly']
+// "All" is removed. These are the default top filters.
+const quickFilterKeys = ['vegan', 'high-protein', 'quick', 'meal-prep-friendly']
 
-// Computes the Quick Picks list. Automatically injects any selected filter that isn't already a default quick pick.
 const quickFilters = computed(() => {
   const items: FilterItem[] = []
   const keysToShow = [...quickFilterKeys]
 
   selectedCategories.value.forEach((cat) => {
     if (!keysToShow.includes(cat)) {
-      keysToShow.splice(1, 0, cat)
+      keysToShow.splice(0, 0, cat) // Puts active custom filters at the very beginning of the row
     }
   })
 
@@ -450,12 +448,8 @@ const fetchCategories = async () => {
     const response = await api.get('/meta/categories')
     const data = response.data.data || response.data
 
-    const groups: FilterGroup[] = [
-      {
-        titleKey: 'recipes.filters.groups.basis',
-        items: [{ labelKey: 'recipes.filters.all', value: 'all', icon: '✨' }],
-      },
-    ]
+    // The "Basis" group is completely removed
+    const groups: FilterGroup[] = []
 
     for (const [groupKey, itemsArray] of Object.entries(data)) {
       const mappedItems = (itemsArray as string[]).map((val) => ({
@@ -475,20 +469,13 @@ const fetchCategories = async () => {
   }
 }
 
-// Handles Multi-Selection Logic and Implicit Reset
+// Standard multi-select toggle
 const toggleCategory = (value: string) => {
-  if (value === 'all') {
-    // Implicit reset: Clicking 'All' clears all specific filters
-    selectedCategories.value = []
+  const index = selectedCategories.value.indexOf(value)
+  if (index > -1) {
+    selectedCategories.value.splice(index, 1)
   } else {
-    const index = selectedCategories.value.indexOf(value)
-    if (index > -1) {
-      // Remove if already selected
-      selectedCategories.value.splice(index, 1)
-    } else {
-      // Add if not selected
-      selectedCategories.value.push(value)
-    }
+    selectedCategories.value.push(value)
   }
   fetchRecipes()
 }
@@ -523,7 +510,6 @@ const fetchRecipes = async () => {
       endpoint += `search=${encodeURIComponent(searchQuery.value.trim())}&`
     }
 
-    // Convert array to Laravel-friendly query params (e.g., category[]=vegan&category[]=quick)
     if (selectedCategories.value.length > 0) {
       selectedCategories.value.forEach((cat) => {
         endpoint += `category[]=${encodeURIComponent(cat)}&`
