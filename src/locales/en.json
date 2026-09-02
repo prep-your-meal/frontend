@@ -14,18 +14,30 @@
   },
   "categories": {
     "breakfast": "Breakfast",
-    "low-carb": "Low-carb",
+    "lunch": "Lunch",
     "dinner": "Dinner",
+    "snack": "Snack",
+    "vegan": "Vegan",
+    "vegetarian": "Vegetarian",
+    "keto": "Keto",
+    "low-carb": "Low Carb",
+    "gluten-free": "Gluten-Free",
+    "dairy-free": "Dairy-Free",
+    "pescatarian": "Pescatarian",
     "high-protein": "High Protein",
     "bulking": "Bulking",
     "cutting": "Cutting",
-    "vegan": "Vegan",
-    "vegetarian": "Vegetarian",
-    "lunch": "Lunch",
+    "balanced": "Balanced",
+    "meal-prep-friendly": "Meal Prep",
     "quick": "Quick",
     "one-pot": "One-Pot",
-    "meal-prep-friendly": "Meal Prep friendly",
-    "snack": "Snack"
+    "family-friendly": "Family Friendly",
+    "nuts": "Nuts",
+    "soy": "Soy",
+    "shellfish": "Shellfish",
+    "eggs": "Eggs",
+    "lactose": "Lactose",
+    "gluten": "Gluten"
   },
   "landing": {
     "hero_title": "Plan your week with",
@@ -70,8 +82,11 @@
     "filters": {
       "groups": {
         "basis": "Basic",
-        "diet": "Diet",
-        "macros": "Macros & Time"
+        "meal_types": "Meal Types",
+        "diets": "Diet",
+        "fitness": "Fitness & Macros",
+        "logistics": "Prep & Lifestyle",
+        "allergies": "Allergies (free from)"
       },
       "all": "All"
     }

@@ -14,18 +14,30 @@
   },
   "categories": {
     "breakfast": "Frühstück",
-    "low-carb": "Low-carb",
+    "lunch": "Mittagessen",
     "dinner": "Abendessen",
-    "high-protein": "High Protein",
-    "bulking": "Bulking",
-    "cutting": "Cutting",
+    "snack": "Snack",
     "vegan": "Vegan",
     "vegetarian": "Vegetarisch",
-    "lunch": "Mittagessen",
+    "keto": "Keto",
+    "low-carb": "Low Carb",
+    "gluten-free": "Glutenfrei",
+    "dairy-free": "Laktosefrei",
+    "pescatarian": "Pescetarisch",
+    "high-protein": "High Protein",
+    "bulking": "Massephase",
+    "cutting": "Definieren",
+    "balanced": "Ausgewogen",
+    "meal-prep-friendly": "Meal Prep",
     "quick": "Schnell",
     "one-pot": "One-Pot",
-    "meal-prep-friendly": "Meal Prep freundlich",
-    "snack": "Snack"
+    "family-friendly": "Familientauglich",
+    "nuts": "Nüsse",
+    "soy": "Soja",
+    "shellfish": "Krustentiere",
+    "eggs": "Eier",
+    "lactose": "Laktose",
+    "gluten": "Gluten"
   },
   "landing": {
     "hero_title": "Plane deine Woche mit",
@@ -70,8 +82,11 @@
     "filters": {
       "groups": {
         "basis": "Basis",
-        "diet": "Ernährungsform",
-        "macros": "Makros & Zeit"
+        "meal_types": "Mahlzeiten",
+        "diets": "Ernährungsform",
+        "fitness": "Fitness & Makros",
+        "logistics": "Zubereitung & Alltag",
+        "allergies": "Allergene (ohne)"
       },
       "all": "Alle"
     }

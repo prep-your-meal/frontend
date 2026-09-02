@@ -1,122 +1,145 @@
 <template>
   <div class="max-w-6xl w-full mx-auto px-4 pb-8 sm:pb-12 flex-grow flex flex-col">
-    <!-- 1. Spacer: Pushes content below TopNav -->
+    <!-- 1. Spacer -->
     <div class="w-full h-24 md:h-28 shrink-0"></div>
 
-    <!-- 2. Header Text (Top Half - Scrolls normally) -->
-    <!-- UI Polish: Border only on top/sides, no bottom border so it visually merges with the search bar -->
-    <div
-      class="bg-white px-6 sm:px-10 pt-8 sm:pt-10 pb-4 border-t border-x border-gray-100 rounded-t-3xl z-10 transition-opacity duration-300 relative"
-    >
-      <h1 class="text-4xl md:text-5xl font-extrabold text-dark-green mb-3 tracking-tight">
-        {{ $t('recipes.title') }}
-      </h1>
-      <p class="text-dark-green/60 text-lg max-w-xl font-medium">
-        {{ $t('recipes.subtitle') }}
-      </p>
-    </div>
+    <!-- 2. Combined Header & Search Area -->
+    <div class="relative w-full mb-8 flex flex-col">
+      <!-- Top Half: Header Text -->
+      <div
+        class="bg-white px-6 sm:px-10 pt-8 sm:pt-10 pb-4 border-t border-x border-gray-100 rounded-t-3xl z-10 transition-opacity duration-300"
+      >
+        <h1 class="text-4xl md:text-5xl font-extrabold text-dark-green mb-3 tracking-tight">
+          {{ $t('recipes.title') }}
+        </h1>
+        <p class="text-dark-green/60 text-lg max-w-xl font-medium">
+          {{ $t('recipes.subtitle') }}
+        </p>
+      </div>
 
-    <!-- 3. Sticky Search Island (Bottom Half - Detaches and sticks) -->
-    <!-- UI Polish: Removed the parent wrapper. mb-10 creates space for the recipes sliding underneath -->
-    <div
-      class="sticky top-4 md:top-[104px] z-40 mb-10 bg-white/95 backdrop-blur-xl px-4 sm:px-6 py-5 border transition-all duration-500"
-      :class="[
-        isScrolled
-          ? 'rounded-3xl border-gray-100 shadow-xl shadow-dark-green/5'
-          : 'rounded-b-3xl border-t-transparent border-b-gray-100 border-x-gray-100 shadow-sm',
-      ]"
-    >
-      <div class="flex flex-col gap-4 w-full">
-        <!-- Search Input & Mobile Filter Toggle -->
-        <div class="flex gap-3 w-full items-center">
-          <div class="relative w-full shrink group">
-            <svg
-              class="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-primary-green transition-colors pointer-events-none"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              ></path>
-            </svg>
-            <input
-              v-model="searchQuery"
-              @keyup.enter="fetchRecipes"
-              type="text"
-              :placeholder="$t('recipes.search_placeholder')"
-              class="block w-full pl-12 pr-4 py-3.5 border border-gray-200 rounded-2xl leading-5 bg-bg-cream/30 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-primary-green focus:bg-white transition-all shadow-inner text-dark-green"
-            />
-          </div>
-
-          <!-- Mobile Filter Toggle Button -->
-          <button
-            @click="isFilterOpen = !isFilterOpen"
-            class="md:hidden shrink-0 flex items-center justify-center w-14 h-14 bg-bg-cream/50 text-dark-green rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-green transition-colors relative"
-            :class="{
-              'bg-primary-green text-white border-primary-green':
-                isFilterOpen || activeFilterCount > 0,
-            }"
-          >
-            <div
-              v-if="activeFilterCount > 0 && !isFilterOpen"
-              class="absolute top-2 right-2 w-3 h-3 bg-secondary-rust rounded-full border-2 border-white"
-            ></div>
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
-              ></path>
-            </svg>
-          </button>
-        </div>
-
-        <!-- Grouped Category Filters -->
-        <div
-          :class="[
-            isFilterOpen ? 'flex' : 'hidden',
-            'md:flex w-full flex-col md:flex-row gap-6 md:gap-12 pt-2 md:pt-0 transition-all duration-300',
-          ]"
-        >
-          <div
-            v-for="group in categoryGroups"
-            :key="group.titleKey"
-            class="flex flex-col gap-3 w-full md:w-auto"
-          >
-            <div class="flex items-center gap-3 px-1">
-              <h4 class="text-xs font-bold text-dark-green/60 uppercase tracking-wider">
-                {{ $t(group.titleKey) }}
-              </h4>
-              <div class="h-px flex-grow bg-gray-200/60 rounded-full"></div>
+      <!-- Bottom Half: Sticky Search Island -->
+      <div
+        class="sticky top-4 md:top-[104px] z-40 bg-white/95 backdrop-blur-xl px-4 sm:px-6 py-5 border transition-all duration-500"
+        :class="[
+          isScrolled
+            ? 'rounded-3xl border-gray-100 shadow-xl shadow-dark-green/5'
+            : 'rounded-b-3xl border-t-transparent border-b-gray-100 border-x-gray-100 shadow-sm',
+        ]"
+      >
+        <div class="flex flex-col gap-4 w-full">
+          <!-- Search Input & Filter Toggle Button -->
+          <div class="flex gap-3 w-full items-center">
+            <div class="relative w-full shrink group">
+              <svg
+                class="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-primary-green transition-colors pointer-events-none"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                ></path>
+              </svg>
+              <input
+                v-model="searchQuery"
+                @keyup.enter="fetchRecipes"
+                type="text"
+                :placeholder="$t('recipes.search_placeholder')"
+                class="block w-full pl-12 pr-4 py-3.5 border border-gray-200 rounded-2xl leading-5 bg-bg-cream/30 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-primary-green focus:bg-white transition-all shadow-inner text-dark-green"
+              />
             </div>
 
-            <div class="flex flex-wrap gap-2.5">
-              <button
-                v-for="cat in group.items"
-                :key="cat.value"
-                @click="toggleCategory(cat.value)"
-                :class="[
-                  'whitespace-nowrap shrink-0 px-4 py-2 rounded-2xl text-sm font-semibold transition-all duration-300 border flex items-center gap-2',
-                  selectedCategory === cat.value
-                    ? 'bg-primary-green text-white border-primary-green shadow-md scale-105'
-                    : 'bg-white text-dark-green/70 border-gray-200 hover:border-primary-green hover:text-primary-green hover:shadow-sm',
-                ]"
+            <!-- Filter Toggle Button (Now visible on Desktop too!) -->
+            <button
+              @click="isFilterOpen = !isFilterOpen"
+              class="shrink-0 flex items-center justify-center h-[52px] px-4 md:px-6 bg-bg-cream/50 text-dark-green rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-green transition-colors relative gap-2.5"
+              :class="{
+                'bg-primary-green text-white border-primary-green':
+                  isFilterOpen || activeFilterCount > 0,
+              }"
+            >
+              <div
+                v-if="activeFilterCount > 0 && !isFilterOpen"
+                class="absolute top-2 right-2 md:right-3 w-3 h-3 bg-secondary-rust rounded-full border-2 border-white"
+              ></div>
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+                ></path>
+              </svg>
+              <span class="hidden md:block font-bold text-sm">Filter</span>
+            </button>
+          </div>
+
+          <!-- The "Mittelweg": Quick Filters Row (Visible when full menu is CLOSED) -->
+          <div
+            v-show="!isFilterOpen"
+            class="flex gap-2.5 overflow-x-auto scrollbar-hide w-full pt-1 pb-1"
+          >
+            <button
+              v-for="cat in quickFilters"
+              :key="cat.value"
+              @click="toggleCategory(cat.value)"
+              :class="[
+                'whitespace-nowrap shrink-0 px-4 py-2 rounded-2xl text-sm font-semibold transition-all duration-300 border flex items-center gap-2',
+                selectedCategory === cat.value
+                  ? 'bg-primary-green text-white border-primary-green shadow-md scale-105'
+                  : 'bg-white text-dark-green/70 border-gray-200 hover:border-primary-green hover:text-primary-green hover:shadow-sm',
+              ]"
+            >
+              <span>{{ cat.icon }}</span>
+              <span>{{ $t(cat.labelKey) }}</span>
+            </button>
+          </div>
+
+          <!-- Full Grouped Category Grid (Visible when full menu is OPEN) -->
+          <div
+            v-show="isFilterOpen"
+            class="flex w-full flex-col gap-6 pt-4 pb-2 transition-all duration-300 border-t border-gray-100/50 mt-2"
+          >
+            <div class="flex flex-col md:flex-row md:flex-wrap gap-8">
+              <div
+                v-for="group in categoryGroups"
+                :key="group.titleKey"
+                class="flex flex-col gap-3 w-full md:w-auto"
               >
-                <span>{{ cat.icon }}</span>
-                <span>{{ $t(cat.labelKey) }}</span>
-              </button>
+                <div class="flex items-center gap-3 px-1">
+                  <h4 class="text-xs font-bold text-dark-green/60 uppercase tracking-wider">
+                    {{ $t(group.titleKey) }}
+                  </h4>
+                  <div class="h-px flex-grow bg-gray-200/60 rounded-full md:hidden"></div>
+                </div>
+
+                <div class="flex flex-wrap gap-2.5">
+                  <button
+                    v-for="cat in group.items"
+                    :key="cat.value"
+                    @click="toggleCategory(cat.value)"
+                    :class="[
+                      'whitespace-nowrap shrink-0 px-4 py-2 rounded-2xl text-sm font-semibold transition-all duration-300 border flex items-center gap-2',
+                      selectedCategory === cat.value
+                        ? 'bg-primary-green text-white border-primary-green shadow-md scale-105'
+                        : 'bg-white text-dark-green/70 border-gray-200 hover:border-primary-green hover:text-primary-green hover:shadow-sm',
+                    ]"
+                  >
+                    <span>{{ cat.icon }}</span>
+                    <span>{{ $t(cat.labelKey) }}</span>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 4. States: Loading -->
+    <!-- 3. States: Loading -->
     <div
       v-if="isLoading"
       class="flex flex-col justify-center items-center py-24 text-dark-green/50"
@@ -144,7 +167,7 @@
       <p class="font-medium animate-pulse">Lade Rezepte...</p>
     </div>
 
-    <!-- 4. States: Error -->
+    <!-- 3. States: Error -->
     <div
       v-else-if="error"
       class="text-center p-8 bg-red-50 rounded-2xl text-red-600 border border-red-100 shadow-sm max-w-2xl mx-auto mt-10"
@@ -159,7 +182,7 @@
       </button>
     </div>
 
-    <!-- 4. States: Empty Results -->
+    <!-- 3. States: Empty Results -->
     <div
       v-else-if="recipes.length === 0"
       class="text-center py-20 px-4 bg-white rounded-3xl border border-gray-100 shadow-sm"
@@ -179,7 +202,7 @@
       </button>
     </div>
 
-    <!-- 5. Recipe Grid -->
+    <!-- 4. Recipe Grid -->
     <TransitionGroup
       v-else
       name="recipe-list"
@@ -192,7 +215,6 @@
         :to="`/recipe/${recipe.slug}`"
         class="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl hover:border-primary-green/30 hover:-translate-y-1 transition-all duration-300 flex flex-col h-full group"
       >
-        <!-- Image Container -->
         <div
           class="h-56 bg-gray-100 flex items-center justify-center flex-shrink-0 relative overflow-hidden"
         >
@@ -203,11 +225,9 @@
             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
           <div v-else class="text-5xl opacity-50">🍽️</div>
-
           <div
             class="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
           ></div>
-
           <button
             @click.prevent
             class="absolute top-4 right-4 h-10 w-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors shadow-sm z-10"
@@ -223,7 +243,6 @@
           </button>
         </div>
 
-        <!-- Card Content -->
         <div class="p-6 flex-grow flex flex-col">
           <h3
             class="text-xl mb-3 text-dark-green font-bold group-hover:text-primary-green transition-colors line-clamp-2"
@@ -250,8 +269,6 @@
                 {{ $t(`categories.${cat}`, cat) }}
               </span>
             </div>
-
-            <!-- Time Info -->
             <div
               v-if="recipe.prep_time || recipe.cook_time"
               class="flex items-center text-sm text-dark-green/50 space-x-3 border-t border-gray-100 pt-4"
@@ -304,11 +321,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch, computed } from 'vue' // Added computed and onUnmounted
+import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
 import api from '../services/api'
 import { getCategoryBadgeClass } from '../utils/theme'
 
-// --- Interfaces ---
 interface Recipe {
   id?: number
   slug: string
@@ -321,47 +337,128 @@ interface Recipe {
   categories?: string[]
 }
 
-// --- State Management ---
+interface FilterItem {
+  labelKey: string
+  value: string
+  icon: string
+}
+
+interface FilterGroup {
+  titleKey: string
+  items: FilterItem[]
+}
+
 const recipes = ref<Recipe[]>([])
+const categoryGroups = ref<FilterGroup[]>([])
 const isLoading = ref<boolean>(true)
 const error = ref<string | null>(null)
 
-// Search & Filter State
 const searchQuery = ref('')
 const selectedCategory = ref<string>('all')
 
-// Mobile Filter & Scroll State
 const isFilterOpen = ref(false)
 const isScrolled = ref(false)
 
-// Count active filters to show a notification dot on mobile
 const activeFilterCount = computed(() => {
   return selectedCategory.value !== 'all' ? 1 : 0
 })
 
-const categoryGroups = [
-  {
-    titleKey: 'recipes.filters.groups.basis',
-    items: [{ labelKey: 'recipes.filters.all', value: 'all', icon: '🍽️' }],
-  },
-  {
-    titleKey: 'recipes.filters.groups.diet',
-    items: [
-      { labelKey: 'categories.vegan', value: 'vegan', icon: '🌱' },
-      { labelKey: 'categories.vegetarian', value: 'vegetarian', icon: '🧀' },
-    ],
-  },
-  {
-    titleKey: 'recipes.filters.groups.macros',
-    items: [
-      { labelKey: 'categories.high-protein', value: 'high-protein', icon: '💪' },
-      { labelKey: 'categories.low-carb', value: 'low-carb', icon: '🥑' },
-      { labelKey: 'categories.quick', value: 'quick', icon: '⏱️' },
-    ],
-  },
-]
+// --- Der UX Trick: Quick Filters ---
+// Diese Filter werden standardmäßig als Vorschlag in der eingeklappten Ansicht gezeigt.
+const quickFilterKeys = ['all', 'vegan', 'high-protein', 'quick', 'meal-prep-friendly']
 
-// --- Methods ---
+const quickFilters = computed(() => {
+  const items: FilterItem[] = []
+  const keysToShow = [...quickFilterKeys]
+
+  // Wenn der Nutzer einen Filter gewählt hat, der NICHT in den Quick Picks ist,
+  // fügen wir ihn temporär in die Quick-Pick-Leiste (nach 'Alle') ein, damit er sichtbar bleibt!
+  if (selectedCategory.value !== 'all' && !keysToShow.includes(selectedCategory.value)) {
+    keysToShow.splice(1, 0, selectedCategory.value)
+  }
+
+  // Suchen der dazugehörigen Icons und Übersetzungen aus den API-geladenen Gruppen
+  keysToShow.forEach((key) => {
+    for (const group of categoryGroups.value) {
+      const found = group.items.find((i) => i.value === key)
+      if (found) {
+        if (!items.some((item) => item.value === found.value)) {
+          items.push(found)
+        }
+        break
+      }
+    }
+  })
+  return items
+})
+
+const iconMapping: Record<string, string> = {
+  breakfast: '🥐',
+  lunch: '🥪',
+  dinner: '🍽️',
+  snack: '🍎',
+  vegan: '🌱',
+  vegetarian: '🧀',
+  keto: '🥩',
+  'low-carb': '🥑',
+  'gluten-free': '🌾',
+  'dairy-free': '🥛',
+  pescatarian: '🐟',
+  'high-protein': '💪',
+  bulking: '🍚',
+  cutting: '✂️',
+  balanced: '⚖️',
+  'meal-prep-friendly': '🍱',
+  quick: '⏱️',
+  'one-pot': '🥘',
+  'family-friendly': '👨‍👩‍👧‍👦',
+  nuts: '🥜',
+  soy: '🫘',
+  shellfish: '🦐',
+  eggs: '🥚',
+  lactose: '🥛',
+  gluten: '🍞',
+}
+
+const groupKeyMapping: Record<string, string> = {
+  meal_types: 'recipes.filters.groups.meal_types',
+  diets: 'recipes.filters.groups.diets',
+  fitness_profiles: 'recipes.filters.groups.fitness',
+  logistics: 'recipes.filters.groups.logistics',
+  allergies: 'recipes.filters.groups.allergies',
+}
+
+const fetchCategories = async () => {
+  try {
+    const response = await api.get('/meta/categories')
+    const data = response.data.data || response.data
+
+    const groups: FilterGroup[] = [
+      {
+        titleKey: 'recipes.filters.groups.basis',
+        items: [{ labelKey: 'recipes.filters.all', value: 'all', icon: '✨' }],
+      },
+    ]
+
+    for (const [groupKey, itemsArray] of Object.entries(data)) {
+      const mappedItems = (itemsArray as string[]).map((val) => ({
+        labelKey: `categories.${val}`,
+        value: val,
+        icon: iconMapping[val] || '🏷️',
+      }))
+
+      groups.push({
+        titleKey: groupKeyMapping[groupKey] || `recipes.filters.groups.${groupKey}`,
+        items: mappedItems,
+      })
+    }
+
+    categoryGroups.value = groups
+  } catch (err) {
+    console.error('Failed to fetch meta categories:', err)
+  }
+}
+
 const toggleCategory = (value: string) => {
   selectedCategory.value = value
   fetchRecipes()
@@ -374,7 +471,6 @@ const resetFilters = () => {
 }
 
 const handleScroll = () => {
-  // Triggers the "breakaway island" morph effect when scrolled down slightly
   isScrolled.value = window.scrollY > 60
 }
 
@@ -411,12 +507,11 @@ const fetchRecipes = async () => {
   }
 }
 
-// --- Lifecycle Hooks ---
 onMounted(() => {
   document.title = 'Entdecken | PrepYourMeal'
-  fetchRecipes()
+  Promise.all([fetchCategories(), fetchRecipes()])
   window.addEventListener('scroll', handleScroll, { passive: true })
-  handleScroll() // Initialize state
+  handleScroll()
 })
 
 onUnmounted(() => {
@@ -425,6 +520,15 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+/* Erhält die native Scroll-Fähigkeit für die Quick Picks, versteckt aber den Balken */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 .recipe-list-move,
 .recipe-list-enter-active,
 .recipe-list-leave-active {
