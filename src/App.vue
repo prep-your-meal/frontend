@@ -6,20 +6,22 @@ import BottomNav from '@/components/layout/BottomNav.vue'
 
 const route = useRoute()
 
-// 1. TopNav: Visible everywhere except on pure auth pages
+// 1. TopNav: Visible everywhere except on pages flagged with hideNav (Login, Register, Impressum, Privacy)
 const showTopNav = computed(() => {
-  const hiddenNavPages = ['login', 'register']
-  return !hiddenNavPages.includes(route.name as string)
+  // UI Polish: Greift jetzt dynamisch auf das Meta-Feld zu
+  return !route.meta.hideNav
 })
 
-// 2. BottomNav (PWA): Visible on mobile except for landing and auth pages
+// 2. BottomNav (PWA): Visible on mobile except on the landing page and hideNav pages
 const showBottomNav = computed(() => {
-  const hiddenBottomNavPages = ['landing', 'login', 'register']
-  return !hiddenBottomNavPages.includes(route.name as string)
+  // UI Polish: Landing-Page bleibt eine Ausnahme, da sie zwar eine TopNav, aber keine BottomNav hat
+  return !route.meta.hideNav && route.name !== 'landing'
 })
 
 // 3. Footer: Rendered everywhere in the DOM.
 const showFooter = computed(() => {
+  // UI Polish: Wenn du möchtest, dass der Footer auf Login/Register/Impressum
+  // auf dem Desktop auch verschwindet, kannst du hier ebenfalls `return !route.meta.hideNav` eintragen.
   return true
 })
 

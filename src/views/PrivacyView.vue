@@ -1,50 +1,52 @@
 <template>
-  <div class="max-w-3xl mx-auto px-4 py-8 sm:py-12 w-full flex-grow flex flex-col">
-    <!-- Back Navigation (Floating Pill) -->
-    <div class="mb-8">
-      <button
-        @click="goBack"
-        class="inline-flex items-center px-5 py-2.5 bg-white rounded-full shadow-sm border border-gray-100 text-sm font-bold text-dark-green hover:text-primary-green hover:shadow-md hover:-translate-y-0.5 transition-all group"
-      >
-        <svg
-          class="w-5 h-5 mr-2 text-gray-400 group-hover:text-primary-green transition-colors"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M10 19l-7-7m0 0l7-7m-7 7h18"
-          />
-        </svg>
-        <span>{{ $t('privacy.back') }}</span>
-      </button>
-    </div>
-
-    <!-- Main Container -->
+  <div class="flex flex-col items-center justify-center w-full px-4 py-8 md:py-12 flex-grow">
+    <!-- Main Card (Aligned with Login/Register styling) -->
     <div
-      class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 sm:p-14 relative overflow-hidden"
+      class="w-full max-w-3xl bg-white px-6 sm:px-12 py-10 rounded-3xl shadow-sm border-t-[8px] border-primary-green relative overflow-hidden"
     >
       <!-- Decorative Background Blob -->
       <div
         class="absolute -top-24 -right-24 w-64 h-64 bg-accent-gold/5 rounded-full blur-3xl pointer-events-none"
       ></div>
 
-      <!-- Header -->
-      <div
-        class="pb-8 border-b border-gray-100 relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-4"
-      >
-        <div>
-          <BrandName class="text-lg text-accent-gold mb-2" />
-          <h1 class="text-4xl font-extrabold text-dark-green tracking-tight">
-            {{ $t('privacy.title') }}
-          </h1>
+      <!-- Unified Header with integrated Back Button -->
+      <div class="relative flex justify-center items-center mb-8 z-10">
+        <!-- Native-style Back Button -->
+        <button
+          @click="goBack"
+          class="absolute left-0 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 bg-bg-cream/50 text-dark-green rounded-full border border-gray-100 shadow-sm hover:bg-primary-green hover:text-white hover:border-primary-green transition-all"
+          :aria-label="$t('privacy.back')"
+        >
+          <svg class="w-6 h-6 pr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+        </button>
+
+        <!-- Centered Logo & Brand -->
+        <div class="flex flex-col items-center">
+          <img
+            src="@/assets/images/prepyourmeal_logo.svg"
+            alt="PrepYourMeal Logo"
+            class="h-16 w-auto drop-shadow-sm mb-2"
+          />
+          <BrandName class="text-xl text-accent-gold" />
         </div>
       </div>
 
-      <div class="mt-8 space-y-10 text-gray-600 leading-relaxed relative z-10">
+      <!-- Page Title -->
+      <h1
+        class="text-3xl md:text-4xl font-extrabold text-dark-green text-center mb-8 pb-8 border-b border-gray-100 relative z-10"
+      >
+        {{ $t('privacy.title') }}
+      </h1>
+
+      <!-- Content Area -->
+      <div class="space-y-10 text-gray-600 leading-relaxed relative z-10">
         <!-- Section 1 -->
         <section>
           <h2 class="text-xl font-bold text-dark-green mb-4 flex items-center gap-3">

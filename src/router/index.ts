@@ -34,23 +34,25 @@ const router = createRouter({
       path: '/impressum',
       name: 'impressum',
       component: ImpressumView,
+      meta: { hideNav: true },
     },
     {
       path: '/privacy',
       name: 'privacy',
       component: PrivacyView,
+      meta: { hideNav: true },
     },
     {
       path: '/login',
       name: 'login',
       component: LoginView,
-      meta: { requiresAuth: false, guestOnly: true },
+      meta: { requiresAuth: false, guestOnly: true, hideNav: true },
     },
     {
       path: '/register',
       name: 'register',
       component: RegisterView,
-      meta: { requiresAuth: false, guestOnly: true },
+      meta: { requiresAuth: false, guestOnly: true, hideNav: true },
     },
     {
       path: '/dashboard',
