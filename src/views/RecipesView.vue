@@ -1,12 +1,24 @@
 <template>
   <div class="max-w-6xl w-full mx-auto px-4 pb-8 sm:pb-12 flex-grow flex flex-col">
     <!-- 1. Spacer -->
-    <div class="w-full h-24 md:h-28 shrink-0"></div>
+    <!-- UI Polish: Reduced mobile spacer to h-6 since there is no TopNav, kept md:h-28 for desktop -->
+    <div class="w-full h-6 md:h-28 shrink-0"></div>
 
     <!-- 2. Header Text (Top Half - Scrolls normally) -->
+    <!-- UI Polish: Adjusted top padding for mobile (pt-6) -->
     <div
-      class="bg-white px-6 sm:px-10 pt-8 sm:pt-10 pb-4 border-t border-x border-gray-100 rounded-t-3xl z-10 transition-opacity duration-300 relative"
+      class="bg-white px-6 sm:px-10 pt-6 md:pt-10 pb-4 border-t border-x border-gray-100 rounded-t-3xl z-10 transition-opacity duration-300 relative"
     >
+      <!-- Mobile Branding / PWA Header (Hidden on Desktop) -->
+      <div class="md:hidden flex items-center mb-8">
+        <img
+          src="@/assets/images/prepyourmeal_logo.svg"
+          alt="PrepYourMeal Logo"
+          class="h-8 w-auto mr-2 drop-shadow-sm"
+        />
+        <BrandName class="text-xl" />
+      </div>
+
       <h1 class="text-4xl md:text-5xl font-extrabold text-dark-green mb-3 tracking-tight">
         {{ $t('recipes.title') }}
       </h1>
@@ -315,8 +327,8 @@ import { useI18n } from 'vue-i18n' // <-- Importiere useI18n
 import api from '../services/api'
 import { getCategoryBadgeClass } from '../utils/theme'
 import LoadingState from '@/components/ui/LoadingState.vue'
+import BrandName from '@/components/ui/BrandName.vue'
 
-// i18n Instanz erstellen
 const { t } = useI18n()
 
 interface Recipe {

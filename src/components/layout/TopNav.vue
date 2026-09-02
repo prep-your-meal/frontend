@@ -23,9 +23,10 @@
         <!-- App Navigation Links (Mixed visibility) -->
         <nav class="flex space-x-8 h-full">
           <!-- 1. Discover -->
+          <!-- UI Polish: Changed text-gray-500 to text-dark-green to match the Login action -->
           <RouterLink
             to="/recipes"
-            class="inline-flex items-center h-full px-1 text-sm font-medium text-gray-500 hover:text-primary-green transition-colors border-b-2 border-transparent"
+            class="inline-flex items-center h-full px-1 text-sm font-medium text-dark-green hover:text-primary-green transition-colors border-b-2 border-transparent"
             active-class="!text-primary-green border-primary-green"
           >
             {{ $t('nav.discover') }}
@@ -35,24 +36,24 @@
           <template v-if="authStore.isAuthenticated">
             <RouterLink
               to="/dashboard"
-              class="inline-flex items-center h-full px-1 text-sm font-medium text-gray-500 hover:text-primary-green transition-colors border-b-2 border-transparent"
+              class="inline-flex items-center h-full px-1 text-sm font-medium text-dark-green hover:text-primary-green transition-colors border-b-2 border-transparent"
               active-class="!text-primary-green border-primary-green"
             >
-              {{ $t('nav.plan', 'Planer') }}
+              {{ $t('nav.plan') }}
             </RouterLink>
             <RouterLink
               to="/shopping"
-              class="inline-flex items-center h-full px-1 text-sm font-medium text-gray-500 hover:text-primary-green transition-colors border-b-2 border-transparent"
+              class="inline-flex items-center h-full px-1 text-sm font-medium text-dark-green hover:text-primary-green transition-colors border-b-2 border-transparent"
               active-class="!text-primary-green border-primary-green"
             >
-              {{ $t('nav.shopping', 'Einkauf') }}
+              {{ $t('nav.shopping') }}
             </RouterLink>
             <RouterLink
               to="/profile"
-              class="inline-flex items-center h-full px-1 text-sm font-medium text-gray-500 hover:text-primary-green transition-colors border-b-2 border-transparent"
+              class="inline-flex items-center h-full px-1 text-sm font-medium text-dark-green hover:text-primary-green transition-colors border-b-2 border-transparent"
               active-class="!text-primary-green border-primary-green"
             >
-              {{ $t('nav.profile', 'Profil') }}
+              {{ $t('nav.profile') }}
             </RouterLink>
           </template>
         </nav>
