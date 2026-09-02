@@ -1,56 +1,88 @@
 <template>
   <div class="max-w-6xl w-full mx-auto px-4 pb-8 sm:pb-12 flex-grow flex flex-col">
-    <!-- 1. Spacer: Safely pushes the content below the fixed TopNav without relying on padding -->
-    <div class="w-full h-24 md:h-32 shrink-0"></div>
+    <!-- 1. Spacer: Pushes content below TopNav -->
+    <div class="w-full h-24 md:h-28 shrink-0"></div>
 
-    <!-- 2. Header Section -->
+    <!-- 2. Header Text (Top Half - Scrolls normally) -->
+    <!-- UI Polish: Border only on top/sides, no bottom border so it visually merges with the search bar -->
     <div
-      class="mb-8 md:mb-10 text-center md:text-left flex flex-col md:flex-row md:items-end justify-between gap-4"
+      class="bg-white px-6 sm:px-10 pt-8 sm:pt-10 pb-4 border-t border-x border-gray-100 rounded-t-3xl z-10 transition-opacity duration-300 relative"
     >
-      <div>
-        <h1
-          class="text-4xl md:text-5xl font-extrabold text-dark-green mb-3 tracking-tight relative z-10"
-        >
-          {{ $t('recipes.title') }}
-        </h1>
-        <!-- UI Polish: Replaced text-gray-500 with text-dark-green/70 for better harmony on cream bg -->
-        <p class="text-dark-green/70 text-lg max-w-xl relative z-10 font-medium">
-          {{ $t('recipes.subtitle') }}
-        </p>
-      </div>
+      <h1 class="text-4xl md:text-5xl font-extrabold text-dark-green mb-3 tracking-tight">
+        {{ $t('recipes.title') }}
+      </h1>
+      <p class="text-dark-green/60 text-lg max-w-xl font-medium">
+        {{ $t('recipes.subtitle') }}
+      </p>
     </div>
 
-    <!-- 3. Search & Filter Bar (Floating Island) -->
+    <!-- 3. Sticky Search Island (Bottom Half - Detaches and sticks) -->
+    <!-- UI Polish: Removed the parent wrapper. mb-10 creates space for the recipes sliding underneath -->
     <div
-      class="sticky top-4 md:top-[104px] z-40 bg-white/90 backdrop-blur-xl py-5 mb-8 border border-gray-100 shadow-xl shadow-dark-green/5 rounded-3xl px-5 sm:px-6"
+      class="sticky top-4 md:top-[104px] z-40 mb-10 bg-white/95 backdrop-blur-xl px-4 sm:px-6 py-5 border transition-all duration-500"
+      :class="[
+        isScrolled
+          ? 'rounded-3xl border-gray-100 shadow-xl shadow-dark-green/5'
+          : 'rounded-b-3xl border-t-transparent border-b-gray-100 border-x-gray-100 shadow-sm',
+      ]"
     >
-      <div class="flex flex-col gap-6 w-full">
-        <!-- Search Input -->
-        <div class="relative w-full shrink-0 group">
-          <svg
-            class="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-primary-green transition-colors pointer-events-none"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+      <div class="flex flex-col gap-4 w-full">
+        <!-- Search Input & Mobile Filter Toggle -->
+        <div class="flex gap-3 w-full items-center">
+          <div class="relative w-full shrink group">
+            <svg
+              class="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-primary-green transition-colors pointer-events-none"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              ></path>
+            </svg>
+            <input
+              v-model="searchQuery"
+              @keyup.enter="fetchRecipes"
+              type="text"
+              :placeholder="$t('recipes.search_placeholder')"
+              class="block w-full pl-12 pr-4 py-3.5 border border-gray-200 rounded-2xl leading-5 bg-bg-cream/30 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-primary-green focus:bg-white transition-all shadow-inner text-dark-green"
+            />
+          </div>
+
+          <!-- Mobile Filter Toggle Button -->
+          <button
+            @click="isFilterOpen = !isFilterOpen"
+            class="md:hidden shrink-0 flex items-center justify-center w-14 h-14 bg-bg-cream/50 text-dark-green rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-green transition-colors relative"
+            :class="{
+              'bg-primary-green text-white border-primary-green':
+                isFilterOpen || activeFilterCount > 0,
+            }"
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-            ></path>
-          </svg>
-          <input
-            v-model="searchQuery"
-            @keyup.enter="fetchRecipes"
-            type="text"
-            :placeholder="$t('recipes.search_placeholder')"
-            class="block w-full pl-12 pr-4 py-3.5 border border-gray-200 rounded-2xl leading-5 bg-bg-cream/30 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-primary-green focus:bg-white transition-all shadow-inner text-dark-green"
-          />
+            <div
+              v-if="activeFilterCount > 0 && !isFilterOpen"
+              class="absolute top-2 right-2 w-3 h-3 bg-secondary-rust rounded-full border-2 border-white"
+            ></div>
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+              ></path>
+            </svg>
+          </button>
         </div>
 
         <!-- Grouped Category Filters -->
-        <div class="w-full flex flex-col md:flex-row gap-6 md:gap-12">
+        <div
+          :class="[
+            isFilterOpen ? 'flex' : 'hidden',
+            'md:flex w-full flex-col md:flex-row gap-6 md:gap-12 pt-2 md:pt-0 transition-all duration-300',
+          ]"
+        >
           <div
             v-for="group in categoryGroups"
             :key="group.titleKey"
@@ -198,7 +230,6 @@
           >
             {{ recipe.title }}
           </h3>
-          <!-- UI Polish: Text slightly warmer to match the new theme -->
           <p class="text-dark-green/60 text-sm leading-relaxed mb-6 line-clamp-2">
             {{ recipe.description }}
           </p>
@@ -273,7 +304,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, onUnmounted, watch, computed } from 'vue' // Added computed and onUnmounted
 import api from '../services/api'
 import { getCategoryBadgeClass } from '../utils/theme'
 
@@ -298,6 +329,15 @@ const error = ref<string | null>(null)
 // Search & Filter State
 const searchQuery = ref('')
 const selectedCategory = ref<string>('all')
+
+// Mobile Filter & Scroll State
+const isFilterOpen = ref(false)
+const isScrolled = ref(false)
+
+// Count active filters to show a notification dot on mobile
+const activeFilterCount = computed(() => {
+  return selectedCategory.value !== 'all' ? 1 : 0
+})
 
 const categoryGroups = [
   {
@@ -331,6 +371,11 @@ const resetFilters = () => {
   searchQuery.value = ''
   selectedCategory.value = 'all'
   fetchRecipes()
+}
+
+const handleScroll = () => {
+  // Triggers the "breakaway island" morph effect when scrolled down slightly
+  isScrolled.value = window.scrollY > 60
 }
 
 let searchTimeout: ReturnType<typeof setTimeout> | null = null
@@ -370,6 +415,12 @@ const fetchRecipes = async () => {
 onMounted(() => {
   document.title = 'Entdecken | PrepYourMeal'
   fetchRecipes()
+  window.addEventListener('scroll', handleScroll, { passive: true })
+  handleScroll() // Initialize state
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
 })
 </script>
 
