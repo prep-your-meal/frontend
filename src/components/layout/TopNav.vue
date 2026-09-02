@@ -20,10 +20,9 @@
 
       <!-- Right side: Navigation & Auth Actions -->
       <div class="flex items-center h-full">
-        <!-- App Navigation Links (Mixed visibility) -->
+        <!-- App Navigation Links (Visible to everyone now!) -->
         <nav class="flex space-x-8 h-full">
           <!-- 1. Discover -->
-
           <RouterLink
             to="/recipes"
             class="inline-flex items-center h-full px-1 text-sm font-medium text-dark-green hover:text-primary-green transition-colors border-b-2 border-transparent"
@@ -32,30 +31,33 @@
             {{ $t('nav.discover') }}
           </RouterLink>
 
-          <!-- 2. Auth-Only Links (Planner, Shopping, Profile) -->
-          <template v-if="authStore.isAuthenticated">
-            <RouterLink
-              to="/dashboard"
-              class="inline-flex items-center h-full px-1 text-sm font-medium text-dark-green hover:text-primary-green transition-colors border-b-2 border-transparent"
-              active-class="!text-primary-green border-primary-green"
-            >
-              {{ $t('nav.plan') }}
-            </RouterLink>
-            <RouterLink
-              to="/shopping"
-              class="inline-flex items-center h-full px-1 text-sm font-medium text-dark-green hover:text-primary-green transition-colors border-b-2 border-transparent"
-              active-class="!text-primary-green border-primary-green"
-            >
-              {{ $t('nav.shopping') }}
-            </RouterLink>
-            <RouterLink
-              to="/profile"
-              class="inline-flex items-center h-full px-1 text-sm font-medium text-dark-green hover:text-primary-green transition-colors border-b-2 border-transparent"
-              active-class="!text-primary-green border-primary-green"
-            >
-              {{ $t('nav.profile') }}
-            </RouterLink>
-          </template>
+          <!-- 2. Planner (Now visible to guests for PLG flow) -->
+          <RouterLink
+            to="/dashboard"
+            class="inline-flex items-center h-full px-1 text-sm font-medium text-dark-green hover:text-primary-green transition-colors border-b-2 border-transparent"
+            active-class="!text-primary-green border-primary-green"
+          >
+            {{ $t('nav.plan') }}
+          </RouterLink>
+
+          <!-- 3. Shopping (Now visible to guests for PLG flow) -->
+          <RouterLink
+            to="/shopping"
+            class="inline-flex items-center h-full px-1 text-sm font-medium text-dark-green hover:text-primary-green transition-colors border-b-2 border-transparent"
+            active-class="!text-primary-green border-primary-green"
+          >
+            {{ $t('nav.shopping') }}
+          </RouterLink>
+
+          <!-- 4. Profile (Still hidden for guests, they have no profile yet) -->
+          <RouterLink
+            v-if="authStore.isAuthenticated"
+            to="/profile"
+            class="inline-flex items-center h-full px-1 text-sm font-medium text-dark-green hover:text-primary-green transition-colors border-b-2 border-transparent"
+            active-class="!text-primary-green border-primary-green"
+          >
+            {{ $t('nav.profile') }}
+          </RouterLink>
         </nav>
 
         <!-- Guest Actions (Login/Register) -->

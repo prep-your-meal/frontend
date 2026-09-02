@@ -41,8 +41,21 @@
   },
   "dashboard": {
     "title": "Dashboard",
-    "protected_text": "This is a protected area. Only authenticated users can see this.",
-    "logout": "Log out"
+    "protected_text": "Here is your weekly planner.",
+    "logout": "Log out",
+    "teaser_title": "Your Personal Weekly Planner",
+    "teaser_desc": "Save your favorite recipes and plan your week in advance. Sign up for free to unlock this feature.",
+    "teaser_register": "Sign up for free",
+    "teaser_login": "I already have an account"
+  },
+  "shopping": {
+    "title": "Shopping List",
+    "protected_text": "Your smart shopping list will appear here.",
+    "empty_list": "No ingredients on your list yet...",
+    "teaser_title": "Your Smart Shopping List",
+    "teaser_desc": "Add ingredients from recipes with a single click and check them off at the grocery store. Create a free account to get started.",
+    "teaser_register": "Sign up for free",
+    "teaser_login": "Log in"
   },
   "impressum": {
     "title": "Legal Notice",

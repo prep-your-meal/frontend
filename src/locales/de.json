@@ -42,7 +42,20 @@
   "dashboard": {
     "title": "Dashboard",
     "protected_text": "Dies ist ein geschützter Bereich. Nur angemeldete Nutzer können ihn sehen.",
-    "logout": "Abmelden"
+    "logout": "Abmelden",
+    "teaser_title": "Dein persönlicher Wochenplaner",
+    "teaser_desc": "Speichere deine Lieblingsrezepte und plane deine Woche im Voraus. Melde dich kostenlos an, um diese Funktion zu nutzen.",
+    "teaser_register": "Kostenlos registrieren",
+    "teaser_login": "Ich habe schon einen Account"
+  },
+  "shopping": {
+    "title": "Einkaufsliste",
+    "protected_text": "Hier entsteht deine smarte Einkaufsliste.",
+    "empty_list": "Noch keine Zutaten auf deiner Liste...",
+    "teaser_title": "Deine intelligente Einkaufsliste",
+    "teaser_desc": "Füge Zutaten mit einem Klick aus Rezepten hinzu und hake sie direkt im Supermarkt ab. Erstelle einen kostenlosen Account, um loszulegen.",
+    "teaser_register": "Kostenlos registrieren",
+    "teaser_login": "Anmelden"
   },
   "impressum": {
     "title": "Impressum",

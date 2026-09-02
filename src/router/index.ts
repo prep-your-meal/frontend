@@ -9,6 +9,7 @@ import RecipeDetailView from '../views/RecipeDetailView.vue'
 import RecipesView from '../views/RecipesView.vue'
 import ImpressumView from '../views/ImpressumView.vue'
 import PrivacyView from '../views/PrivacyView.vue'
+import ShoppingView from '../views/ShoppingView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -20,7 +21,6 @@ const router = createRouter({
       meta: { requiresAuth: false, guestOnly: true },
     },
     {
-      // NEUE ROUTE: Für alle sichtbar
       path: '/recipes',
       name: 'recipes',
       component: RecipesView,
@@ -56,7 +56,11 @@ const router = createRouter({
       path: '/dashboard',
       name: 'dashboard',
       component: DashboardView,
-      meta: { requiresAuth: true },
+    },
+    {
+      path: '/shopping',
+      name: 'shopping',
+      component: ShoppingView,
     },
   ],
   scrollBehavior(to, from, savedPosition) {
