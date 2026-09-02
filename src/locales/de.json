@@ -46,6 +46,7 @@
     "cta_button": "Kostenlos starten",
     "loading": "Lade Rezepte...",
     "error_loading": "Rezepte konnten nicht geladen werden.",
+    "retry": "Erneut versuchen",
     "empty": "Keine Rezepte gefunden.",
     "prep_time": "Zubereitung: {prep} Min.",
     "cook_time": "Kochen: {cook} Min.",

@@ -46,6 +46,7 @@
     "latest_recipes": "Discover new favorite recipes",
     "loading": "Loading recipes...",
     "error_loading": "Could not load recipes.",
+    "retry": "Try again",
     "empty": "No recipes found.",
     "prep_time": "Prep: {prep} min.",
     "cook_time": "Cook: {cook} min.",

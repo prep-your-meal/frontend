@@ -10,7 +10,7 @@
         class="flex flex-col items-center mb-8 hover:opacity-90 transition-opacity"
       >
         <img
-          src="@/assets/images/prepyourmeal_logo.png"
+          src="@/assets/images/prepyourmeal_logo.svg"
           alt="PrepYourMeal Logo"
           class="w-24 md:w-32 h-auto block drop-shadow-sm mb-2"
         />

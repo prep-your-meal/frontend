@@ -162,11 +162,12 @@
     >
       <div class="text-4xl mb-3">😕</div>
       <p class="font-medium">{{ error }}</p>
+      <!-- UI Polish: Use i18n for the retry button -->
       <button
         @click="fetchRecipes"
         class="mt-4 px-6 py-2 bg-red-100 text-red-700 rounded-xl font-bold hover:bg-red-200 transition-colors"
       >
-        Erneut versuchen
+        {{ $t('landing.retry') }}
       </button>
     </div>
 
@@ -310,9 +311,13 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
+import { useI18n } from 'vue-i18n' // <-- Importiere useI18n
 import api from '../services/api'
 import { getCategoryBadgeClass } from '../utils/theme'
 import LoadingState from '@/components/ui/LoadingState.vue'
+
+// i18n Instanz erstellen
+const { t } = useI18n()
 
 interface Recipe {
   id?: number
@@ -493,7 +498,8 @@ const fetchRecipes = async () => {
     recipes.value = response.data.data || response.data
   } catch (err) {
     console.error('Failed to fetch recipes:', err)
-    error.value = 'Hoppla! Die Rezepte konnten gerade nicht geladen werden.'
+    // UI Polish: Use i18n for the error message
+    error.value = t('landing.error_loading')
   } finally {
     isLoading.value = false
   }
