@@ -97,4 +97,16 @@ router.beforeEach((to, from, next) => {
   }
 })
 
+// === PWA SCROLL FIX ===
+router.afterEach((to, from) => {
+  if (to.path !== from.path) {
+    setTimeout(() => {
+      window.scrollTo(0, 0)
+      document.getElementById('app')?.scrollTo(0, 0)
+      document.body.scrollTop = 0
+      document.documentElement.scrollTop = 0
+    }, 50)
+  }
+})
+
 export default router

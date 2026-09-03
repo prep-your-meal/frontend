@@ -1,8 +1,8 @@
 <template>
-  <div class="flex flex-col items-center justify-center w-full md:px-4 py-8 md:py-12 flex-grow">
+  <div class="flex flex-col items-center w-full md:px-4 md:pt-8 md:pb-12 flex-grow">
     <!-- Main Container -->
     <div
-      class="w-full max-w-3xl py-10 relative md:bg-white md:px-12 md:rounded-3xl md:shadow-sm md:border md:border-gray-100 md:border-t-[8px] md:border-t-primary-green"
+      class="w-full max-w-3xl md:pt-10 relative md:bg-white md:px-12 md:rounded-3xl md:shadow-sm md:border md:border-gray-100 md:border-t-[8px] md:border-t-primary-green"
     >
       <!-- Decorative Background Blob -->
       <div

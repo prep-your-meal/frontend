@@ -1,34 +1,3 @@
-<script setup lang="ts">
-import { computed } from 'vue'
-import { RouterView, useRoute } from 'vue-router'
-import TopNav from '@/components/layout/TopNav.vue'
-import BottomNav from '@/components/layout/BottomNav.vue'
-
-const route = useRoute()
-
-// 1. TopNav: Visible everywhere except on pages flagged with hideNav (Login, Register, Impressum, Privacy)
-const showTopNav = computed(() => {
-  return !route.meta.hideNav
-})
-
-// 2. BottomNav (PWA): Visible on mobile except on the landing page and hideNav pages
-const showBottomNav = computed(() => {
-  return !route.meta.hideNav && route.name !== 'landing'
-})
-
-// 3. Footer: Rendered everywhere in the DOM.
-const showFooter = computed(() => {
-  return true
-})
-
-// 4. Mobile Footer Display logic:
-// Show the footer on mobile ONLY on the landing page.
-// For all other pages (impressum, privacy, auth, app views), hide it on mobile to favor the PWA BottomNav.
-const alwaysShowFooterOnMobile = computed(() => {
-  return route.name === 'landing'
-})
-</script>
-
 <template>
   <div class="min-h-screen flex flex-col bg-bg-cream">
     <!-- Desktop Navigation -->
@@ -49,10 +18,18 @@ const alwaysShowFooterOnMobile = computed(() => {
       :class="!alwaysShowFooterOnMobile ? 'hidden md:block' : ''"
     >
       <div class="flex justify-center space-x-6 mb-2">
-        <RouterLink to="/impressum" class="hover:text-primary-green transition-colors duration-200">
+        <RouterLink
+          to="/impressum"
+          @click="scrollToTop"
+          class="hover:text-primary-green transition-colors duration-200"
+        >
           {{ $t('footer.impressum') }}
         </RouterLink>
-        <RouterLink to="/privacy" class="hover:text-primary-green transition-colors duration-200">
+        <RouterLink
+          to="/privacy"
+          @click="scrollToTop"
+          class="hover:text-primary-green transition-colors duration-200"
+        >
           {{ $t('footer.privacy') }}
         </RouterLink>
       </div>
@@ -63,3 +40,31 @@ const alwaysShowFooterOnMobile = computed(() => {
     <BottomNav v-if="showBottomNav" />
   </div>
 </template>
+<script setup lang="ts">
+import { computed } from 'vue'
+import { RouterView, useRoute } from 'vue-router'
+import TopNav from '@/components/layout/TopNav.vue'
+import BottomNav from '@/components/layout/BottomNav.vue'
+
+const route = useRoute()
+
+const showTopNav = computed(() => {
+  return !route.meta.hideNav
+})
+
+const showBottomNav = computed(() => {
+  return !route.meta.hideNav && route.name !== 'landing'
+})
+
+const showFooter = computed(() => {
+  return true
+})
+
+const alwaysShowFooterOnMobile = computed(() => {
+  return route.name === 'landing'
+})
+
+const scrollToTop = () => {
+  window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+}
+</script>
