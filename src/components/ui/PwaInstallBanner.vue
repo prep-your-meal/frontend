@@ -1,6 +1,5 @@
 <template>
   <Transition name="slide-up">
-    <!-- UI Polish: Sitzt auf dem Handy über der BottomNav (bottom-24) und auf dem Desktop unten rechts -->
     <div
       v-if="showBanner"
       class="fixed bottom-24 md:bottom-8 right-0 left-0 md:left-auto md:right-8 mx-4 md:mx-0 z-50 md:max-w-sm"
@@ -21,18 +20,19 @@
 
         <!-- Text -->
         <div class="flex-grow">
-          <h3 class="text-sm font-bold text-dark-green">PrepYourMeal App</h3>
+          <h3 class="text-sm font-bold text-dark-green">{{ $t('pwa.title') }}</h3>
 
-          <!-- Text für Android / Chrome -->
+          <!-- Text for Android / Chrome -->
           <p v-if="!isIos" class="text-xs text-gray-500 mt-0.5 leading-tight">
-            Installiere die App für das beste Erlebnis auf deinem Homescreen.
+            {{ $t('pwa.android_install') }}
           </p>
 
-          <!-- Spezifischer Text für iOS Safari -->
-          <p v-else class="text-xs text-gray-500 mt-0.5 leading-tight">
-            Tippe auf <span class="font-bold text-dark-green">Teilen</span> und dann
-            <span class="font-bold text-dark-green">Zum Home-Bildschirm</span>.
-          </p>
+          <!-- Specific text for iOS Safari rendered as HTML to preserve bold styling -->
+          <p
+            v-else
+            class="text-xs text-gray-500 mt-0.5 leading-tight"
+            v-html="$t('pwa.ios_install')"
+          ></p>
         </div>
 
         <!-- Actions -->
@@ -42,13 +42,13 @@
             @click="installApp"
             class="px-4 py-2 bg-primary-green text-white text-xs font-bold rounded-xl shadow-sm hover:bg-dark-green transition-colors"
           >
-            Laden
+            {{ $t('pwa.install_button') }}
           </button>
           <button
             @click="dismissBanner"
             class="px-4 py-2 bg-gray-50 text-gray-500 text-xs font-bold rounded-xl hover:bg-gray-100 transition-colors"
           >
-            Später
+            {{ $t('pwa.later_button') }}
           </button>
         </div>
       </div>
@@ -59,6 +59,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 
+// Custom interface for the non-standard install event to satisfy TypeScript strict mode
 interface BeforeInstallPromptEvent extends Event {
   readonly platforms: Array<string>
   readonly userChoice: Promise<{
@@ -72,18 +73,22 @@ const showBanner = ref(false)
 const deferredPrompt = ref<BeforeInstallPromptEvent | null>(null)
 const isIos = ref(false)
 
+// Check if the user is on iOS devices
 const checkIos = () => {
   const userAgent = window.navigator.userAgent.toLowerCase()
   return /iphone|ipad|ipod/.test(userAgent)
 }
 
+// Check if the app is already running in PWA standalone mode
 const isStandalone = () => {
+  // Extend Navigator type safely to check for Apple's proprietary standalone property
   const nav = window.navigator as Navigator & { standalone?: boolean }
   return window.matchMedia('(display-mode: standalone)').matches || !!nav.standalone
 }
 
 const handleInstallPrompt = (e: Event) => {
   e.preventDefault()
+  // Cast the event as our custom BeforeInstallPromptEvent type
   deferredPrompt.value = e as BeforeInstallPromptEvent
   showBanner.value = true
 }
@@ -91,8 +96,10 @@ const handleInstallPrompt = (e: Event) => {
 const installApp = async () => {
   if (!deferredPrompt.value) return
 
+  // Open the native browser installation dialog
   deferredPrompt.value.prompt()
 
+  // Wait for the user's choice outcome
   const { outcome } = await deferredPrompt.value.userChoice
 
   if (outcome === 'accepted') {
@@ -112,6 +119,7 @@ onMounted(() => {
 
   isIos.value = checkIos()
 
+  // iOS Safari doesn't support the install event. Show banner automatically as a hint after 3 seconds.
   if (isIos.value) {
     setTimeout(() => {
       showBanner.value = true

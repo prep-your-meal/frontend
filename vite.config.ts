@@ -18,7 +18,7 @@ export default defineConfig({
       manifest: {
         name: 'PrepYourMeal',
         short_name: 'PrepYourMeal',
-        description: 'Dein persönlicher Wochenplaner für Meal Prep',
+        description: 'Dein persönlicher Wochenplaner für Meal Prep | Your weekly meal prep planner',
         theme_color: '#ffffff',
         background_color: '#F9F8F6',
         display: 'standalone',

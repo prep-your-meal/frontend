@@ -12,6 +12,13 @@
     "privacy": "Datenschutz",
     "rights": "Alle Rechte vorbehalten."
   },
+  "pwa": {
+    "title": "PrepYourMeal App",
+    "android_install": "Installiere die App für das beste Erlebnis auf deinem Homescreen.",
+    "ios_install": "Tippe auf <span class='font-bold text-dark-green'>Teilen</span> und dann <span class='font-bold text-dark-green'>Zum Home-Bildschirm</span>.",
+    "install_button": "Laden",
+    "later_button": "Später"
+  },
   "categories": {
     "breakfast": "Frühstück",
     "lunch": "Mittagessen",
