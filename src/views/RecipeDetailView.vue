@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-6xl w-full mx-auto md:pb-12 flex-grow flex flex-col md:px-4">
+  <div class="max-w-6xl w-full mx-auto md:pb-4 flex-grow flex flex-col md:px-4">
     <!-- 1. Spacer (Clears the PWA Notch / iOS Status Bar & Desktop TopNav) -->
     <div class="w-full h-4 md:h-28 shrink-0"></div>
 
