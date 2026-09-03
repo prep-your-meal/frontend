@@ -1,8 +1,8 @@
 <template>
-  <div class="flex flex-col items-center justify-center w-full px-4 py-8 flex-grow">
-    <!-- Login Card -->
+  <div class="flex flex-col items-center justify-center w-full md:px-4 py-8 flex-grow">
+    <!-- Login Container (Edge-to-Edge on Mobile, Card on Desktop) -->
     <div
-      class="w-full max-w-md bg-white px-8 py-10 rounded-3xl shadow-sm border-t-[8px] border-primary-green relative"
+      class="w-full max-w-md md:bg-white px-4 md:px-8 py-4 md:py-10 md:rounded-3xl md:shadow-sm md:border-t-[8px] border-t-transparent md:border-primary-green relative"
     >
       <!-- Unified Header -->
       <FocusHeader />
@@ -37,7 +37,7 @@
             v-model="email"
             type="email"
             required
-            class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-bg-cream/30 text-dark-green focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-green/50 focus:border-primary-green transition-all"
+            class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white md:bg-bg-cream/30 text-dark-green shadow-sm md:shadow-none focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-green/50 focus:border-primary-green transition-all"
             :placeholder="$t('login.email_placeholder', { at: '@' })"
           />
         </div>
@@ -52,7 +52,7 @@
             v-model="password"
             type="password"
             required
-            class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-bg-cream/30 text-dark-green focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-green/50 focus:border-primary-green transition-all"
+            class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white md:bg-bg-cream/30 text-dark-green shadow-sm md:shadow-none focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-green/50 focus:border-primary-green transition-all"
             placeholder="••••••••"
           />
 
@@ -78,8 +78,8 @@
 
       <!-- Divider -->
       <div class="mt-8 relative flex items-center justify-center">
-        <div class="absolute inset-x-0 h-px bg-gray-100"></div>
-        <span class="relative bg-white px-4 text-sm text-gray-400">
+        <div class="absolute inset-x-0 h-px bg-gray-200 md:bg-gray-100"></div>
+        <span class="relative bg-bg-cream md:bg-white px-4 text-sm text-gray-500 md:text-gray-400">
           {{ $t('login.no_account', "Don't have an account yet?") }}
         </span>
       </div>

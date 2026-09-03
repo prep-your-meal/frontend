@@ -1,9 +1,8 @@
 <template>
-  <!-- Reduced padding, added flex-grow to push footer down without scrolling -->
-  <div class="flex flex-col items-center justify-center w-full px-4 py-8 flex-grow">
-    <!-- Register/Beta Card -->
+  <div class="flex flex-col items-center justify-center w-full md:px-4 py-8 flex-grow">
+    <!-- Register/Beta Container (Edge-to-Edge on Mobile, Card on Desktop) -->
     <div
-      class="w-full max-w-md bg-white px-8 py-10 rounded-3xl shadow-sm border-t-[8px] border-primary-green relative text-center"
+      class="w-full max-w-md md:bg-white px-4 md:px-8 py-4 md:py-10 md:rounded-3xl md:shadow-sm md:border-t-[8px] border-t-transparent md:border-primary-green relative text-center"
     >
       <!-- Unified Header -->
       <FocusHeader />
@@ -51,7 +50,7 @@
       </a>
 
       <!-- Back Link to Login -->
-      <div class="border-t border-gray-100 pt-6">
+      <div class="border-t border-gray-200 md:border-gray-100 pt-6">
         <RouterLink
           to="/login"
           class="text-primary-green font-medium hover:text-accent-gold transition-colors"
