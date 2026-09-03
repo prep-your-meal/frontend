@@ -1,11 +1,9 @@
 <template>
-  <div class="max-w-6xl w-full mx-auto px-4 pb-8 sm:pb-12 flex-grow flex flex-col">
-    <!-- 1. Spacer -->
+  <div class="max-w-6xl w-full mx-auto pb-8 sm:pb-12 flex-grow flex flex-col md:px-4">
     <div class="w-full h-4 md:h-28 shrink-0"></div>
 
-    <!-- 2. Header Text -->
     <div
-      class="px-6 sm:px-10 pt-3 md:pt-10 pb-6 z-10 transition-opacity duration-300 relative flex flex-col items-center text-center md:bg-white md:border-t md:border-x md:border-gray-100 md:rounded-t-3xl"
+      class="px-4 sm:px-10 pt-3 md:pt-10 pb-6 z-10 transition-opacity duration-300 relative flex flex-col items-center text-center md:bg-white md:border-t md:border-x md:border-gray-100 md:rounded-t-3xl"
     >
       <MobileHeader />
 
@@ -17,17 +15,15 @@
       </p>
     </div>
 
-    <!-- 3. Sticky Search Island -->
     <div
-      class="sticky top-4 md:top-[104px] z-40 mb-10 bg-white/95 backdrop-blur-xl px-4 sm:px-6 py-5 border transition-all duration-500"
+      class="sticky top-0 md:top-[104px] z-40 mb-10 bg-white/95 backdrop-blur-xl px-4 sm:px-6 py-5 transition-all duration-500"
       :class="[
         isScrolled
-          ? 'rounded-3xl border-gray-100 shadow-xl shadow-dark-green/5'
-          : 'rounded-b-3xl border-t-transparent border-b-gray-100 border-x-gray-100 shadow-sm',
+          ? 'md:rounded-3xl border-b border-gray-200 md:border md:border-gray-100 shadow-md md:shadow-xl shadow-dark-green/5'
+          : 'md:rounded-b-3xl border-b border-gray-200 md:border-t-transparent md:border-x md:border-x-gray-100 shadow-sm',
       ]"
     >
       <div class="flex flex-col gap-4 w-full">
-        <!-- Search Input & Filter Toggle Button -->
         <div class="flex gap-3 w-full items-center">
           <div class="relative w-full shrink group">
             <svg
@@ -52,7 +48,6 @@
             />
           </div>
 
-          <!-- Filter Toggle Button -->
           <button
             @click="isFilterOpen = !isFilterOpen"
             class="shrink-0 flex items-center justify-center h-[52px] px-4 md:px-6 bg-bg-cream/50 text-dark-green rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-green transition-colors relative gap-2.5"
@@ -83,7 +78,6 @@
           </button>
         </div>
 
-        <!-- Quick Filters Row -->
         <div v-show="!isFilterOpen" class="flex flex-wrap gap-2.5 w-full pt-1 pb-1">
           <button
             v-for="cat in quickFilters"
@@ -101,7 +95,6 @@
           </button>
         </div>
 
-        <!-- Full Grouped Category Grid -->
         <div
           v-show="isFilterOpen"
           class="flex w-full flex-col transition-all duration-300 border-t border-gray-100/50 mt-2 pt-4"
@@ -152,13 +145,11 @@
       </div>
     </div>
 
-    <!-- States: Loading -->
-    <LoadingState v-if="isLoading" :text="$t('landing.loading')" />
+    <LoadingState v-if="isLoading" :text="$t('landing.loading')" class="mx-4 md:mx-0" />
 
-    <!-- States: Error -->
     <div
       v-else-if="error"
-      class="text-center p-8 bg-red-50 rounded-2xl text-red-600 border border-red-100 shadow-sm max-w-2xl mx-auto mt-10"
+      class="text-center p-8 bg-red-50 rounded-2xl text-red-600 border border-red-100 shadow-sm max-w-2xl mx-4 md:mx-auto mt-10"
     >
       <div class="text-4xl mb-3">😕</div>
       <p class="font-medium">{{ error }}</p>
@@ -171,10 +162,9 @@
       </button>
     </div>
 
-    <!-- States: Empty Results -->
     <div
       v-else-if="recipes.length === 0"
-      class="text-center py-20 px-4 bg-white rounded-3xl border border-gray-100 shadow-sm"
+      class="text-center py-20 px-4 bg-white rounded-3xl border border-gray-100 shadow-sm mx-4 md:mx-0"
     >
       <div class="text-6xl mb-6">🔍</div>
       <h3 class="text-2xl font-bold text-dark-green mb-2">
@@ -191,21 +181,20 @@
       </button>
     </div>
 
-    <!-- Recipe Grid -->
     <TransitionGroup
       v-else
       name="recipe-list"
       tag="div"
-      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-8 md:gap-8"
     >
       <RouterLink
         v-for="recipe in recipes"
         :key="recipe.slug || recipe.id"
         :to="`/recipe/${recipe.slug}`"
-        class="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl hover:border-primary-green/30 hover:-translate-y-1 transition-all duration-300 flex flex-col h-full group"
+        class="bg-white md:rounded-3xl overflow-hidden border-y border-gray-200 md:border md:border-gray-100 shadow-sm hover:shadow-xl hover:border-primary-green/30 hover:-translate-y-1 transition-all duration-300 flex flex-col h-full group"
       >
         <div
-          class="h-56 bg-gray-100 flex items-center justify-center flex-shrink-0 relative overflow-hidden"
+          class="h-64 md:h-56 bg-gray-100 flex items-center justify-center flex-shrink-0 relative overflow-hidden"
         >
           <img
             v-if="recipe.image || recipe.image_url"
@@ -232,7 +221,7 @@
           </button>
         </div>
 
-        <div class="p-6 flex-grow flex flex-col">
+        <div class="px-4 py-5 md:p-6 flex-grow flex flex-col">
           <h3
             class="text-xl mb-3 text-dark-green font-bold group-hover:text-primary-green transition-colors line-clamp-2"
           >
