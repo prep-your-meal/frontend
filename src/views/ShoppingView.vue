@@ -36,12 +36,15 @@
       class="flex flex-col items-center md:justify-center w-full md:px-4 pt-4 pb-8 md:py-12 flex-grow"
     >
       <div
-        class="w-full max-w-3xl pt-2 pb-10 md:py-10 relative md:bg-white md:px-12 md:rounded-3xl md:shadow-sm md:border md:border-gray-100 md:border-t-[8px] md:border-t-primary-green"
+        class="w-full max-w-3xl pt-3 pb-10 md:py-10 relative md:bg-white md:px-12 md:rounded-3xl md:shadow-sm md:border md:border-gray-100 md:border-t-[8px] md:border-t-primary-green"
       >
         <!-- Decorative Background Blob -->
         <div
           class="absolute -top-24 -right-24 w-64 h-64 bg-accent-gold/5 rounded-full blur-3xl pointer-events-none hidden md:block"
         ></div>
+
+        <!-- Unified Header -->
+        <MobileHeader />
 
         <!-- Content -->
         <div
@@ -97,6 +100,7 @@
 
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/auth'
+import MobileHeader from '@/components/ui/MobileHeader.vue'
 
 const authStore = useAuthStore()
 </script>
