@@ -1,27 +1,35 @@
 <template>
-  <div class="relative flex justify-center items-center mb-8 z-10">
-    <!-- Native-style Back Button -->
-    <button
-      @click="goBack"
-      class="md:hidden absolute left-0 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 bg-bg-cream/50 text-dark-green rounded-full border border-gray-100 shadow-sm hover:bg-primary-green hover:text-white hover:border-primary-green transition-all"
-    >
-      <svg class="w-6 h-6 pr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-      </svg>
-    </button>
+  <div class="mb-8 z-10 w-full">
+    <div class="relative flex justify-center items-center w-full">
+      <!-- Native-style Back Button -->
+      <button
+        @click="goBack"
+        class="md:hidden absolute left-0 top-1/2 -translate-y-1/2 flex items-center justify-center w-11 h-11 bg-white text-dark-green rounded-full border border-gray-200 shadow-md hover:bg-primary-green hover:text-white hover:border-primary-green transition-all"
+        :aria-label="$t('common.back', 'Zurück')"
+      >
+        <svg class="w-6 h-6 pr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 19l-7-7 7-7"
+          />
+        </svg>
+      </button>
 
-    <!-- Centered Logo & Brand -->
-    <button
-      @click="goBack"
-      class="flex flex-col items-center hover:opacity-90 hover:scale-105 transition-all duration-300 focus:outline-none cursor-pointer"
-    >
-      <img
-        src="@/assets/images/prepyourmeal_logo.svg"
-        alt="PrepYourMeal Logo"
-        class="h-20 md:h-24 w-auto drop-shadow-sm mb-3"
-      />
-      <BrandName class="text-2xl text-primary-green" />
-    </button>
+      <!-- Centered Logo & Brand -->
+      <button
+        @click="goBack"
+        class="flex flex-col items-center hover:opacity-90 hover:scale-105 transition-all duration-300 focus:outline-none cursor-pointer"
+      >
+        <img
+          src="@/assets/images/prepyourmeal_logo.svg"
+          alt="PrepYourMeal Logo"
+          class="h-20 md:h-24 w-auto drop-shadow-sm mb-3"
+        />
+        <BrandName class="text-2xl text-primary-green" />
+      </button>
+    </div>
   </div>
 </template>
 

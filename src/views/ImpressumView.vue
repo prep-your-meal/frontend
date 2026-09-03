@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-center justify-center w-full px-4 py-8 md:py-12 flex-grow">
+  <div class="flex flex-col items-center justify-center w-full md:px-4 py-8 md:py-12 flex-grow">
     <!-- Main Container -->
     <div
       class="w-full max-w-3xl py-10 relative md:bg-white md:px-12 md:rounded-3xl md:shadow-sm md:border md:border-gray-100 md:border-t-[8px] md:border-t-primary-green"
@@ -10,11 +10,11 @@
       ></div>
 
       <!-- Unified Header -->
-      <FocusHeader />
+      <FocusHeader class="px-4 md:px-0" />
 
       <!-- Page Title -->
       <h1
-        class="text-3xl md:text-4xl font-extrabold text-dark-green text-center mb-8 pb-8 border-b border-gray-200/60 md:border-gray-100 relative z-10"
+        class="text-3xl md:text-4xl font-extrabold text-dark-green text-center mb-8 pb-8 border-b border-gray-200/60 md:border-gray-100 relative z-10 px-4 md:px-0"
       >
         {{ $t('impressum.title') }}
       </h1>
@@ -23,7 +23,7 @@
       <div class="space-y-10 text-gray-600 leading-relaxed relative z-10">
         <!-- DDG Section -->
         <section>
-          <h2 class="text-xl font-bold text-dark-green mb-4 flex items-center gap-2">
+          <h2 class="text-xl font-bold text-dark-green mb-4 flex items-center gap-2 px-4 md:px-0">
             <svg
               class="w-6 h-6 text-accent-gold"
               fill="none"
@@ -40,7 +40,7 @@
             {{ $t('impressum.ddg') }}
           </h2>
           <p
-            class="text-gray-700 bg-white md:bg-bg-cream/40 p-6 md:p-5 rounded-3xl md:rounded-2xl shadow-sm md:shadow-none border border-gray-100 md:border-gray-50"
+            class="text-gray-700 bg-white md:bg-bg-cream/40 px-6 py-6 md:p-5 rounded-none md:rounded-2xl shadow-sm md:shadow-none border-y md:border border-gray-100 md:border-gray-50"
           >
             Sven Fehr<br />
             Am Dachspfad 14<br />
@@ -51,7 +51,7 @@
 
         <!-- Contact Section -->
         <section>
-          <h2 class="text-xl font-bold text-dark-green mb-4 flex items-center gap-2">
+          <h2 class="text-xl font-bold text-dark-green mb-4 flex items-center gap-2 px-4 md:px-0">
             <svg
               class="w-6 h-6 text-primary-green"
               fill="none"
@@ -67,7 +67,7 @@
             </svg>
             {{ $t('impressum.contact') }}
           </h2>
-          <p class="flex items-center gap-2">
+          <p class="flex items-center gap-2 px-4 md:px-0">
             <span class="font-medium text-gray-500">{{ $t('impressum.email') }}</span>
             <a
               href="mailto:hello@prepyourmeal.de"
@@ -79,7 +79,7 @@
 
         <!-- MStV Section -->
         <section>
-          <h2 class="text-xl font-bold text-dark-green mb-4 flex items-center gap-2">
+          <h2 class="text-xl font-bold text-dark-green mb-4 flex items-center gap-2 px-4 md:px-0">
             <svg
               class="w-6 h-6 text-secondary-rust"
               fill="none"
@@ -96,7 +96,7 @@
             {{ $t('impressum.mstv') }}
           </h2>
           <p
-            class="text-gray-700 bg-white md:bg-bg-cream/40 p-6 md:p-5 rounded-3xl md:rounded-2xl shadow-sm md:shadow-none border border-gray-100 md:border-gray-50"
+            class="text-gray-700 bg-white md:bg-bg-cream/40 px-6 py-6 md:p-5 rounded-none md:rounded-2xl shadow-sm md:shadow-none border-y md:border border-gray-100 md:border-gray-50"
           >
             Sven Fehr<br />
             Am Dachspfad 14<br />
@@ -106,7 +106,7 @@
         </section>
 
         <!-- Copyright Section -->
-        <section class="pt-4 border-t border-gray-200/60 md:border-gray-100">
+        <section class="pt-4 border-t border-gray-200/60 md:border-gray-100 px-4 md:px-0">
           <h2 class="text-lg font-bold text-dark-green mb-2">{{ $t('impressum.copyright') }}</h2>
           <p class="text-sm text-gray-500">
             {{ $t('impressum.copyright_text') }}
