@@ -3,12 +3,10 @@
     <!-- 1. Spacer -->
     <div class="w-full h-4 md:h-28 shrink-0"></div>
 
-    <!-- 2. Header Text (Top Half - Scrolls normally) -->
-
+    <!-- 2. Header Text -->
     <div
-      class="bg-white px-6 sm:px-10 pt-3 md:pt-10 pb-6 border-t border-x border-gray-100 rounded-t-3xl z-10 transition-opacity duration-300 relative flex flex-col items-center text-center"
+      class="px-6 sm:px-10 pt-3 md:pt-10 pb-6 z-10 transition-opacity duration-300 relative flex flex-col items-center text-center md:bg-white md:border-t md:border-x md:border-gray-100 md:rounded-t-3xl"
     >
-      <!-- Mobile Branding Component -->
       <MobileHeader />
 
       <h1 class="text-4xl md:text-5xl font-extrabold text-dark-green mb-3 tracking-tight">
@@ -19,7 +17,7 @@
       </p>
     </div>
 
-    <!-- 3. Sticky Search Island (Bottom Half - Detaches and sticks infinitely) -->
+    <!-- 3. Sticky Search Island -->
     <div
       class="sticky top-4 md:top-[104px] z-40 mb-10 bg-white/95 backdrop-blur-xl px-4 sm:px-6 py-5 border transition-all duration-500"
       :class="[
@@ -85,8 +83,7 @@
           </button>
         </div>
 
-        <!-- Quick Filters Row (Visible when full menu is CLOSED) -->
-
+        <!-- Quick Filters Row -->
         <div v-show="!isFilterOpen" class="flex flex-wrap gap-2.5 w-full pt-1 pb-1">
           <button
             v-for="cat in quickFilters"
@@ -104,12 +101,11 @@
           </button>
         </div>
 
-        <!-- Full Grouped Category Grid (Visible when full menu is OPEN) -->
+        <!-- Full Grouped Category Grid -->
         <div
           v-show="isFilterOpen"
           class="flex w-full flex-col transition-all duration-300 border-t border-gray-100/50 mt-2 pt-4"
         >
-          <!-- UI Polish: Inner scrollable container with max-h-[55vh] to prevent overflowing behind the BottomNav -->
           <div
             class="flex flex-col md:flex-row md:flex-wrap gap-8 overflow-y-auto max-h-[55vh] scrollbar-hide pb-4"
           >
@@ -144,7 +140,6 @@
             </div>
           </div>
 
-          <!-- Filter Actions (Pinned to the bottom of the open menu) -->
           <div class="flex justify-end pt-4 border-t border-gray-100/50 shrink-0 mt-2">
             <button
               @click="resetFilters"
@@ -157,10 +152,10 @@
       </div>
     </div>
 
-    <!-- 4. States: Loading -->
+    <!-- States: Loading -->
     <LoadingState v-if="isLoading" :text="$t('landing.loading')" />
 
-    <!-- 4. States: Error -->
+    <!-- States: Error -->
     <div
       v-else-if="error"
       class="text-center p-8 bg-red-50 rounded-2xl text-red-600 border border-red-100 shadow-sm max-w-2xl mx-auto mt-10"
@@ -176,7 +171,7 @@
       </button>
     </div>
 
-    <!-- 4. States: Empty Results -->
+    <!-- States: Empty Results -->
     <div
       v-else-if="recipes.length === 0"
       class="text-center py-20 px-4 bg-white rounded-3xl border border-gray-100 shadow-sm"
@@ -196,7 +191,7 @@
       </button>
     </div>
 
-    <!-- 5. Recipe Grid -->
+    <!-- Recipe Grid -->
     <TransitionGroup
       v-else
       name="recipe-list"
@@ -360,12 +355,10 @@ const isScrolled = ref(false)
 
 const activeFilterCount = computed(() => selectedCategories.value.length)
 
-// Evaluates true if a category is actively selected
 const isCategoryActive = (value: string) => {
   return selectedCategories.value.includes(value)
 }
 
-// Default top filters
 const quickFilterKeys = ['vegan', 'high-protein', 'quick', 'meal-prep-friendly']
 
 const quickFilters = computed(() => {
@@ -530,7 +523,6 @@ onUnmounted(() => {
   opacity: 0;
   transform: translateY(20px);
 }
-/* Optional: Removing scrollbar-hide since we no longer use overflow-x-auto, but keeping it is harmless */
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }

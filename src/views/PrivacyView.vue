@@ -1,8 +1,8 @@
 <template>
   <div class="flex flex-col items-center justify-center w-full px-4 py-8 md:py-12 flex-grow">
-    <!-- Main Card (Aligned with Login/Register styling) -->
+    <!-- Main Container -->
     <div
-      class="w-full max-w-3xl bg-white px-6 sm:px-12 py-10 rounded-3xl shadow-sm border-t-[8px] border-primary-green relative overflow-hidden"
+      class="w-full max-w-3xl py-10 relative md:bg-white md:px-12 md:rounded-3xl md:shadow-sm md:border md:border-gray-100 md:border-t-[8px] md:border-t-primary-green"
     >
       <!-- Decorative Background Blob -->
       <div
@@ -14,7 +14,7 @@
 
       <!-- Page Title -->
       <h1
-        class="text-3xl md:text-4xl font-extrabold text-dark-green text-center mb-8 pb-8 border-b border-gray-100 relative z-10"
+        class="text-3xl md:text-4xl font-extrabold text-dark-green text-center mb-8 pb-8 border-b border-gray-200/60 md:border-gray-100 relative z-10"
       >
         {{ $t('privacy.title') }}
       </h1>
@@ -31,7 +31,7 @@
             {{ $t('privacy.general.title') }}
           </h2>
           <p
-            class="text-gray-700 bg-bg-cream/40 p-5 rounded-2xl border border-gray-50"
+            class="text-gray-700 bg-white md:bg-bg-cream/40 p-6 md:p-5 rounded-3xl md:rounded-2xl shadow-sm md:shadow-none border border-gray-100 md:border-gray-50"
             v-html="
               $t('privacy.general.text', {
                 brand: '<strong class=\'text-dark-green\'>PrepYourMeal</strong>',
@@ -56,7 +56,9 @@
               Otto-Ostrowski-Straße 7<br />
               10249 Berlin, Germany
             </p>
-            <div class="p-4 bg-gray-50 rounded-xl border border-gray-100 text-sm text-gray-500">
+            <div
+              class="p-5 bg-white md:bg-gray-50 rounded-3xl md:rounded-xl shadow-sm md:shadow-none border border-gray-100 text-sm text-gray-500"
+            >
               <svg
                 class="w-5 h-5 text-gray-400 mb-2"
                 fill="none"

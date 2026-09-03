@@ -1,8 +1,8 @@
 <template>
   <div class="flex flex-col items-center justify-center w-full px-4 py-8 md:py-12 flex-grow">
-    <!-- Main Card (Aligned with Login/Register styling) -->
+    <!-- Main Container -->
     <div
-      class="w-full max-w-3xl bg-white px-6 sm:px-12 py-10 rounded-3xl shadow-sm border-t-[8px] border-primary-green relative overflow-hidden"
+      class="w-full max-w-3xl py-10 relative md:bg-white md:px-12 md:rounded-3xl md:shadow-sm md:border md:border-gray-100 md:border-t-[8px] md:border-t-primary-green"
     >
       <!-- Decorative Background Blob -->
       <div
@@ -14,7 +14,7 @@
 
       <!-- Page Title -->
       <h1
-        class="text-3xl md:text-4xl font-extrabold text-dark-green text-center mb-8 pb-8 border-b border-gray-100 relative z-10"
+        class="text-3xl md:text-4xl font-extrabold text-dark-green text-center mb-8 pb-8 border-b border-gray-200/60 md:border-gray-100 relative z-10"
       >
         {{ $t('impressum.title') }}
       </h1>
@@ -39,7 +39,9 @@
             </svg>
             {{ $t('impressum.ddg') }}
           </h2>
-          <p class="text-gray-700 bg-bg-cream/40 p-5 rounded-2xl border border-gray-50">
+          <p
+            class="text-gray-700 bg-white md:bg-bg-cream/40 p-6 md:p-5 rounded-3xl md:rounded-2xl shadow-sm md:shadow-none border border-gray-100 md:border-gray-50"
+          >
             Sven Fehr<br />
             Am Dachspfad 14<br />
             61169 Friedberg (Hessen)<br />
@@ -70,9 +72,8 @@
             <a
               href="mailto:hello@prepyourmeal.de"
               class="text-primary-green font-semibold hover:text-dark-green hover:underline transition-colors"
+              >hello@prepyourmeal.de</a
             >
-              hello@prepyourmeal.de
-            </a>
           </p>
         </section>
 
@@ -94,7 +95,9 @@
             </svg>
             {{ $t('impressum.mstv') }}
           </h2>
-          <p class="text-gray-700 bg-bg-cream/40 p-5 rounded-2xl border border-gray-50">
+          <p
+            class="text-gray-700 bg-white md:bg-bg-cream/40 p-6 md:p-5 rounded-3xl md:rounded-2xl shadow-sm md:shadow-none border border-gray-100 md:border-gray-50"
+          >
             Sven Fehr<br />
             Am Dachspfad 14<br />
             61169 Friedberg (Hessen)<br />
@@ -103,7 +106,7 @@
         </section>
 
         <!-- Copyright Section -->
-        <section class="pt-4 border-t border-gray-100">
+        <section class="pt-4 border-t border-gray-200/60 md:border-gray-100">
           <h2 class="text-lg font-bold text-dark-green mb-2">{{ $t('impressum.copyright') }}</h2>
           <p class="text-sm text-gray-500">
             {{ $t('impressum.copyright_text') }}

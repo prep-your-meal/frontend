@@ -5,23 +5,21 @@
 
     <div class="flex flex-col">
       <!-- Header Area -->
-      <div
-        class="md:hidden bg-white px-4 pt-3 pb-2 border-t border-x border-gray-100 rounded-t-3xl z-10 relative"
-      >
+      <div class="md:hidden px-4 pt-3 pb-2 z-10 relative">
         <MobileHeader :showBack="true" />
       </div>
 
       <!-- Loading State -->
       <LoadingState
         v-if="isLoading"
-        containerClass="py-20 bg-white md:rounded-3xl rounded-b-3xl border-x border-b md:border-t border-t-0 border-gray-100 shadow-sm"
+        containerClass="py-20 bg-white rounded-3xl shadow-sm"
         spinnerSize="h-8 w-8"
       />
 
       <!-- Error State -->
       <div
         v-else-if="error"
-        class="bg-red-50 border-x border-b md:border-t border-t-0 border-red-200 text-red-700 p-8 md:rounded-3xl rounded-b-3xl shadow-sm text-center"
+        class="bg-red-50 text-red-700 p-8 rounded-3xl shadow-sm text-center mt-4"
       >
         <p class="font-bold text-xl mb-2">{{ $t('recipe_detail.error_title') }}</p>
         <p>{{ error }}</p>
@@ -30,15 +28,16 @@
       <!-- Recipe Content -->
       <div
         v-else-if="recipe"
-        class="bg-white md:rounded-3xl rounded-b-3xl shadow-sm border-x border-b md:border-t border-t-0 border-gray-100 overflow-hidden"
+        class="flex flex-col mt-2 md:mt-0 md:bg-white md:rounded-3xl md:shadow-sm md:border md:border-gray-100 md:overflow-hidden"
       >
         <!-- Top Section: Image & Basic Info -->
-        <!-- UI Polish: items-stretch forces both columns to the exact same height. Added a bottom border to cleanly separate the top section from the ingredients. -->
-        <div class="flex flex-col md:flex-row items-stretch border-b border-gray-100">
+        <div
+          class="flex flex-col md:flex-row items-stretch gap-8 md:gap-0 md:border-b md:border-gray-100 mb-12 md:mb-0"
+        >
           <!-- Recipe Image -->
-          <!-- UI Polish: Container is relative. Height on mobile is h-72, on desktop it stretches to match text. No padding, no rounded corners. -->
-          <div class="relative w-full md:w-1/2 h-72 md:h-auto shrink-0 bg-gray-100">
-            <!-- UI Polish: Image is absolute inset-0. It completely fills the space dictated by the text column without pushing anything down. -->
+          <div
+            class="relative w-full md:w-1/2 h-72 md:h-auto shrink-0 bg-gray-200 rounded-3xl md:rounded-none overflow-hidden shadow-sm md:shadow-none"
+          >
             <img
               v-if="recipe.image_url || recipe.image"
               :src="recipe.image_url || recipe.image"
@@ -54,7 +53,7 @@
           </div>
 
           <!-- Recipe Title, Times & Macros -->
-          <div class="w-full md:w-1/2 p-6 lg:p-10 flex flex-col justify-center">
+          <div class="w-full md:w-1/2 flex flex-col justify-center py-2 md:p-6 lg:p-10">
             <!-- Title & Description -->
             <h1 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">{{ recipe.title }}</h1>
             <p class="text-gray-600 mb-6 leading-relaxed">{{ recipe.description }}</p>
@@ -78,7 +77,7 @@
 
             <!-- Times Section -->
             <div
-              class="flex flex-wrap items-center md:justify-center gap-6 mb-8 text-gray-600 border-y border-gray-100 py-6"
+              class="flex flex-wrap items-center md:justify-center gap-6 mb-8 text-gray-600 border-y border-gray-200/60 md:border-gray-100 py-6"
             >
               <!-- Prep Time -->
               <div v-if="recipe.prep_time" class="flex items-center">
@@ -99,7 +98,6 @@
                   $t('recipe_detail.prep_time', { prep: recipe.prep_time })
                 }}</span>
               </div>
-
               <!-- Cook Time -->
               <div v-if="recipe.cook_time" class="flex items-center">
                 <svg
@@ -170,9 +168,13 @@
         </div>
 
         <!-- Bottom Section: Ingredients & Instructions -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-0 border-t border-gray-100">
+        <div
+          class="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-0 pt-8 md:pt-0 border-t border-gray-200/60 md:border-transparent"
+        >
           <!-- Ingredients List -->
-          <div class="lg:col-span-1 p-6 lg:p-10 bg-bg-cream/40 border-r border-gray-100">
+          <div
+            class="lg:col-span-1 md:p-6 lg:p-10 md:bg-bg-cream/40 md:border-r md:border-gray-100"
+          >
             <h2 class="text-xl font-bold text-dark-green mb-6">
               {{ $t('recipe_detail.ingredients') }}
             </h2>
@@ -180,7 +182,7 @@
               <li
                 v-for="(item, index) in recipe.ingredients"
                 :key="index"
-                class="flex justify-between items-center py-3 border-b border-gray-200 last:border-0"
+                class="flex justify-between items-center py-3 border-b border-gray-200/60 md:border-gray-200 last:border-0"
               >
                 <span class="text-gray-600 pr-4 leading-relaxed">{{ item.name }}</span>
                 <span
@@ -193,7 +195,7 @@
           </div>
 
           <!-- Instructions (Parsed Markdown) -->
-          <div class="lg:col-span-2 p-6 lg:p-10">
+          <div class="lg:col-span-2 md:p-6 lg:p-10">
             <h2 class="text-xl font-bold text-dark-green mb-6">
               {{ $t('recipe_detail.instructions') }}
             </h2>
