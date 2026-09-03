@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.15](https://github.com/prep-your-meal/frontend/compare/v0.0.14...v0.0.15) (2026-09-03)
+
+### Features
+
+* **i18n:** internationalize PWA install banner and standardize comments ([c4b79e9](https://github.com/prep-your-meal/frontend/commit/c4b79e9772908093aaa31d70461da17521fe7d14))
+* **profile:** create profile view and conditionally hide mobile profile ([b15a54b](https://github.com/prep-your-meal/frontend/commit/b15a54b408bec22b13e34a066fb259f32f922ed5))
+* **pwa:** implement global PWA installation flow and smart prompt banner ([ea64047](https://github.com/prep-your-meal/frontend/commit/ea64047b367391c01a7faf342dc7da47d16f8b87))
+
+### Bug Fixes
+
+* **navigation:** enlarge focus header logo and fix scroll behavior ([b192e70](https://github.com/prep-your-meal/frontend/commit/b192e704597c74a008d0bdb0a0e09e4636e3de01))
+* **navigation:** override browser scroll anchoring on global footer links ([ac54a64](https://github.com/prep-your-meal/frontend/commit/ac54a64b5e9421d95107f3f3f83974c1ecbf7df1))
 ## [0.0.14](https://github.com/prep-your-meal/frontend/compare/v0.0.13...v0.0.14) (2026-09-02)
 
 ### Features
