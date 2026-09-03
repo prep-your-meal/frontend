@@ -11,6 +11,9 @@
       <RouterView />
     </main>
 
+    <!-- PWA Install Banner -->
+    <PwaInstallBanner />
+
     <!-- Global Footer -->
     <footer
       v-if="showFooter"
@@ -45,6 +48,7 @@ import { computed } from 'vue'
 import { RouterView, useRoute } from 'vue-router'
 import TopNav from '@/components/layout/TopNav.vue'
 import BottomNav from '@/components/layout/BottomNav.vue'
+import PwaInstallBanner from '@/components/ui/PwaInstallBanner.vue'
 
 const route = useRoute()
 
