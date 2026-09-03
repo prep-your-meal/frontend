@@ -1,12 +1,12 @@
 <template>
-  <div class="flex flex-col items-center w-full md:px-4 md:pt-8 md:pb-12 flex-grow">
+  <div class="flex flex-col items-center w-full md:px-4 py-8 md:py-12 flex-grow">
     <!-- Main Container -->
     <div
-      class="w-full max-w-3xl md:pt-10 relative md:bg-white md:px-12 md:rounded-3xl md:shadow-sm md:border md:border-gray-100 md:border-t-[8px] md:border-t-primary-green"
+      class="w-full max-w-3xl pt-2 pb-10 md:p-12 relative md:bg-white md:rounded-3xl md:shadow-sm md:border md:border-gray-100 md:border-t-[8px] md:border-t-primary-green"
     >
       <!-- Decorative Background Blob -->
       <div
-        class="absolute -top-24 -right-24 w-64 h-64 bg-accent-gold/5 rounded-full blur-3xl pointer-events-none"
+        class="absolute -top-24 -right-24 w-64 h-64 bg-accent-gold/5 rounded-full blur-3xl pointer-events-none hidden md:block"
       ></div>
 
       <!-- Unified Header -->
@@ -14,24 +14,24 @@
 
       <!-- Page Title -->
       <h1
-        class="text-3xl md:text-4xl font-extrabold text-dark-green text-center mb-8 pb-8 border-b border-gray-200/60 md:border-gray-100 relative z-10 px-4 md:px-0"
+        class="text-3xl md:text-4xl font-extrabold text-dark-green text-center mb-10 pb-8 border-b border-gray-200/60 md:border-gray-100 relative z-10 px-4 md:px-0"
       >
         {{ $t('privacy.title') }}
       </h1>
 
       <!-- Content Area -->
-      <div class="space-y-10 text-gray-600 leading-relaxed relative z-10">
+      <div class="space-y-12 text-gray-600 leading-relaxed relative z-10">
         <!-- Section 1 -->
         <section>
-          <h2 class="text-xl font-bold text-dark-green mb-4 flex items-center gap-3 px-4 md:px-0">
+          <h2 class="text-xl font-bold text-dark-green mb-6 flex items-center gap-3 px-4 md:px-0">
             <span
-              class="flex items-center justify-center w-8 h-8 rounded-lg bg-primary-green/10 text-primary-green font-mono text-sm"
+              class="flex items-center justify-center w-8 h-8 rounded-lg bg-primary-green/10 text-primary-green font-mono text-sm shrink-0"
               >1</span
             >
             {{ $t('privacy.general.title') }}
           </h2>
           <p
-            class="text-gray-700 bg-white md:bg-bg-cream/40 px-6 py-6 md:p-5 rounded-none md:rounded-2xl shadow-sm md:shadow-none border-y md:border border-gray-100 md:border-gray-50"
+            class="text-gray-700 bg-white md:bg-bg-cream/40 px-6 py-6 md:p-8 rounded-none md:rounded-2xl shadow-sm md:shadow-none border-y md:border border-gray-100 md:border-gray-50"
             v-html="
               $t('privacy.general.text', {
                 brand: '<strong class=\'text-dark-green\'>PrepYourMeal</strong>',
@@ -42,14 +42,14 @@
 
         <!-- Section 2 -->
         <section>
-          <h2 class="text-xl font-bold text-dark-green mb-4 flex items-center gap-3 px-4 md:px-0">
+          <h2 class="text-xl font-bold text-dark-green mb-6 flex items-center gap-3 px-4 md:px-0">
             <span
-              class="flex items-center justify-center w-8 h-8 rounded-lg bg-primary-green/10 text-primary-green font-mono text-sm"
+              class="flex items-center justify-center w-8 h-8 rounded-lg bg-primary-green/10 text-primary-green font-mono text-sm shrink-0"
               >2</span
             >
             {{ $t('privacy.hosting.title') }}
           </h2>
-          <div class="space-y-4">
+          <div class="space-y-6">
             <p class="text-gray-700 px-4 md:px-0">
               {{ $t('privacy.hosting.text1') }}<br />
               <strong class="text-dark-green block mt-2">STRATO AG</strong>
@@ -57,10 +57,10 @@
               10249 Berlin, Germany
             </p>
             <div
-              class="px-6 py-5 md:p-5 bg-white md:bg-gray-50 rounded-none md:rounded-xl shadow-sm md:shadow-none border-y md:border border-gray-100 text-sm text-gray-500"
+              class="px-6 py-6 md:p-8 bg-white md:bg-gray-50 rounded-none md:rounded-2xl shadow-sm md:shadow-none border-y md:border border-gray-100 text-sm text-gray-500"
             >
               <svg
-                class="w-5 h-5 text-gray-400 mb-2"
+                class="w-6 h-6 text-gray-400 mb-3"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -79,9 +79,9 @@
 
         <!-- Section 3 -->
         <section>
-          <h2 class="text-xl font-bold text-dark-green mb-4 flex items-center gap-3 px-4 md:px-0">
+          <h2 class="text-xl font-bold text-dark-green mb-6 flex items-center gap-3 px-4 md:px-0">
             <span
-              class="flex items-center justify-center w-8 h-8 rounded-lg bg-primary-green/10 text-primary-green font-mono text-sm"
+              class="flex items-center justify-center w-8 h-8 rounded-lg bg-primary-green/10 text-primary-green font-mono text-sm shrink-0"
               >3</span
             >
             {{ $t('privacy.account.title') }}
