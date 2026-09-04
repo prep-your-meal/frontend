@@ -1,7 +1,7 @@
 <template>
   <Transition name="slide-up">
     <div
-      v-if="showBanner"
+      v-if="showBanner && route.name !== 'landing'"
       class="fixed bottom-24 md:bottom-8 right-0 left-0 md:left-auto md:right-8 mx-4 md:mx-0 z-50 md:max-w-sm"
     >
       <div
@@ -58,6 +58,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
+import { useRoute } from 'vue-router'
 
 // Custom interface for the non-standard install event to satisfy TypeScript strict mode
 interface BeforeInstallPromptEvent extends Event {
@@ -69,6 +70,7 @@ interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>
 }
 
+const route = useRoute()
 const showBanner = ref(false)
 const deferredPrompt = ref<BeforeInstallPromptEvent | null>(null)
 const isIos = ref(false)
