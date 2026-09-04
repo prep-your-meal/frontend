@@ -468,10 +468,10 @@ watch(searchQuery, () => {
   }, 400)
 })
 
-// Add a parameter to allow silent background fetching without triggering the UI loader
-const fetchRecipes = async (isSilent = false) => {
-  // Vue template events (@keyup) pass the Event object. We must ensure it's strictly a boolean.
-  const silentMode = typeof isSilent === 'boolean' ? isSilent : false
+// Accept either a boolean (for silent background updates) or an Event (from Vue template bindings like @click)
+const fetchRecipes = async (payload?: boolean | Event) => {
+  // Check if the payload is strictly a boolean. If it's an Event or undefined, default to false.
+  const silentMode = typeof payload === 'boolean' ? payload : false
 
   if (!silentMode) {
     isLoading.value = true

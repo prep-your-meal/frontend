@@ -45,7 +45,7 @@ export const useRecipeStore = defineStore(
   },
   {
     persist: {
-      paths: ['recipes', 'categoryGroups', 'searchQuery', 'selectedCategories'],
+      pick: ['recipes', 'categoryGroups', 'searchQuery', 'selectedCategories'],
     },
   },
 )
