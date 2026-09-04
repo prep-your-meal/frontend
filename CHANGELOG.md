@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.16](https://github.com/prep-your-meal/frontend/compare/v0.0.15...v0.0.16) (2026-09-04)
+
+### Features
+
+* **router:** optimize PWA startup routing experience ([c1cd9b8](https://github.com/prep-your-meal/frontend/commit/c1cd9b8efca6de87090a806e19c9515aadc6d9d6))
 ## [0.0.15](https://github.com/prep-your-meal/frontend/compare/v0.0.14...v0.0.15) (2026-09-03)
 
 ### Features
