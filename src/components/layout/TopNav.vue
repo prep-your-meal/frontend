@@ -13,7 +13,7 @@
         <img
           src="@/assets/images/prepyourmeal_logo.svg"
           alt="PrepYourMeal Logo"
-          class="h-20 w-auto drop-shadow-sm"
+          class="h-14 w-auto drop-shadow-sm"
         />
         <BrandName class="ml-4 text-2xl" />
       </RouterLink>
