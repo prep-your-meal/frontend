@@ -306,39 +306,20 @@ import { getCategoryBadgeClass } from '../utils/theme'
 import LoadingState from '@/components/ui/LoadingState.vue'
 import MobileHeader from '@/components/ui/MobileHeader.vue'
 
+import { useRecipeStore } from '@/stores/recipes'
+import { storeToRefs } from 'pinia'
+import type { FilterItem, FilterGroup } from '@/stores/recipes'
+
 const { t } = useI18n()
 
-interface Recipe {
-  id?: number
-  slug: string
-  title: string
-  description: string
-  image?: string
-  image_url?: string
-  prep_time?: number
-  cook_time?: number
-  categories?: string[]
-}
+// NEU: Globale State-Variablen aus dem Store ziehen (reaktiv dank storeToRefs)
+const recipeStore = useRecipeStore()
+const { recipes, categoryGroups, searchQuery, selectedCategories, hasLoaded } =
+  storeToRefs(recipeStore)
 
-interface FilterItem {
-  labelKey: string
-  value: string
-  icon: string
-}
-
-interface FilterGroup {
-  titleKey: string
-  items: FilterItem[]
-}
-
-const recipes = ref<Recipe[]>([])
-const categoryGroups = ref<FilterGroup[]>([])
+// Lokaler View-State (muss nicht gecacht werden)
 const isLoading = ref<boolean>(true)
 const error = ref<string | null>(null)
-
-const searchQuery = ref('')
-const selectedCategories = ref<string[]>([])
-
 const isFilterOpen = ref(false)
 const isScrolled = ref(false)
 
@@ -491,7 +472,14 @@ const fetchRecipes = async () => {
 
 onMounted(() => {
   document.title = 'Entdecken | PrepYourMeal'
-  Promise.all([fetchCategories(), fetchRecipes()])
+  if (!hasLoaded.value) {
+    Promise.all([fetchCategories(), fetchRecipes()]).then(() => {
+      hasLoaded.value = true
+    })
+  } else {
+    isLoading.value = false
+  }
+
   window.addEventListener('scroll', handleScroll, { passive: true })
   handleScroll()
 })
