@@ -145,42 +145,53 @@
       </div>
     </div>
 
-    <LoadingState v-if="isLoading" :text="$t('landing.loading')" class="mx-4 md:mx-0" />
-
-    <div
-      v-else-if="error"
-      class="text-center p-8 bg-red-50 rounded-2xl text-red-600 border border-red-100 shadow-sm max-w-2xl mx-4 md:mx-auto mt-10"
-    >
-      <div class="text-4xl mb-3">😕</div>
-      <p class="font-medium">{{ error }}</p>
-
-      <button
-        @click="fetchRecipes"
-        class="mt-4 px-6 py-2 bg-red-100 text-red-700 rounded-xl font-bold hover:bg-red-200 transition-colors"
-      >
-        {{ $t('landing.retry') }}
-      </button>
+    <!-- Loading State -->
+    <div v-if="isLoading" class="flex-grow flex items-center justify-center min-h-[50vh]">
+      <LoadingState :text="$t('landing.loading')" class="mx-4 md:mx-0" />
     </div>
 
+    <!-- Error State -->
+    <div v-else-if="error" class="flex-grow flex items-center justify-center min-h-[50vh] w-full">
+      <div
+        class="text-center p-8 bg-red-50 rounded-2xl text-red-600 border border-red-100 shadow-sm w-full max-w-2xl mx-4"
+      >
+        <div class="text-4xl mb-3">😕</div>
+        <p class="font-medium">{{ error }}</p>
+
+        <button
+          @click="fetchRecipes"
+          class="mt-4 px-6 py-2 bg-red-100 text-red-700 rounded-xl font-bold hover:bg-red-200 transition-colors"
+        >
+          {{ $t('landing.retry') }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Empty State -->
     <div
       v-else-if="recipes.length === 0"
-      class="text-center py-20 px-4 bg-white rounded-3xl border border-gray-100 shadow-sm mx-4 md:mx-0"
+      class="flex-grow flex items-center justify-center min-h-[50vh] w-full"
     >
-      <div class="text-6xl mb-6">🔍</div>
-      <h3 class="text-2xl font-bold text-dark-green mb-2">
-        {{ $t('recipes.no_results') }}
-      </h3>
-      <p class="text-dark-green/60 max-w-md mx-auto">
-        {{ $t('recipes.no_results_desc') }}
-      </p>
-      <button
-        @click="resetFilters"
-        class="mt-8 px-6 py-2.5 bg-primary-green text-white font-bold rounded-xl hover:bg-dark-green transition-colors"
+      <div
+        class="text-center py-20 px-4 bg-white rounded-3xl border border-gray-100 shadow-sm w-full max-w-3xl mx-4"
       >
-        {{ $t('recipes.filters.clear') }}
-      </button>
+        <div class="text-6xl mb-6">🔍</div>
+        <h3 class="text-2xl font-bold text-dark-green mb-2">
+          {{ $t('recipes.no_results') }}
+        </h3>
+        <p class="text-dark-green/60 max-w-md mx-auto">
+          {{ $t('recipes.no_results_desc') }}
+        </p>
+        <button
+          @click="resetFilters"
+          class="mt-8 px-6 py-2.5 bg-primary-green text-white font-bold rounded-xl hover:bg-dark-green transition-colors"
+        >
+          {{ $t('recipes.filters.clear') }}
+        </button>
+      </div>
     </div>
 
+    <!-- Recipes Grid -->
     <TransitionGroup
       v-else
       name="recipe-list"
@@ -312,12 +323,12 @@ import type { FilterItem, FilterGroup } from '@/stores/recipes'
 
 const { t } = useI18n()
 
-// NEU: Globale State-Variablen aus dem Store ziehen (reaktiv dank storeToRefs)
+// Extract global state variables from the store (reactive via storeToRefs)
 const recipeStore = useRecipeStore()
 const { recipes, categoryGroups, searchQuery, selectedCategories, hasLoaded } =
   storeToRefs(recipeStore)
 
-// Lokaler View-State (muss nicht gecacht werden)
+// Local view state (does not need to be cached)
 const isLoading = ref<boolean>(true)
 const error = ref<string | null>(null)
 const isFilterOpen = ref(false)
