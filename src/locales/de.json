@@ -133,6 +133,7 @@
     "search_placeholder": "Rezepte oder Zutaten suchen...",
     "no_results": "Keine Rezepte gefunden",
     "no_results_desc": "Probiere es mit einem anderen Suchbegriff oder passe deine Filter an.",
+    "toggle_favorite": "Als Favorit markieren / entfernen",
     "filters": {
       "button": "Filter",
       "groups": {

@@ -133,6 +133,7 @@
     "search_placeholder": "Search recipes or ingredients...",
     "no_results": "No recipes found",
     "no_results_desc": "Try a different search term or adjust your filters.",
+    "toggle_favorite": "Toggle favorite",
     "filters": {
       "button": "Filter",
       "groups": {

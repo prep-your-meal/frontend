@@ -219,8 +219,12 @@
           <div
             class="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
           ></div>
+
+          <!-- Favorite Button (Authenticated Users Only) -->
           <button
-            @click.prevent
+            v-if="authStore.isAuthenticated"
+            @click.prevent="toggleFavorite(recipe.id)"
+            :aria-label="$t('recipes.toggle_favorite')"
             class="absolute top-4 right-4 h-10 w-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors shadow-sm z-10"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -319,7 +323,9 @@ import { getCategoryBadgeClass } from '../utils/theme'
 import LoadingState from '@/components/ui/LoadingState.vue'
 import MobileHeader from '@/components/ui/MobileHeader.vue'
 
+// Global Stores
 import { useRecipeStore } from '@/stores/recipes'
+import { useAuthStore } from '@/stores/auth'
 import { storeToRefs } from 'pinia'
 import type { FilterItem, FilterGroup } from '@/stores/recipes'
 
@@ -331,6 +337,7 @@ const updateTitle = () => {
 }
 
 const recipeStore = useRecipeStore()
+const authStore = useAuthStore()
 const { recipes, categoryGroups, searchQuery, selectedCategories, hasLoaded } =
   storeToRefs(recipeStore)
 
@@ -491,6 +498,14 @@ const fetchRecipes = async (payload?: boolean | Event) => {
   } finally {
     isLoading.value = false
   }
+}
+
+// Stub function to handle adding a recipe to favorites
+const toggleFavorite = async (recipeId?: number) => {
+  if (!recipeId) return
+
+  // TODO: Implement actual API call to add/remove favorite
+  console.info(`Toggle favorite status for recipe ID: ${recipeId}`)
 }
 
 onMounted(() => {
