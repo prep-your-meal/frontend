@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.21](https://github.com/prep-your-meal/frontend/compare/v0.0.20...v0.0.21) (2026-09-04)
+
+### Bug Fixes
+
+* **types:** resolve TypeScript build errors for Pinia persistence and Vue event handlers ([c05a9e6](https://github.com/prep-your-meal/frontend/commit/c05a9e6dc07e8cd882cc3de5b91ddea63dcb0b30))
 ## [0.0.20](https://github.com/prep-your-meal/frontend/compare/v0.0.19...v0.0.20) (2026-09-04)
 
 ### Features
