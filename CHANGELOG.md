@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.20](https://github.com/prep-your-meal/frontend/compare/v0.0.19...v0.0.20) (2026-09-04)
+
+### Features
+
+* **recipes:** implement persistent local storage and stale-while-revalidate ([96bdff5](https://github.com/prep-your-meal/frontend/commit/96bdff5592f1292c8f4aebb5a63f16f5b08e2238))
 ## [0.0.19](https://github.com/prep-your-meal/frontend/compare/v0.0.18...v0.0.19) (2026-09-04)
 
 ### Bug Fixes
