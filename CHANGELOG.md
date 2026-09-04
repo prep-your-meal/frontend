@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.23](https://github.com/prep-your-meal/frontend/compare/v0.0.22...v0.0.23) (2026-09-04)
+
+### Features
+
+* **recipes:** implement conditional rendering for favorite button based on auth state ([f936dc6](https://github.com/prep-your-meal/frontend/commit/f936dc6743b476ea854b80335ed1a5b32c7cc64a))
+
+### Bug Fixes
+
+* **types:** resolve Recipe interface collision between view and store ([a93e6a5](https://github.com/prep-your-meal/frontend/commit/a93e6a59dfd890b303538893aceb70dca5c67517))
 ## [0.0.22](https://github.com/prep-your-meal/frontend/compare/v0.0.21...v0.0.22) (2026-09-04)
 
 ### Features
