@@ -86,12 +86,18 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore()
 
+  const nav = window.navigator as Navigator & { standalone?: boolean }
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || !!nav.standalone
+
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
     console.warn('Access denied. Redirecting to login.')
     next({ name: 'login' })
   } else if (to.meta.guestOnly && authStore.isAuthenticated) {
     console.info('User already logged in. Redirecting to dashboard.')
     next({ name: 'dashboard' })
+  } else if (to.name === 'landing' && isStandalone && !authStore.isAuthenticated) {
+    console.info('PWA guest mode detected. Redirecting to recipes.')
+    next({ name: 'recipes' })
   } else {
     next()
   }
