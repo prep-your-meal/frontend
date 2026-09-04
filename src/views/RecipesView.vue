@@ -312,7 +312,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
+import { ref, onMounted, onUnmounted, watch, computed, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 import api from '../services/api'
 import { getCategoryBadgeClass } from '../utils/theme'
@@ -323,23 +323,17 @@ import { useRecipeStore } from '@/stores/recipes'
 import { storeToRefs } from 'pinia'
 import type { FilterItem, FilterGroup } from '@/stores/recipes'
 
-// Extract t and locale for dynamic title translation
 const { t, locale } = useI18n()
-
-// Store original document title to restore it on unmount
 const originalTitle = document.title
 
-// Dynamically update document title based on current locale
 const updateTitle = () => {
   document.title = `${t('recipes.title')} | PrepYourMeal`
 }
 
-// Extract global state variables from the store (reactive via storeToRefs)
 const recipeStore = useRecipeStore()
 const { recipes, categoryGroups, searchQuery, selectedCategories, hasLoaded } =
   storeToRefs(recipeStore)
 
-// Local view state (does not need to be cached)
 const isLoading = ref<boolean>(true)
 const error = ref<string | null>(null)
 const isFilterOpen = ref(false)
@@ -458,7 +452,6 @@ const handleScroll = () => {
 
 let searchTimeout: ReturnType<typeof setTimeout> | null = null
 
-// Watch for locale changes to automatically update document title
 watch(locale, updateTitle)
 
 watch(searchQuery, () => {
@@ -468,9 +461,7 @@ watch(searchQuery, () => {
   }, 400)
 })
 
-// Accept either a boolean (for silent background updates) or an Event (from Vue template bindings like @click)
 const fetchRecipes = async (payload?: boolean | Event) => {
-  // Check if the payload is strictly a boolean. If it's an Event or undefined, default to false.
   const silentMode = typeof payload === 'boolean' ? payload : false
 
   if (!silentMode) {
@@ -506,21 +497,25 @@ onMounted(() => {
   updateTitle()
 
   if (!hasLoaded.value) {
-    // Fresh app start: Check if we already have restored cache from LocalStorage
     const hasCache = recipes.value.length > 0
 
     if (hasCache) {
-      // Hide loader instantly to show cached data
       isLoading.value = false
+      // Restore scroll position after DOM renders cached data
+      nextTick(() => {
+        window.scrollTo({ top: recipeStore.savedScrollPosition, behavior: 'instant' })
+      })
     }
 
-    // Trigger API calls. If we have cache, run fetchRecipes in silent mode (true)
     Promise.all([fetchCategories(), fetchRecipes(hasCache)]).then(() => {
       hasLoaded.value = true
     })
   } else {
-    // User simply navigated back from another view during the same active session
     isLoading.value = false
+    // Restore scroll position immediately for hot navigation back
+    nextTick(() => {
+      window.scrollTo({ top: recipeStore.savedScrollPosition, behavior: 'instant' })
+    })
   }
 
   window.addEventListener('scroll', handleScroll, { passive: true })
@@ -528,7 +523,9 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  document.title = originalTitle // Restore previous title to prevent bleeding across routes
+  // Save current scroll position before leaving the view
+  recipeStore.savedScrollPosition = window.scrollY
+  document.title = originalTitle
   window.removeEventListener('scroll', handleScroll)
 })
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div class="max-w-6xl w-full mx-auto md:pb-4 flex-grow flex flex-col md:px-4">
-    <!-- 1. Spacer (Clears the PWA Notch / iOS Status Bar & Desktop TopNav) -->
+    <!-- Spacer -->
     <div class="w-full h-4 md:h-28 shrink-0"></div>
 
     <div class="flex flex-col flex-grow">
@@ -30,7 +30,7 @@
         v-else-if="recipe"
         class="flex flex-col flex-grow mt-2 md:mt-0 bg-white md:rounded-3xl md:shadow-sm md:border md:border-gray-100 overflow-hidden -mb-20 pb-20 md:mb-0 md:pb-0"
       >
-        <!-- Top Section: Image & Basic Info -->
+        <!-- Top Section -->
         <div class="flex flex-col md:flex-row items-stretch md:border-b md:border-gray-100">
           <!-- Recipe Image -->
           <div class="relative w-full md:w-1/2 h-72 md:h-auto shrink-0 bg-gray-200 overflow-hidden">
@@ -163,7 +163,7 @@
           </div>
         </div>
 
-        <!-- Bottom Section: Ingredients & Instructions -->
+        <!-- Bottom Section -->
         <div
           class="grid grid-cols-1 lg:grid-cols-3 gap-0 border-t border-gray-100 md:border-transparent"
         >
@@ -190,7 +190,7 @@
             </ul>
           </div>
 
-          <!-- Instructions (Parsed Markdown) -->
+          <!-- Instructions -->
           <div class="lg:col-span-2 px-4 pt-8 pb-0 md:p-6 lg:p-10">
             <h2 class="text-xl font-bold text-dark-green mb-6">
               {{ $t('recipe_detail.instructions') }}
@@ -217,6 +217,7 @@ import MobileHeader from '@/components/ui/MobileHeader.vue'
 import axios from 'axios'
 import { marked } from 'marked'
 import DOMPurify from 'dompurify'
+import { useRecipeStore } from '@/stores/recipes'
 
 interface RecipeIngredient {
   name: string
@@ -251,6 +252,7 @@ interface Recipe {
 
 const route = useRoute()
 const { t } = useI18n()
+const recipeStore = useRecipeStore()
 
 const recipe = ref<Recipe | null>(null)
 const isLoading = ref<boolean>(false)
@@ -270,14 +272,29 @@ const parsedInstructionsHtml = computed(() => {
 })
 
 onMounted(async () => {
-  const recipeId = route.params.id
+  const recipeIdentifier = route.params.id as string
 
-  isLoading.value = true
   error.value = null
 
+  // Retrieve recipe from Pinia cache if it was loaded previously
+  if (recipeStore.detailedRecipes[recipeIdentifier]) {
+    recipe.value = recipeStore.detailedRecipes[recipeIdentifier]
+    if (recipe.value?.title) {
+      document.title = `${recipe.value.title} | PrepYourMeal`
+    }
+    return // Skip API call entirely
+  }
+
+  // Fetch from API if not cached
+  isLoading.value = true
   try {
-    const response = await api.get(`/recipes/${recipeId}`)
+    const response = await api.get(`/recipes/${recipeIdentifier}`)
     recipe.value = response.data.data || response.data
+
+    // Save the retrieved recipe to Pinia cache for future visits
+    if (recipe.value) {
+      recipeStore.detailedRecipes[recipeIdentifier] = recipe.value
+    }
 
     if (recipe.value?.title) {
       document.title = `${recipe.value.title} | PrepYourMeal`

@@ -35,17 +35,23 @@ export const useRecipeStore = defineStore(
 
     const hasLoaded = ref(false)
 
+    const detailedRecipes = ref<Record<string, Recipe>>({})
+
+    const savedScrollPosition = ref<number>(0)
+
     return {
       recipes,
       categoryGroups,
       searchQuery,
       selectedCategories,
       hasLoaded,
+      detailedRecipes,
+      savedScrollPosition,
     }
   },
   {
     persist: {
-      pick: ['recipes', 'categoryGroups', 'searchQuery', 'selectedCategories'],
+      pick: ['recipes', 'categoryGroups', 'searchQuery', 'selectedCategories', 'detailedRecipes'],
     },
   },
 )
