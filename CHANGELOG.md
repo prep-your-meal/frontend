@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.19](https://github.com/prep-your-meal/frontend/compare/v0.0.18...v0.0.19) (2026-09-04)
+
+### Bug Fixes
+
+* **pwa:** correct manifest icon paths and purpose rendering ([e56ef06](https://github.com/prep-your-meal/frontend/commit/e56ef06e544167e1aa1621eb6aa41ab7f2c9e6df))
 ## [0.0.18](https://github.com/prep-your-meal/frontend/compare/v0.0.17...v0.0.18) (2026-09-04)
 ## [0.0.17](https://github.com/prep-your-meal/frontend/compare/v0.0.16...v0.0.17) (2026-09-04)
 
