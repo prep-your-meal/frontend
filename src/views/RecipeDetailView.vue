@@ -218,37 +218,7 @@ import axios from 'axios'
 import { marked } from 'marked'
 import DOMPurify from 'dompurify'
 import { useRecipeStore } from '@/stores/recipes'
-
-interface RecipeIngredient {
-  name: string
-  amount: number | string
-  unit: string
-}
-
-interface NutritionInfo {
-  calories: number
-  protein_g: number
-  carbs_g: number
-  fat_g: number
-}
-
-interface Recipe {
-  id: number
-  title: string
-  description: string
-  image_url?: string
-  image?: string
-  calories?: number
-  protein?: number
-  carbs?: number
-  fat?: number
-  prep_time?: number
-  cook_time?: number
-  categories?: string[]
-  nutrition?: NutritionInfo
-  ingredients?: RecipeIngredient[]
-  instructions?: string
-}
+import type { Recipe } from '@/stores/recipes'
 
 const route = useRoute()
 const { t } = useI18n()

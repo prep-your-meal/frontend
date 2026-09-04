@@ -1,6 +1,19 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
+export interface RecipeIngredient {
+  name: string
+  amount: number | string
+  unit: string
+}
+
+export interface NutritionInfo {
+  calories: number
+  protein_g: number
+  carbs_g: number
+  fat_g: number
+}
+
 export interface Recipe {
   id?: number
   slug: string
@@ -11,6 +24,13 @@ export interface Recipe {
   prep_time?: number
   cook_time?: number
   categories?: string[]
+  calories?: number
+  protein?: number
+  carbs?: number
+  fat?: number
+  nutrition?: NutritionInfo
+  ingredients?: RecipeIngredient[]
+  instructions?: string
 }
 
 export interface FilterItem {
