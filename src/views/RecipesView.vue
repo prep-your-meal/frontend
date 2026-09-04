@@ -74,7 +74,9 @@
                 d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
               ></path>
             </svg>
-            <span class="hidden md:block font-bold text-sm">Filter</span>
+            <span class="hidden md:block font-bold text-sm">{{
+              $t('recipes.filters.button')
+            }}</span>
           </button>
         </div>
 
@@ -321,7 +323,16 @@ import { useRecipeStore } from '@/stores/recipes'
 import { storeToRefs } from 'pinia'
 import type { FilterItem, FilterGroup } from '@/stores/recipes'
 
-const { t } = useI18n()
+// Extract t and locale for dynamic title translation
+const { t, locale } = useI18n()
+
+// Store original document title to restore it on unmount
+const originalTitle = document.title
+
+// Dynamically update document title based on current locale
+const updateTitle = () => {
+  document.title = `${t('recipes.title')} | PrepYourMeal`
+}
 
 // Extract global state variables from the store (reactive via storeToRefs)
 const recipeStore = useRecipeStore()
@@ -447,6 +458,9 @@ const handleScroll = () => {
 
 let searchTimeout: ReturnType<typeof setTimeout> | null = null
 
+// Watch for locale changes to automatically update document title
+watch(locale, updateTitle)
+
 watch(searchQuery, () => {
   if (searchTimeout) clearTimeout(searchTimeout)
   searchTimeout = setTimeout(() => {
@@ -454,8 +468,15 @@ watch(searchQuery, () => {
   }, 400)
 })
 
-const fetchRecipes = async () => {
-  isLoading.value = true
+// Add a parameter to allow silent background fetching without triggering the UI loader
+const fetchRecipes = async (isSilent = false) => {
+  // Vue template events (@keyup) pass the Event object. We must ensure it's strictly a boolean.
+  const silentMode = typeof isSilent === 'boolean' ? isSilent : false
+
+  if (!silentMode) {
+    isLoading.value = true
+  }
+
   error.value = null
 
   try {
@@ -482,12 +503,23 @@ const fetchRecipes = async () => {
 }
 
 onMounted(() => {
-  document.title = 'Entdecken | PrepYourMeal'
+  updateTitle()
+
   if (!hasLoaded.value) {
-    Promise.all([fetchCategories(), fetchRecipes()]).then(() => {
+    // Fresh app start: Check if we already have restored cache from LocalStorage
+    const hasCache = recipes.value.length > 0
+
+    if (hasCache) {
+      // Hide loader instantly to show cached data
+      isLoading.value = false
+    }
+
+    // Trigger API calls. If we have cache, run fetchRecipes in silent mode (true)
+    Promise.all([fetchCategories(), fetchRecipes(hasCache)]).then(() => {
       hasLoaded.value = true
     })
   } else {
+    // User simply navigated back from another view during the same active session
     isLoading.value = false
   }
 
@@ -496,6 +528,7 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
+  document.title = originalTitle // Restore previous title to prevent bleeding across routes
   window.removeEventListener('scroll', handleScroll)
 })
 </script>

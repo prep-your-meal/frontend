@@ -134,6 +134,7 @@
     "no_results": "Keine Rezepte gefunden",
     "no_results_desc": "Probiere es mit einem anderen Suchbegriff oder passe deine Filter an.",
     "filters": {
+      "button": "Filter",
       "groups": {
         "basis": "Basis",
         "meal_types": "Mahlzeiten",

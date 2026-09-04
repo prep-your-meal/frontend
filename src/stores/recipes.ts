@@ -24,20 +24,28 @@ export interface FilterGroup {
   items: FilterItem[]
 }
 
-export const useRecipeStore = defineStore('recipes', () => {
-  const recipes = ref<Recipe[]>([])
-  const categoryGroups = ref<FilterGroup[]>([])
+export const useRecipeStore = defineStore(
+  'recipes',
+  () => {
+    const recipes = ref<Recipe[]>([])
+    const categoryGroups = ref<FilterGroup[]>([])
 
-  const searchQuery = ref('')
-  const selectedCategories = ref<string[]>([])
+    const searchQuery = ref('')
+    const selectedCategories = ref<string[]>([])
 
-  const hasLoaded = ref(false)
+    const hasLoaded = ref(false)
 
-  return {
-    recipes,
-    categoryGroups,
-    searchQuery,
-    selectedCategories,
-    hasLoaded,
-  }
-})
+    return {
+      recipes,
+      categoryGroups,
+      searchQuery,
+      selectedCategories,
+      hasLoaded,
+    }
+  },
+  {
+    persist: {
+      paths: ['recipes', 'categoryGroups', 'searchQuery', 'selectedCategories'],
+    },
+  },
+)

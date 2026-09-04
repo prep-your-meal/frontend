@@ -134,6 +134,7 @@
     "no_results": "No recipes found",
     "no_results_desc": "Try a different search term or adjust your filters.",
     "filters": {
+      "button": "Filter",
       "groups": {
         "basis": "Basic",
         "meal_types": "Meal Types",
