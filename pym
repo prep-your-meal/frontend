@@ -23,16 +23,24 @@ if [ $# -eq 0 ]; then
     exit 1
 fi
 
+# Determine if standard input (stdin - file descriptor 0) is attached to a terminal
+# This explicitly resolves the "stdin is not a terminal" error in Git hooks
+if [ -t 0 ] && [ -z "$HUSKY" ]; then
+    TTY_FLAG=""
+else
+    TTY_FLAG="-T"
+fi
+
 # Intercept basic Docker Compose commands and execute them directly
 if [ "$1" == "up" ] || [ "$1" == "down" ] || [ "$1" == "restart" ] || [ "$1" == "logs" ] || [ "$1" == "build" ]; then
     docker compose "$@"
 else
     # Check if the 'frontend' container is currently running
     if docker compose ps --services --filter "status=running" | grep -q "^frontend$"; then
-        # Execute instantly inside the existing container
-        docker compose exec frontend "$@"
+        # Execute instantly inside the existing container using the dynamic TTY flag
+        docker compose exec $TTY_FLAG frontend "$@" 
     else
-        # Spin up a temporary container if it's not running
-        docker compose run --rm frontend "$@"
+        # Spin up a temporary container if it is not running
+        docker compose run $TTY_FLAG --rm frontend "$@" 
     fi
 fi
