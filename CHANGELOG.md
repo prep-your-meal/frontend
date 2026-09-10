@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.30](https://github.com/prep-your-meal/frontend/compare/v0.0.29...v0.0.30) (2026-09-10)
+
+### Features
+
+* **auth:** persist user session across page reloads ([f6cbdee](https://github.com/prep-your-meal/frontend/commit/f6cbdee1766e1940160098ff07024407c66c917e))
+* **nav:** keep mobile bottom navigation visible on legal pages ([e289ae0](https://github.com/prep-your-meal/frontend/commit/e289ae06da905d5cbf7e6536e5ce23e472ff554d))
+
+### Bug Fixes
+
+* **cli:** add dynamic TTY detection to docker wrapper to prevent husky hook failures ([fe518c2](https://github.com/prep-your-meal/frontend/commit/fe518c29588a7399e5595ef21375878e2292f37a))
+* **ui:** prevent layout shift and navigation flicker on page reload ([25bc3b6](https://github.com/prep-your-meal/frontend/commit/25bc3b6668f4916b9e33c914ceb4cf953292ac5c))
 ## [0.0.29](https://github.com/prep-your-meal/frontend/compare/v0.0.28...v0.0.29) (2026-09-10)
 ## [0.0.28](https://github.com/prep-your-meal/frontend/compare/v0.0.27...v0.0.28) (2026-09-10)
 ## [0.0.27](https://github.com/prep-your-meal/frontend/compare/v0.0.26...v0.0.27) (2026-09-10)
