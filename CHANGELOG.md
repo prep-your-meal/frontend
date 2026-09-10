@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.26](https://github.com/prep-your-meal/frontend/compare/v0.0.25...v0.0.26) (2026-09-10)
+
+### Bug Fixes
+
+* **auth:** remove unused catch parameter to resolve oxlint error ([f431703](https://github.com/prep-your-meal/frontend/commit/f4317032580659e951a694cf430668a41949ddf2))
 ## [0.0.25](https://github.com/prep-your-meal/frontend/compare/v0.0.24...v0.0.25) (2026-09-10)
 ## [0.0.24](https://github.com/prep-your-meal/frontend/compare/v0.0.23...v0.0.24) (2026-09-10)
 ## [0.0.23](https://github.com/prep-your-meal/frontend/compare/v0.0.22...v0.0.23) (2026-09-04)
