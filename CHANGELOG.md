@@ -2,6 +2,7 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.29](https://github.com/prep-your-meal/frontend/compare/v0.0.28...v0.0.29) (2026-09-10)
 ## [0.0.28](https://github.com/prep-your-meal/frontend/compare/v0.0.27...v0.0.28) (2026-09-10)
 ## [0.0.27](https://github.com/prep-your-meal/frontend/compare/v0.0.26...v0.0.27) (2026-09-10)
 ## [0.0.26](https://github.com/prep-your-meal/frontend/compare/v0.0.25...v0.0.26) (2026-09-10)
