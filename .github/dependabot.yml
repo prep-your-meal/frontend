@@ -1,0 +1,17 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    
+    # Protects against zero-day supply chain attacks by waiting 7 days before proposing newly published packages
+    cooldown:
+      default-days: 7
+      
+    # Groups all minor/patch updates into a single PR to save CI execution time
+    groups:
+      frontend-dependencies:
+        patterns:
+          - "*"
