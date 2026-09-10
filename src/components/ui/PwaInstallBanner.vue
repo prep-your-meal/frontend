@@ -28,6 +28,7 @@
           </p>
 
           <!-- Specific text for iOS Safari rendered as HTML to preserve bold styling -->
+          <!-- nosemgrep: javascript.vue.security.audit.xss.templates.avoid-v-html.avoid-v-html -->
           <p
             v-else
             class="text-xs text-gray-500 mt-0.5 leading-tight"

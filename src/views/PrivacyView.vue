@@ -30,14 +30,15 @@
             >
             {{ $t('privacy.general.title') }}
           </h2>
-          <p
+          <i18n-t
+            keypath="privacy.general.text"
+            tag="p"
             class="text-gray-700 bg-white md:bg-bg-cream/40 px-6 py-6 md:p-8 rounded-none md:rounded-2xl shadow-sm md:shadow-none border-y md:border border-gray-100 md:border-gray-50"
-            v-html="
-              $t('privacy.general.text', {
-                brand: '<strong class=\'text-dark-green\'>PrepYourMeal</strong>',
-              })
-            "
-          ></p>
+          >
+            <template #brand>
+              <strong class="text-dark-green">PrepYourMeal</strong>
+            </template>
+          </i18n-t>
         </section>
 
         <!-- Section 2 -->

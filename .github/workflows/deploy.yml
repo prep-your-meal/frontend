@@ -15,12 +15,12 @@ jobs:
     steps:
       # === PART 1: RELEASE & CHANGELOG GENERATION ===
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           fetch-depth: 0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
         with:
           node-version: '22' # Updated to match your local Docker setup
 
@@ -48,7 +48,7 @@ jobs:
 
       # === PART 3: DEPLOY INFRASTRUCTURE FILES TO STRATO ===
       - name: Deploy static files via SCP to Webspace
-        uses: appleboy/scp-action@v0.1.7
+        uses: appleboy/scp-action@1d8687251de1fbf0465c40af2fbac27873634e00 # v0.1.7
         with:
           host: ${{ secrets.WEBSPACE_HOST }}
           username: ${{ secrets.WEBSPACE_USER }}

@@ -2,17 +2,30 @@
 
 echo "🔍 Running pre-commit checks..."
 
-echo "🛡️  Scanning for secrets and vulnerabilities..."
-# Hier ist das korrekte Arbeitsverzeichnis (-w) und der safe.directory Bypass hinzugefügt
+echo "🔐 1/4: Scanning for secrets (Gitleaks)..."
 if ! docker run --rm -v "$(pwd):/app" -w /app --user "$(id -u):$(id -g)" -e GIT_CONFIG_COUNT=1 -e GIT_CONFIG_KEY_0=safe.directory -e GIT_CONFIG_VALUE_0="*" zricethezav/gitleaks:latest protect -v --staged; then
     echo "❌ Secret scan failed! Please remove secrets before committing."
     exit 1
 fi
 
-echo "💅 Running linter and static code analysis..."
+echo "📦 2/4: Scanning dependencies for vulnerabilities (SCA)..."
+if ! ./pym npm audit --audit-level=high; then
+    echo "❌ Dependency vulnerabilities found! Please fix them (e.g., via 'npm audit fix') before committing."
+    exit 1
+fi
+
+echo "🛡️ 3/4: Running Static Application Security Testing (SAST via Semgrep)..."
+# Semgrep runs in a temporary container. --config=auto pulls the best community rules for JS/TS/Vue.
+if ! docker run --rm -v "$(pwd):/src" -w /src semgrep/semgrep semgrep scan --config=auto --error --quiet; then
+    echo "❌ SAST scan failed! Please fix the identified security issues."
+    exit 1
+fi
+
+echo "💅 4/4: Running linter and static code analysis..."
+# Uses the frontend container to run lint-staged
 if ! ./pym npx lint-staged; then
     echo "❌ Code quality checks failed! Please fix the errors above."
     exit 1
 fi
 
-echo "✅ All pre-commit checks passed!"
+echo "✅ All pre-commit checks passed! Ready for commit."

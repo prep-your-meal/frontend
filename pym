@@ -18,6 +18,7 @@ if [ $# -eq 0 ]; then
     echo "  ./pym npm install     Installs new NPM packages"
     echo "  ./pym npm run dev     Starts the server (if not started via 'up')"
     echo "  ./pym npm run lint    Runs the ESLint check"
+    echo "  ./pym npm audit       Runs dependency vulnerability scan (SCA)"
     echo "  ./pym npm run build   Builds the PWA for production"
     exit 1
 fi
