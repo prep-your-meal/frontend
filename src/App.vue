@@ -1,5 +1,15 @@
 <template>
-  <div class="min-h-screen flex flex-col bg-bg-cream">
+  <!-- Loading State: Shown only during the initial hard reload while verifying the token -->
+  <div
+    v-if="!authStore.isInitialized"
+    class="min-h-screen flex items-center justify-center bg-bg-cream"
+  >
+    <!-- Reusing your existing LoadingSpinner component -->
+    <LoadingSpinner size="h-10 w-10" color="text-primary-green" />
+  </div>
+
+  <!-- Main Application: Shown only after auth initialization is complete -->
+  <div v-else class="min-h-screen flex flex-col bg-bg-cream">
     <!-- Desktop Navigation -->
     <TopNav v-if="showTopNav" />
 
@@ -43,22 +53,24 @@
     <BottomNav v-if="showBottomNav" />
   </div>
 </template>
+
 <script setup lang="ts">
 import { computed } from 'vue'
 import { RouterView, useRoute } from 'vue-router'
+import { useAuthStore } from '@/stores/auth' // <-- IMPORT AUTH STORE
 import TopNav from '@/components/layout/TopNav.vue'
 import BottomNav from '@/components/layout/BottomNav.vue'
 import PwaInstallBanner from '@/components/ui/PwaInstallBanner.vue'
+import LoadingSpinner from '@/components/ui/LoadingSpinner.vue' // <-- IMPORT SPINNER
 
 const route = useRoute()
+const authStore = useAuthStore() // <-- INITIALIZE STORE
 
 const showTopNav = computed(() => {
-  // Use the specific hideTopNav meta property
   return !route.meta.hideTopNav
 })
 
 const showBottomNav = computed(() => {
-  // Use hideBottomNav, but keep it hidden on the landing page
   return !route.meta.hideBottomNav && route.name !== 'landing'
 })
 
