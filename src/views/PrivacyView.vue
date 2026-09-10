@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-center w-full md:px-4 py-8 md:py-12 flex-grow">
+  <div class="flex flex-col items-center w-full md:px-4 pt-8 pb-28 md:py-12 flex-grow">
     <!-- Main Container -->
     <div
       class="w-full max-w-3xl pt-2 pb-10 md:p-12 relative md:bg-white md:rounded-3xl md:shadow-sm md:border md:border-gray-100 md:border-t-[8px] md:border-t-primary-green"

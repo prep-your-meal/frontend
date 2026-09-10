@@ -20,7 +20,7 @@
 
       <!-- Right side: Navigation & Auth Actions -->
       <div class="flex items-center h-full">
-        <!-- App Navigation Links (Visible to everyone now!) -->
+        <!-- App Navigation Links -->
         <nav class="flex space-x-8 h-full">
           <!-- 1. Discover -->
           <RouterLink
@@ -28,55 +28,71 @@
             class="inline-flex items-center h-full px-1 text-sm font-medium text-dark-green hover:text-primary-green transition-colors border-b-2 border-transparent"
             active-class="!text-primary-green border-primary-green"
           >
-            {{ $t('nav.discover') }}
+            {{ $t('nav.discover', 'Entdecken') }}
           </RouterLink>
 
-          <!-- 2. Planner (Now visible to guests for PLG flow) -->
+          <!-- 2. Planner (Visible to everyone) -->
           <RouterLink
+            to="/planner"
+            class="inline-flex items-center h-full px-1 text-sm font-medium text-dark-green hover:text-primary-green transition-colors border-b-2 border-transparent"
+            active-class="!text-primary-green border-primary-green"
+          >
+            {{ $t('nav.plan', 'Planer') }}
+          </RouterLink>
+
+          <!-- 3. Dashboard (ONLY visible if authenticated) -->
+          <RouterLink
+            v-if="authStore.isAuthenticated"
             to="/dashboard"
             class="inline-flex items-center h-full px-1 text-sm font-medium text-dark-green hover:text-primary-green transition-colors border-b-2 border-transparent"
             active-class="!text-primary-green border-primary-green"
           >
-            {{ $t('nav.plan') }}
+            {{ $t('nav.dashboard', 'Dashboard') }}
           </RouterLink>
 
-          <!-- 3. Shopping (Now visible to guests for PLG flow) -->
+          <!-- 4. Shopping -->
           <RouterLink
             to="/shopping"
             class="inline-flex items-center h-full px-1 text-sm font-medium text-dark-green hover:text-primary-green transition-colors border-b-2 border-transparent"
             active-class="!text-primary-green border-primary-green"
           >
-            {{ $t('nav.shopping') }}
-          </RouterLink>
-
-          <!-- 4. Profile (Still hidden for guests, they have no profile yet) -->
-          <RouterLink
-            v-if="authStore.isAuthenticated"
-            to="/profile"
-            class="inline-flex items-center h-full px-1 text-sm font-medium text-dark-green hover:text-primary-green transition-colors border-b-2 border-transparent"
-            active-class="!text-primary-green border-primary-green"
-          >
-            {{ $t('nav.profile') }}
+            {{ $t('nav.shopping', 'Einkauf') }}
           </RouterLink>
         </nav>
 
-        <!-- Guest Actions (Login/Register) -->
-        <div
-          v-if="!authStore.isAuthenticated"
-          class="flex items-center space-x-6 ml-8 pl-8 border-l border-gray-100 h-8"
-        >
-          <RouterLink
-            to="/login"
-            class="text-sm font-medium text-dark-green hover:text-primary-green transition-colors"
-          >
-            {{ $t('nav.login', 'Login') }}
-          </RouterLink>
-          <RouterLink
-            to="/register"
-            class="text-sm font-bold text-white bg-primary-green px-5 py-2.5 rounded-xl hover:bg-accent-gold transition-colors shadow-sm"
-          >
-            {{ $t('nav.register', 'Registrieren') }}
-          </RouterLink>
+        <!-- Right Side Auth Actions (Visually separated by border-l) -->
+        <div class="flex items-center space-x-6 ml-8 pl-8 border-l border-gray-200 h-8">
+          <!-- Guest State: Login / Register -->
+          <template v-if="!authStore.isAuthenticated">
+            <RouterLink
+              to="/login"
+              class="text-sm font-medium text-dark-green hover:text-primary-green transition-colors"
+            >
+              {{ $t('nav.login', 'Login') }}
+            </RouterLink>
+            <RouterLink
+              to="/register"
+              class="text-sm font-bold text-white bg-primary-green px-5 py-2.5 rounded-xl hover:bg-accent-gold transition-colors shadow-sm"
+            >
+              {{ $t('nav.register', 'Registrieren') }}
+            </RouterLink>
+          </template>
+
+          <!-- Authenticated State: Profile / Logout -->
+          <template v-else>
+            <RouterLink
+              to="/profile"
+              class="text-sm font-medium text-dark-green hover:text-primary-green transition-colors"
+            >
+              {{ $t('nav.profile', 'Profil') }}
+            </RouterLink>
+            <button
+              @click="handleLogout"
+              class="text-sm font-bold text-secondary-rust bg-white border border-secondary-rust/30 px-5 py-2.5 rounded-xl hover:bg-secondary-rust hover:text-white transition-all shadow-sm"
+            >
+              {{ $t('nav.logout', 'Abmelden') }}
+            </button>
+          </template>
         </div>
       </div>
     </div>
@@ -85,12 +101,13 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import BrandName from '@/components/ui/BrandName.vue'
 
 const authStore = useAuthStore()
 const route = useRoute()
+const router = useRouter()
 
 const isScrolled = ref(false)
 
@@ -100,6 +117,11 @@ const isLandingAndAtTop = computed(() => {
 
 const handleScroll = () => {
   isScrolled.value = window.scrollY > 50 || document.documentElement.scrollTop > 50
+}
+
+const handleLogout = async () => {
+  await authStore.logout()
+  router.push('/login')
 }
 
 onMounted(() => {

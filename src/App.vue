@@ -53,11 +53,13 @@ import PwaInstallBanner from '@/components/ui/PwaInstallBanner.vue'
 const route = useRoute()
 
 const showTopNav = computed(() => {
-  return !route.meta.hideNav
+  // Use the specific hideTopNav meta property
+  return !route.meta.hideTopNav
 })
 
 const showBottomNav = computed(() => {
-  return !route.meta.hideNav && route.name !== 'landing'
+  // Use hideBottomNav, but keep it hidden on the landing page
+  return !route.meta.hideBottomNav && route.name !== 'landing'
 })
 
 const showFooter = computed(() => {

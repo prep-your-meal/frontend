@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 
 import DashboardView from '../views/DashboardView.vue'
+// Add the new PlannerView (you will need to create this file next)
+import PlannerView from '../views/PlannerView.vue'
 import LandingView from '../views/LandingView.vue'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
@@ -31,38 +33,46 @@ const router = createRouter({
       component: RecipeDetailView,
     },
     {
-      path: '/impressum',
-      name: 'impressum',
-      component: ImpressumView,
-      meta: { hideNav: true },
-    },
-    {
-      path: '/privacy',
-      name: 'privacy',
-      component: PrivacyView,
-      meta: { hideNav: true },
-    },
-    {
-      path: '/login',
-      name: 'login',
-      component: LoginView,
-      meta: { requiresAuth: false, guestOnly: true, hideNav: true },
-    },
-    {
-      path: '/register',
-      name: 'register',
-      component: RegisterView,
-      meta: { requiresAuth: false, guestOnly: true, hideNav: true },
+      // New standalone planner route (public, can show PLG teaser for guests)
+      path: '/planner',
+      name: 'planner',
+      component: PlannerView,
     },
     {
       path: '/dashboard',
       name: 'dashboard',
       component: DashboardView,
+      // Protect the dashboard route
+      meta: { requiresAuth: true },
     },
     {
       path: '/shopping',
       name: 'shopping',
       component: ShoppingView,
+    },
+    {
+      path: '/impressum',
+      name: 'impressum',
+      component: ImpressumView,
+      meta: { hideTopNav: true, hideBottomNav: false },
+    },
+    {
+      path: '/privacy',
+      name: 'privacy',
+      component: PrivacyView,
+      meta: { hideTopNav: true, hideBottomNav: false },
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: LoginView,
+      meta: { requiresAuth: false, guestOnly: true, hideTopNav: true, hideBottomNav: true },
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: RegisterView,
+      meta: { requiresAuth: false, guestOnly: true, hideTopNav: true, hideBottomNav: true },
     },
     {
       path: '/profile',
