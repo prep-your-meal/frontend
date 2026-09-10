@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import axios from 'axios'
-import api from '../services/api'
+import api from '@/services/api'
+import i18n from '@/i18n' // Import the i18n instance for translation
 
 export const useAuthStore = defineStore('auth', () => {
   // State
@@ -13,22 +14,15 @@ export const useAuthStore = defineStore('auth', () => {
   const isAuthenticated = computed(() => user.value !== null)
 
   // Actions
-  const fetchCsrfToken = async () => {
-    // Sanctum's CSRF endpoint is usually at the root domain, not under /api.
-    // We dynamically remove '/api' from the baseURL if it exists.
-    const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost/api'
-    const rootUrl = baseUrl.replace(/\/api$/, '')
-
-    await api.get('/sanctum/csrf-cookie', { baseURL: rootUrl })
-  }
-
   const fetchUser = async () => {
     try {
       const response = await api.get('/user')
-      user.value = response.data
+      // The backend returns a JSend formatted response: { status: 'success', data: { ...user } }
+      user.value = response.data.data
     } catch {
-      // If fetching the user fails (e.g., unauthenticated), we ensure the state is clear
+      // If fetching the user fails (e.g., unauthenticated or invalid token), ensure the state is clear
       user.value = null
+      localStorage.removeItem('auth_token')
     }
   }
 
@@ -37,21 +31,29 @@ export const useAuthStore = defineStore('auth', () => {
     error.value = null
 
     try {
-      // 1. Get the CSRF cookie for protection
-      await fetchCsrfToken()
+      // 1. Perform the stateless login request directly
+      const response = await api.post('/auth/login', credentials)
 
-      // 2. Perform the actual login request (adjust the route if your Laravel route differs)
-      await api.post('/login', credentials)
+      // 2. Extract the token from the backend response
+      const token = response.data.token
 
-      // 3. Fetch the authenticated user's data
+      // 3. Save the token to localStorage so the Axios interceptor can attach it to future requests
+      localStorage.setItem('auth_token', token)
+
+      // 4. Fetch the authenticated user's data
       await fetchUser()
     } catch (err) {
-      // <-- ': any' hier einfach komplett entfernen!
       if (axios.isAxiosError(err)) {
-        // Jetzt weiß TypeScript sicher, dass err.response existiert
-        error.value = err.response?.data?.message || 'Ein Fehler ist aufgetreten.'
+        // Handle explicit 401 Unauthorized errors gracefully
+        if (err.response?.status === 401) {
+          error.value = i18n.global.t('auth.invalid_credentials', 'Invalid email or password.')
+        } else {
+          error.value =
+            err.response?.data?.message ||
+            i18n.global.t('auth.error_occurred', 'An error occurred during login.')
+        }
       } else {
-        error.value = 'Ein unerwarteter Fehler ist aufgetreten.'
+        error.value = i18n.global.t('auth.unexpected_error', 'An unexpected error occurred.')
       }
       throw err
     } finally {
@@ -62,11 +64,13 @@ export const useAuthStore = defineStore('auth', () => {
   const logout = async () => {
     isLoading.value = true
     try {
-      await api.post('/logout')
+      // Send logout request to invalidate the token on the server
+      await api.post('/auth/logout')
     } catch (err) {
-      console.error('Logout failed:', err)
+      console.error('Logout failed on the server:', err)
     } finally {
-      // Even if the API call fails, we log the user out locally
+      // Always clean up local state and storage, even if the API call fails or network drops
+      localStorage.removeItem('auth_token')
       user.value = null
       isLoading.value = false
     }

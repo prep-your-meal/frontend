@@ -100,46 +100,36 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import api from '../services/api'
+import { useAuthStore } from '@/stores/auth'
 import FocusHeader from '@/components/ui/FocusHeader.vue'
 import LoadingSpinner from '@/components/ui/LoadingSpinner.vue'
-import axios from 'axios'
 
 const email = ref('')
 const password = ref('')
 const isLoading = ref(false)
 const errorMessage = ref('')
+
 const router = useRouter()
+const authStore = useAuthStore()
 
 const handleLogin = async () => {
   isLoading.value = true
   errorMessage.value = ''
 
   try {
-    // 1. Request CSRF cookie required by Laravel Sanctum SPA authentication
-    await api.get('/sanctum/csrf-cookie', { baseURL: import.meta.env.VITE_APP_URL })
-
-    // 2. Perform the actual login request using your configured Axios client
-    const response = await api.post('/auth/login', {
+    // 1. Delegate the entire authentication flow (API request, token storage, user fetch) to the Pinia store
+    await authStore.login({
       email: email.value,
       password: password.value,
     })
 
-    console.log('Login successful:', response.data)
+    // 2. Redirect to the authenticated dashboard upon success
     router.push('/dashboard')
   } catch (error: unknown) {
-    // Safely check if the error is an Axios error to satisfy TypeScript
-    if (axios.isAxiosError(error)) {
-      if (error.response?.status === 401) {
-        errorMessage.value = 'Invalid email or password.'
-      } else {
-        errorMessage.value = 'An error occurred during login. Please try again.'
-      }
-    } else {
-      // Fallback for native JS errors or network drops
-      errorMessage.value = 'An unexpected error occurred.'
-    }
-    console.error('Login Error:', error)
+    // 3. The authStore already caught the error, translated it via i18n, and stored it in `authStore.error`.
+    // We simply assign that pre-formatted message to our local UI banner.
+    errorMessage.value = authStore.error || 'An unexpected error occurred.'
+    console.error('Login process failed:', error)
   } finally {
     isLoading.value = false
   }

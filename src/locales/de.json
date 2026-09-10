@@ -1,4 +1,9 @@
 {
+  "auth": {
+    "invalid_credentials": "Ungültige E-Mail oder Passwort.",
+    "error_occurred": "Beim Login ist ein Fehler aufgetreten. Bitte versuche es erneut.",
+    "unexpected_error": "Ein unerwarteter Fehler ist aufgetreten."
+  },
   "nav": {
     "login": "Anmelden",
     "register": "Registrieren",

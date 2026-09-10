@@ -1,4 +1,9 @@
 {
+  "auth": {
+    "invalid_credentials": "Invalid email or password.",
+    "error_occurred": "An error occurred during login. Please try again.",
+    "unexpected_error": "An unexpected error occurred."
+  },
   "nav": {
     "login": "Login",
     "register": "Register",

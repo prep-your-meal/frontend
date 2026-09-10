@@ -1,5 +1,4 @@
 import axios from 'axios'
-
 import i18n from '../i18n'
 
 const api = axios.create({
@@ -9,15 +8,20 @@ const api = axios.create({
     Accept: 'application/json',
     'Content-Type': 'application/json',
   },
-  // Absolutely essential for Laravel Sanctum Auth (allows setting cookies)!
-  withCredentials: true,
-  withXSRFToken: true,
+  // REMOVED: withCredentials and withXSRFToken since we are transitioning
+  // to a stateless Bearer token architecture (OAuth2 ready).
 })
 
+// Request interceptor to attach global headers and the Bearer token
 api.interceptors.request.use((config) => {
   const currentLocale = i18n.global.locale.value
-
   config.headers['Accept-Language'] = currentLocale
+
+  // Retrieve the token from localStorage and attach it to the Authorization header
+  const token = localStorage.getItem('auth_token')
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
 
   return config
 })
@@ -28,7 +32,9 @@ api.interceptors.response.use(
   (error) => {
     // If the API throws a 401 Unauthorized error
     if (error.response?.status === 401) {
-      console.warn('Unauthorized. The session is invalid or has expired.')
+      console.warn('Unauthorized. The session or token is invalid or has expired.')
+      // Clear the invalid token from storage to prevent infinite loops
+      localStorage.removeItem('auth_token')
       // We can add an automatic redirect to the login page here later
     }
     return Promise.reject(error)
