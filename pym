@@ -27,6 +27,12 @@ fi
 if [ "$1" == "up" ] || [ "$1" == "down" ] || [ "$1" == "restart" ] || [ "$1" == "logs" ] || [ "$1" == "build" ]; then
     docker compose "$@"
 else
-    # Execute all other commands (like npm, npx, node) inside a temporary/running container
-    docker compose run --rm frontend "$@"
+    # Check if the 'frontend' container is currently running
+    if docker compose ps --services --filter "status=running" | grep -q "^frontend$"; then
+        # Execute instantly inside the existing container
+        docker compose exec frontend "$@"
+    else
+        # Spin up a temporary container if it's not running
+        docker compose run --rm frontend "$@"
+    fi
 fi
