@@ -93,8 +93,13 @@ const router = createRouter({
 })
 
 // Global Navigation Guard
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
+
+  // Before evaluating any route rules, ensure the auth state is restored from localStorage
+  if (!authStore.isInitialized) {
+    await authStore.initializeAuth()
+  }
 
   const nav = window.navigator as Navigator & { standalone?: boolean }
   const isStandalone = window.matchMedia('(display-mode: standalone)').matches || !!nav.standalone

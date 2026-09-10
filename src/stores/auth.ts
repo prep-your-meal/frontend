@@ -10,6 +10,9 @@ export const useAuthStore = defineStore('auth', () => {
   const isLoading = ref<boolean>(false)
   const error = ref<string | null>(null)
 
+  // Tracks if the app has checked local storage for an existing session on initial load
+  const isInitialized = ref<boolean>(false)
+
   // Getters
   const isAuthenticated = computed(() => user.value !== null)
 
@@ -24,6 +27,16 @@ export const useAuthStore = defineStore('auth', () => {
       user.value = null
       localStorage.removeItem('auth_token')
     }
+  }
+
+  // Function to restore the session upon page reload
+  const initializeAuth = async () => {
+    const token = localStorage.getItem('auth_token')
+    if (token) {
+      // If a token exists in storage, silently fetch the user data before the router redirects
+      await fetchUser()
+    }
+    isInitialized.value = true
   }
 
   const login = async (credentials: Record<string, string>) => {
@@ -81,11 +94,13 @@ export const useAuthStore = defineStore('auth', () => {
     user,
     isLoading,
     error,
+    isInitialized,
     // Getters
     isAuthenticated,
     // Actions
     login,
     logout,
     fetchUser,
+    initializeAuth,
   }
 })
