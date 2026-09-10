@@ -26,7 +26,7 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       const response = await api.get('/user')
       user.value = response.data
-    } catch (err) {
+    } catch {
       // If fetching the user fails (e.g., unauthenticated), we ensure the state is clear
       user.value = null
     }
