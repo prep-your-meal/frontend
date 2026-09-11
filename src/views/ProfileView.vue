@@ -5,45 +5,147 @@
 
     <div class="max-w-6xl w-full mx-auto px-4 py-8 md:py-16 flex-grow flex flex-col items-center">
       <div
-        class="bg-white p-8 md:p-12 rounded-3xl shadow-sm border border-gray-100 max-w-2xl w-full"
+        class="bg-white p-6 md:p-12 rounded-3xl shadow-sm border border-gray-100 max-w-2xl w-full"
       >
-        <!-- Header -->
+        <!-- Header: User Identity -->
         <div class="flex items-center gap-6 mb-10">
           <div
-            class="w-20 h-20 bg-primary-green/10 text-primary-green rounded-full flex items-center justify-center shrink-0"
+            class="w-20 h-20 bg-primary-green/10 text-primary-green rounded-full flex items-center justify-center shrink-0 text-3xl font-bold uppercase"
           >
-            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-              ></path>
-            </svg>
+            <!-- Dynamically show the first letter of the user's name, fallback to 'U' -->
+            {{ authStore.user?.name ? authStore.user.name.charAt(0) : 'U' }}
           </div>
-          <div>
-            <h2 class="text-3xl font-bold text-dark-green">{{ $t('profile.title', 'Profil') }}</h2>
-            <p class="text-gray-500 mt-1">
-              {{ $t('profile.subtitle', 'Deine persönlichen Einstellungen') }}
+          <div class="overflow-hidden">
+            <h2 class="text-3xl font-bold text-dark-green capitalize truncate">
+              {{ authStore.user?.name || $t('profile.title', 'Profil') }}
+            </h2>
+            <p class="text-gray-500 mt-1 truncate">
+              {{ authStore.user?.email }}
             </p>
           </div>
         </div>
 
-        <div class="space-y-6">
-          <!-- Placeholder: User Data -->
-          <div class="p-5 bg-bg-cream/30 rounded-2xl border border-gray-100">
-            <p class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-1">
-              {{ $t('profile.email', 'E-Mail Adresse') }}
-            </p>
-            <!-- Ersetze dies später durch authStore.user?.email, sobald dein Backend läuft -->
-            <p class="font-medium text-dark-green text-lg">user@example.com</p>
-          </div>
+        <div class="space-y-8">
+          <!-- Section 1: Meal Planning Defaults -->
+          <section>
+            <h3 class="text-lg font-bold text-dark-green border-b border-gray-100 pb-2 mb-4">
+              {{ $t('profile.planning_settings', 'Planungs-Einstellungen') }}
+            </h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Target Meals -->
+              <div class="p-5 bg-bg-cream/30 rounded-2xl border border-gray-100">
+                <p class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-1">
+                  {{ $t('profile.target_meals', 'Mahlzeiten pro Woche') }}
+                </p>
+                <p class="font-medium text-dark-green text-xl">
+                  {{ authStore.user?.target_meals_per_week || 0 }}
+                </p>
+              </div>
+
+              <!-- Default Portions -->
+              <div class="p-5 bg-bg-cream/30 rounded-2xl border border-gray-100">
+                <p class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-1">
+                  {{ $t('profile.default_portions', 'Standard Portionen') }}
+                </p>
+                <p class="font-medium text-dark-green text-xl">
+                  {{ authStore.user?.default_portions || 0 }}
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section 2: Dietary & Allergies -->
+          <section>
+            <h3 class="text-lg font-bold text-dark-green border-b border-gray-100 pb-2 mb-4">
+              {{ $t('profile.dietary_info', 'Ernährung & Allergien') }}
+            </h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Diets -->
+              <div class="p-5 bg-bg-cream/30 rounded-2xl border border-gray-100">
+                <p class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3">
+                  {{ $t('profile.diet', 'Ernährungsweise') }}
+                </p>
+                <!-- Render array elements if they exist -->
+                <div
+                  v-if="authStore.user?.dietary_preferences?.length"
+                  class="flex flex-wrap gap-2"
+                >
+                  <span
+                    v-for="diet in authStore.user.dietary_preferences"
+                    :key="diet"
+                    class="px-3 py-1 bg-white border border-gray-200 rounded-full text-sm text-dark-green"
+                  >
+                    {{ diet }}
+                  </span>
+                </div>
+                <p v-else class="text-sm text-gray-400 italic">
+                  {{ $t('profile.none_set', 'Keine hinterlegt') }}
+                </p>
+              </div>
+
+              <!-- Allergies -->
+              <div class="p-5 bg-bg-cream/30 rounded-2xl border border-gray-100">
+                <p class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3">
+                  {{ $t('profile.allergies', 'Allergien / Unverträglichkeiten') }}
+                </p>
+                <div v-if="authStore.user?.allergies?.length" class="flex flex-wrap gap-2">
+                  <span
+                    v-for="allergy in authStore.user.allergies"
+                    :key="allergy"
+                    class="px-3 py-1 bg-white border border-gray-200 rounded-full text-sm text-secondary-rust"
+                  >
+                    {{ allergy }}
+                  </span>
+                </div>
+                <p v-else class="text-sm text-gray-400 italic">
+                  {{ $t('profile.none_set', 'Keine hinterlegt') }}
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section 3: App Preferences -->
+          <section>
+            <div
+              class="p-5 bg-bg-cream/30 rounded-2xl border border-gray-100 flex flex-row justify-between items-center gap-4"
+            >
+              <div>
+                <p class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-1">
+                  {{ $t('profile.minimize_waste', 'Food Waste minimieren') }}
+                </p>
+                <p class="text-sm text-gray-500">
+                  {{
+                    $t(
+                      'profile.minimize_waste_desc',
+                      'Algorithmus bevorzugt Rezepte mit Restzutaten',
+                    )
+                  }}
+                </p>
+              </div>
+              <!-- Status Indicator -->
+              <div
+                class="font-bold text-lg shrink-0"
+                :class="
+                  authStore.user?.minimize_food_waste ? 'text-primary-green' : 'text-gray-400'
+                "
+              >
+                {{
+                  authStore.user?.minimize_food_waste
+                    ? $t('common.yes', 'Ja')
+                    : $t('common.no', 'Nein')
+                }}
+              </div>
+            </div>
+          </section>
 
           <!-- Action Buttons -->
           <div class="pt-6 border-t border-gray-100">
+            <!-- Adjusted logout button to match the global secondary-rust styling -->
             <button
               @click="handleLogout"
-              class="w-full py-4 bg-red-50 text-red-600 font-bold rounded-xl border border-red-100 hover:bg-red-100 transition-colors flex items-center justify-center gap-2"
+              class="w-full py-4 bg-white text-secondary-rust font-bold rounded-xl border border-secondary-rust/30 hover:bg-secondary-rust hover:text-white transition-all flex items-center justify-center gap-2 shadow-sm"
             >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path

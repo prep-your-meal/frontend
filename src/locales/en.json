@@ -69,6 +69,23 @@
     "teaser_register": "Sign up for free",
     "teaser_login": "Log in"
   },
+  "profile": {
+    "title": "Profile",
+    "planning_settings": "Planning Settings",
+    "target_meals": "Meals per Week",
+    "default_portions": "Default Portions",
+    "dietary_info": "Dietary & Allergies",
+    "diet": "Dietary Preferences",
+    "allergies": "Allergies / Intolerances",
+    "none_set": "None set",
+    "minimize_waste": "Minimize Food Waste",
+    "minimize_waste_desc": "Algorithm favors recipes using leftover ingredients",
+    "logout": "Log Out"
+  },
+  "common": {
+    "yes": "Yes",
+    "no": "No"
+  },
   "impressum": {
     "title": "Legal Notice",
     "back": "Back to Home",

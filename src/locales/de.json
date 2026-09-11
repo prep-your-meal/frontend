@@ -69,6 +69,23 @@
     "teaser_register": "Kostenlos registrieren",
     "teaser_login": "Ich habe schon einen Account"
   },
+  "profile": {
+    "title": "Profil",
+    "planning_settings": "Planungs-Einstellungen",
+    "target_meals": "Mahlzeiten pro Woche",
+    "default_portions": "Standard Portionen",
+    "dietary_info": "Ernährung & Allergien",
+    "diet": "Ernährungsweise",
+    "allergies": "Allergien / Unverträglichkeiten",
+    "none_set": "Keine hinterlegt",
+    "minimize_waste": "Food Waste minimieren",
+    "minimize_waste_desc": "Algorithmus bevorzugt Rezepte zur Resteverwertung",
+    "logout": "Abmelden"
+  },
+  "common": {
+    "yes": "Ja",
+    "no": "Nein"
+  },
   "impressum": {
     "title": "Impressum",
     "back": "Zurück zur Startseite",
