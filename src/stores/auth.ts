@@ -74,6 +74,28 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
+  const updateUserPreferences = async (payload: Record<string, unknown>) => {
+    try {
+      const response = await api.put('/user/preferences', payload)
+      user.value = response.data.data
+      return true
+    } catch (err) {
+      console.error('Failed to update profile:', err)
+      return false
+    }
+  }
+
+  const deleteAccount = async () => {
+    try {
+      await api.delete('/user')
+      localStorage.removeItem('auth_token')
+      user.value = null
+    } catch (err) {
+      console.error('Failed to delete account:', err)
+      throw err
+    }
+  }
+
   const logout = async () => {
     isLoading.value = true
     try {
@@ -101,6 +123,8 @@ export const useAuthStore = defineStore('auth', () => {
     login,
     logout,
     fetchUser,
+    updateUserPreferences,
+    deleteAccount,
     initializeAuth,
   }
 })

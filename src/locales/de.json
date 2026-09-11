@@ -201,6 +201,24 @@
       "fat": "Fett"
     }
   },
+  "planner": {
+    "title": "Wochenplaner",
+    "subtitle": "Plane deine Mahlzeiten für die aktuelle Woche.",
+    "add_recipe": "Hinzufügen",
+    "empty_slot": "Noch nichts geplant",
+    "days": {
+      "short": { "1": "Mo", "2": "Di", "3": "Mi", "4": "Do", "5": "Fr", "6": "Sa", "0": "So" },
+      "long": {
+        "1": "Montag",
+        "2": "Dienstag",
+        "3": "Mittwoch",
+        "4": "Donnerstag",
+        "5": "Freitag",
+        "6": "Samstag",
+        "0": "Sonntag"
+      }
+    }
+  },
   "login": {
     "title": "Willkommen zurück",
     "subtitle": "Logge dich ein, um deine Meal-Preps zu planen.",

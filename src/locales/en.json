@@ -201,6 +201,24 @@
       "fat": "Fat"
     }
   },
+  "planner": {
+    "title": "Weekly Planner",
+    "subtitle": "Plan your meals for the current week.",
+    "add_recipe": "Add Recipe",
+    "empty_slot": "Nothing planned yet",
+    "days": {
+      "short": { "1": "Mo", "2": "Tu", "3": "We", "4": "Th", "5": "Fr", "6": "Sa", "0": "Su" },
+      "long": {
+        "1": "Monday",
+        "2": "Tuesday",
+        "3": "Wednesday",
+        "4": "Thursday",
+        "5": "Friday",
+        "6": "Saturday",
+        "0": "Sunday"
+      }
+    }
+  },
   "login": {
     "title": "Welcome back",
     "subtitle": "Log in to plan your meal preps.",
