@@ -1,10 +1,9 @@
 <template>
   <div class="flex flex-col items-center justify-center w-full md:px-4 py-8 flex-grow">
-    <!-- Login Container (Edge-to-Edge on Mobile, Card on Desktop) -->
+    <!-- Login Container -->
     <div
       class="w-full max-w-md md:bg-white px-4 md:px-8 py-4 md:py-10 md:rounded-3xl md:shadow-sm md:border-t-[8px] border-t-transparent md:border-primary-green relative"
     >
-      <!-- Unified Header -->
       <FocusHeader />
 
       <!-- Header -->
@@ -17,12 +16,21 @@
         </p>
       </div>
 
-      <!-- Error Message Banner -->
+      <!-- Error Message Banner (Now in Secondary-Rust instead of Red) -->
       <div
         v-if="errorMessage"
-        class="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm text-center font-medium"
+        class="mb-6 p-4 rounded-xl bg-secondary-rust/10 border border-secondary-rust/30 text-secondary-rust text-sm text-center font-medium shadow-sm flex items-center justify-center gap-3"
       >
-        {{ errorMessage }}
+        <!-- Info Icon -->
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          ></path>
+        </svg>
+        <span class="text-left leading-snug">{{ errorMessage }}</span>
       </div>
 
       <!-- Login Form -->
@@ -70,7 +78,6 @@
           :disabled="isLoading"
           class="w-full flex justify-center items-center bg-primary-green text-white font-bold text-lg py-3.5 px-4 rounded-2xl hover:bg-accent-gold hover:-translate-y-1 hover:shadow-lg transition-all duration-300 ring-4 ring-primary-green/20 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:transform-none"
         >
-          <!-- Loading Spinner -->
           <LoadingSpinner v-if="isLoading" size="h-5 w-5" color="text-white" class="-ml-1 mr-3" />
           {{ isLoading ? $t('login.loading', 'Loading...') : $t('login.submit', 'Log In') }}
         </button>
@@ -100,6 +107,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+import axios from 'axios'
 import { useAuthStore } from '@/stores/auth'
 import FocusHeader from '@/components/ui/FocusHeader.vue'
 import LoadingSpinner from '@/components/ui/LoadingSpinner.vue'
@@ -111,25 +120,31 @@ const errorMessage = ref('')
 
 const router = useRouter()
 const authStore = useAuthStore()
+const { t } = useI18n()
 
 const handleLogin = async () => {
   isLoading.value = true
   errorMessage.value = ''
 
   try {
-    // 1. Delegate the entire authentication flow (API request, token storage, user fetch) to the Pinia store
     await authStore.login({
       email: email.value,
       password: password.value,
     })
 
-    // 2. Redirect to the authenticated dashboard upon success
     router.push('/dashboard')
   } catch (error: unknown) {
-    // 3. The authStore already caught the error, translated it via i18n, and stored it in `authStore.error`.
-    // We simply assign that pre-formatted message to our local UI banner.
-    errorMessage.value = authStore.error || 'An unexpected error occurred.'
-    console.error('Login process failed:', error)
+    // Intercept 403 Verification Error specifically
+    if (
+      axios.isAxiosError(error) &&
+      error.response?.status === 403 &&
+      error.response.data?.needs_verification
+    ) {
+      errorMessage.value = t('auth.needs_verification')
+    } else {
+      // Fallback to the authStore's mapped error or a generic one
+      errorMessage.value = authStore.error || t('auth.error_occurred')
+    }
   } finally {
     isLoading.value = false
   }

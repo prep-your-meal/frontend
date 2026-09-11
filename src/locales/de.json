@@ -2,7 +2,8 @@
   "auth": {
     "invalid_credentials": "Ungültige E-Mail oder Passwort.",
     "error_occurred": "Beim Login ist ein Fehler aufgetreten. Bitte versuche es erneut.",
-    "unexpected_error": "Ein unerwarteter Fehler ist aufgetreten."
+    "unexpected_error": "Ein unerwarteter Fehler ist aufgetreten.",
+    "needs_verification": "Bitte bestätige deine E-Mail-Adresse über den Link in deinem Postfach, bevor du dich einloggst."
   },
   "nav": {
     "login": "Anmelden",
@@ -80,7 +81,11 @@
     "none_set": "Keine hinterlegt",
     "minimize_waste": "Food Waste minimieren",
     "minimize_waste_desc": "Algorithmus bevorzugt Rezepte zur Resteverwertung",
-    "logout": "Abmelden"
+    "save": "Änderungen speichern",
+    "delete_account": "Konto löschen",
+    "delete_confirm_title": "Konto wirklich löschen?",
+    "delete_confirm_desc": "Diese Aktion kann nicht rückgängig gemacht werden. Alle deine Pläne und Favoriten gehen unwiderruflich verloren.",
+    "delete_confirm_btn": "Ja, endgültig löschen"
   },
   "common": {
     "yes": "Ja",
