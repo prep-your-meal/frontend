@@ -3,7 +3,8 @@
     "invalid_credentials": "Invalid email or password.",
     "error_occurred": "An error occurred during login. Please try again.",
     "unexpected_error": "An unexpected error occurred.",
-    "needs_verification": "Please confirm your email address using the link in your inbox before logging in."
+    "needs_verification": "Please confirm your email address using the link in your inbox before logging in.",
+    "verified_success": "Your email address has been successfully verified. You can now log in."
   },
   "nav": {
     "login": "Login",

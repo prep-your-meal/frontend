@@ -3,7 +3,8 @@
     "invalid_credentials": "Ungültige E-Mail oder Passwort.",
     "error_occurred": "Beim Login ist ein Fehler aufgetreten. Bitte versuche es erneut.",
     "unexpected_error": "Ein unerwarteter Fehler ist aufgetreten.",
-    "needs_verification": "Bitte bestätige deine E-Mail-Adresse über den Link in deinem Postfach, bevor du dich einloggst."
+    "needs_verification": "Bitte bestätige deine E-Mail-Adresse über den Link in deinem Postfach, bevor du dich einloggst.",
+    "verified_success": "Deine E-Mail-Adresse wurde erfolgreich bestätigt. Du kannst dich nun einloggen."
   },
   "nav": {
     "login": "Anmelden",

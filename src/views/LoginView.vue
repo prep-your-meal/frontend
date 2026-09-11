@@ -16,12 +16,27 @@
         </p>
       </div>
 
-      <!-- Error Message Banner (Now in Secondary-Rust instead of Red) -->
+      <!-- Success Message Banner (For Email Verification) -->
+      <div
+        v-if="successMessage"
+        class="mb-6 p-4 rounded-xl bg-primary-green/10 border border-primary-green/30 text-primary-green text-sm text-center font-medium shadow-sm flex items-center justify-center gap-3"
+      >
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+          ></path>
+        </svg>
+        <span class="text-left leading-snug">{{ successMessage }}</span>
+      </div>
+
+      <!-- Error Message Banner (Secondary-Rust) -->
       <div
         v-if="errorMessage"
         class="mb-6 p-4 rounded-xl bg-secondary-rust/10 border border-secondary-rust/30 text-secondary-rust text-sm text-center font-medium shadow-sm flex items-center justify-center gap-3"
       >
-        <!-- Info Icon -->
         <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             stroke-linecap="round"
@@ -105,8 +120,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import axios from 'axios'
 import { useAuthStore } from '@/stores/auth'
@@ -117,14 +132,26 @@ const email = ref('')
 const password = ref('')
 const isLoading = ref(false)
 const errorMessage = ref('')
+const successMessage = ref('')
 
 const router = useRouter()
+const route = useRoute()
 const authStore = useAuthStore()
 const { t } = useI18n()
+
+onMounted(() => {
+  // Check if the user was just redirected from a successful email verification
+  if (route.query.verified === '1') {
+    successMessage.value = t('auth.verified_success')
+    // Clean up the URL so the parameter doesn't persist on reload
+    router.replace({ query: {} })
+  }
+})
 
 const handleLogin = async () => {
   isLoading.value = true
   errorMessage.value = ''
+  successMessage.value = '' // Clear success message on new login attempt
 
   try {
     await authStore.login({
@@ -134,7 +161,6 @@ const handleLogin = async () => {
 
     router.push('/dashboard')
   } catch (error: unknown) {
-    // Intercept 403 Verification Error specifically
     if (
       axios.isAxiosError(error) &&
       error.response?.status === 403 &&
@@ -142,7 +168,6 @@ const handleLogin = async () => {
     ) {
       errorMessage.value = t('auth.needs_verification')
     } else {
-      // Fallback to the authStore's mapped error or a generic one
       errorMessage.value = authStore.error || t('auth.error_occurred')
     }
   } finally {
