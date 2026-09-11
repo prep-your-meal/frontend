@@ -96,7 +96,10 @@
   },
   "common": {
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "edit": "Edit",
+    "cancel": "Cancel",
+    "saving": "Saving..."
   },
   "impressum": {
     "title": "Legal Notice",

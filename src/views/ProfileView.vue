@@ -33,61 +33,107 @@
               {{ $t('profile.account_settings', 'Account-Einstellungen') }}
             </h3>
             <div class="grid grid-cols-1 gap-4">
-              <!-- Name Input -->
-              <div class="p-5 bg-bg-cream/30 rounded-2xl border border-gray-100 flex flex-col">
-                <label class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-2 block">
-                  {{ $t('profile.name', 'Name') }}
-                </label>
-                <div class="relative flex items-center">
+              <!-- Name Input (Click to edit) -->
+              <div
+                class="p-5 bg-bg-cream/30 rounded-2xl border border-gray-100 flex flex-col transition-all duration-300"
+              >
+                <div class="flex justify-between items-center mb-1">
+                  <label class="text-sm font-bold text-gray-500 uppercase tracking-wider block">
+                    {{ $t('profile.name', 'Name') }}
+                  </label>
+
+                  <!-- Toggle Edit/Cancel Buttons -->
+                  <button
+                    v-if="!isEditingName"
+                    type="button"
+                    @click="isEditingName = true"
+                    class="text-sm text-primary-green hover:text-dark-green transition-colors flex items-center gap-1.5 font-bold"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                      ></path>
+                    </svg>
+                    {{ $t('common.edit', 'Bearbeiten') }}
+                  </button>
+                  <button
+                    v-else
+                    type="button"
+                    @click="cancelEdit('name')"
+                    class="text-sm text-gray-400 hover:text-secondary-rust transition-colors flex items-center gap-1.5 font-bold"
+                  >
+                    {{ $t('common.cancel', 'Abbrechen') }}
+                  </button>
+                </div>
+
+                <!-- Read-Only View -->
+                <div v-if="!isEditingName" class="text-dark-green font-medium text-lg mt-2">
+                  {{ form.name }}
+                </div>
+
+                <!-- Edit View -->
+                <div v-else class="relative flex items-center mt-3">
                   <input
                     v-model="form.name"
                     type="text"
                     required
-                    class="w-full pl-4 pr-12 py-3 rounded-xl border border-gray-200 bg-white text-dark-green font-medium focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-primary-green transition-all shadow-sm"
+                    class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-dark-green font-medium focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-primary-green transition-all shadow-sm"
                   />
-                  <!-- Edit Pencil Icon -->
-                  <svg
-                    class="w-5 h-5 text-gray-400 absolute right-4 pointer-events-none"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                    ></path>
-                  </svg>
                 </div>
               </div>
 
-              <!-- Email Input -->
-              <div class="p-5 bg-bg-cream/30 rounded-2xl border border-gray-100 flex flex-col">
-                <label class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-2 block">
-                  {{ $t('profile.email', 'E-Mail Adresse') }}
-                </label>
-                <div class="relative flex items-center">
+              <!-- Email Input (Click to edit) -->
+              <div
+                class="p-5 bg-bg-cream/30 rounded-2xl border border-gray-100 flex flex-col transition-all duration-300"
+              >
+                <div class="flex justify-between items-center mb-1">
+                  <label class="text-sm font-bold text-gray-500 uppercase tracking-wider block">
+                    {{ $t('profile.email', 'E-Mail Adresse') }}
+                  </label>
+
+                  <!-- Toggle Edit/Cancel Buttons -->
+                  <button
+                    v-if="!isEditingEmail"
+                    type="button"
+                    @click="isEditingEmail = true"
+                    class="text-sm text-primary-green hover:text-dark-green transition-colors flex items-center gap-1.5 font-bold"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                      ></path>
+                    </svg>
+                    {{ $t('common.edit', 'Bearbeiten') }}
+                  </button>
+                  <button
+                    v-else
+                    type="button"
+                    @click="cancelEdit('email')"
+                    class="text-sm text-gray-400 hover:text-secondary-rust transition-colors flex items-center gap-1.5 font-bold"
+                  >
+                    {{ $t('common.cancel', 'Abbrechen') }}
+                  </button>
+                </div>
+
+                <!-- Read-Only View -->
+                <div v-if="!isEditingEmail" class="text-dark-green font-medium text-lg mt-2">
+                  {{ form.email }}
+                </div>
+
+                <!-- Edit View -->
+                <div v-else class="relative flex items-center mt-3">
                   <input
                     v-model="form.email"
                     type="email"
                     required
-                    class="w-full pl-4 pr-12 py-3 rounded-xl border border-gray-200 bg-white text-dark-green font-medium focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-primary-green transition-all shadow-sm"
+                    class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-dark-green font-medium focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-primary-green transition-all shadow-sm"
                   />
-                  <!-- Edit Pencil Icon -->
-                  <svg
-                    class="w-5 h-5 text-gray-400 absolute right-4 pointer-events-none"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                    ></path>
-                  </svg>
                 </div>
               </div>
             </div>
@@ -370,6 +416,10 @@ const authStore = useAuthStore()
 const router = useRouter()
 const { categoryGroups, fetchCategories } = useCategories()
 
+// UI State for click-to-edit fields
+const isEditingName = ref(false)
+const isEditingEmail = ref(false)
+
 // Function to generate a clean snapshot of the user's data
 const getInitialState = () => ({
   name: authStore.user?.name || '',
@@ -388,6 +438,17 @@ const form = reactive(getInitialState())
 const isSaving = ref(false)
 const showDeleteModal = ref(false)
 const showEmailModal = ref(false)
+
+// Reverts a specific text field back to its original value and closes the input
+const cancelEdit = (field: 'name' | 'email') => {
+  if (field === 'name') {
+    form.name = originalState.value.name
+    isEditingName.value = false
+  } else {
+    form.email = originalState.value.email
+    isEditingEmail.value = false
+  }
+}
 
 // Computed property checking for any modifications across all fields
 const hasChanges = computed(() => {
@@ -471,8 +532,10 @@ const executeSave = async () => {
       await authStore.logout()
       router.push('/login')
     } else {
-      // Reset the pristine state to disable the save button
+      // Reset the pristine state to disable the save button and close edit inputs
       originalState.value = getInitialState()
+      isEditingName.value = false
+      isEditingEmail.value = false
     }
   } catch (err) {
     console.error('Failed to update profile:', err)

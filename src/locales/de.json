@@ -96,7 +96,10 @@
   },
   "common": {
     "yes": "Ja",
-    "no": "Nein"
+    "no": "Nein",
+    "edit": "Bearbeiten",
+    "cancel": "Abbrechen",
+    "saving": "Speichern..."
   },
   "impressum": {
     "title": "Impressum",
