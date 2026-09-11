@@ -1,17 +1,15 @@
 <template>
   <div class="w-full flex-grow flex flex-col bg-bg-cream/20 relative">
-    <!-- Adjusted Top Spacer to exactly match RecipesView.vue -->
+    <!-- Top Spacer to match RecipesView.vue -->
     <div class="w-full h-4 md:h-28 shrink-0"></div>
 
     <div class="max-w-6xl w-full mx-auto px-4 pb-8 md:pb-16 flex-grow flex flex-col items-center">
-      <div
-        class="bg-white p-6 md:p-12 rounded-3xl shadow-sm border border-gray-100 max-w-2xl w-full"
-      >
-        <!-- The entire profile is now wrapped in the form -->
+      <!-- Outer Card: max-w-6xl on Desktop to match RecipesView layout -->
+      <div class="bg-white p-6 md:p-12 rounded-3xl shadow-sm border border-gray-100 w-full">
         <form @submit.prevent="saveProfile" class="space-y-10">
           <!-- Identity Header (Combined Read & Edit Mode) -->
           <div
-            class="flex flex-col sm:flex-row sm:items-center gap-6 pb-6 border-b border-gray-100"
+            class="flex flex-col sm:flex-row sm:items-center gap-6 pb-8 border-b border-gray-100"
           >
             <!-- Avatar -->
             <div
@@ -20,7 +18,7 @@
               {{ form.name ? form.name.charAt(0) : 'U' }}
             </div>
 
-            <!-- Details / Edit Form -->
+            <!-- Details / Inline Edit Form -->
             <div class="flex-grow w-full">
               <!-- Read-Only Mode -->
               <div v-if="!isEditingProfile" class="flex items-start justify-between gap-4 group">
@@ -70,7 +68,7 @@
                   </button>
                 </div>
 
-                <div class="flex flex-col gap-2.5">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <input
                     v-model="form.name"
                     type="text"
@@ -90,230 +88,239 @@
             </div>
           </div>
 
-          <!-- Section 1: Meal Planning Defaults -->
-          <section>
-            <h3 class="text-lg font-bold text-dark-green border-b border-gray-100 pb-2 mb-4">
-              {{ $t('profile.planning_settings', 'Planungs-Einstellungen') }}
-            </h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <!-- Target Meals Stepper -->
-              <div
-                class="p-5 bg-bg-cream/30 rounded-2xl border border-gray-100 flex flex-col items-center text-center"
-              >
-                <label class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4 block">
-                  {{ $t('profile.target_meals', 'Mahlzeiten pro Woche') }}
-                </label>
+          <!-- Responsive 2-Column Grid on Desktop -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+            <!-- Left Column: Dietary & Allergies -->
+            <section class="space-y-6">
+              <h3 class="text-lg font-bold text-dark-green border-b border-gray-100 pb-2">
+                {{ $t('profile.dietary_info', 'Ernährung & Allergien') }}
+              </h3>
+
+              <div class="space-y-4">
                 <div
-                  class="flex items-center justify-between w-full max-w-[12rem] bg-white border border-gray-200 rounded-2xl p-1.5 shadow-sm"
+                  class="p-5 bg-bg-cream/30 rounded-2xl border border-gray-100 flex flex-col items-center text-center"
                 >
-                  <button
-                    type="button"
-                    @click="form.target_meals_per_week > 1 && form.target_meals_per_week--"
-                    :disabled="form.target_meals_per_week <= 1"
-                    class="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-primary-green hover:bg-bg-cream/50 rounded-xl transition-colors disabled:opacity-30 disabled:hover:bg-transparent"
-                  >
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M20 12H4"
-                      ></path>
-                    </svg>
-                  </button>
-                  <span class="font-bold text-dark-green text-2xl w-12 text-center">{{
-                    form.target_meals_per_week
-                  }}</span>
-                  <button
-                    type="button"
-                    @click="form.target_meals_per_week < 21 && form.target_meals_per_week++"
-                    :disabled="form.target_meals_per_week >= 21"
-                    class="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-primary-green hover:bg-bg-cream/50 rounded-xl transition-colors disabled:opacity-30 disabled:hover:bg-transparent"
-                  >
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M12 4v16m8-8H4"
-                      ></path>
-                    </svg>
-                  </button>
+                  <p class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">
+                    {{ $t('profile.diet', 'Ernährungsweise') }}
+                  </p>
+                  <div class="flex flex-wrap justify-center gap-2">
+                    <button
+                      v-for="diet in dietOptions"
+                      :key="diet.value"
+                      type="button"
+                      @click="toggleArrayItem('dietary_preferences', diet.value)"
+                      :class="[
+                        'px-4 py-2 rounded-full text-sm font-semibold transition-all border flex items-center gap-2',
+                        form.dietary_preferences.includes(diet.value)
+                          ? 'bg-primary-green text-white border-primary-green shadow-sm'
+                          : 'bg-white text-dark-green/70 border-gray-200 hover:border-primary-green hover:text-primary-green',
+                      ]"
+                    >
+                      <span>{{ diet.icon }}</span>
+                      <span>{{ $t(diet.labelKey) }}</span>
+                    </button>
+                  </div>
                 </div>
-              </div>
 
-              <!-- Default Portions Stepper -->
-              <div
-                class="p-5 bg-bg-cream/30 rounded-2xl border border-gray-100 flex flex-col items-center text-center"
-              >
-                <label class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4 block">
-                  {{ $t('profile.default_portions', 'Standard Portionen') }}
-                </label>
                 <div
-                  class="flex items-center justify-between w-full max-w-[12rem] bg-white border border-gray-200 rounded-2xl p-1.5 shadow-sm"
+                  class="p-5 bg-bg-cream/30 rounded-2xl border border-gray-100 flex flex-col items-center text-center"
                 >
-                  <button
-                    type="button"
-                    @click="form.default_portions > 1 && form.default_portions--"
-                    :disabled="form.default_portions <= 1"
-                    class="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-primary-green hover:bg-bg-cream/50 rounded-xl transition-colors disabled:opacity-30 disabled:hover:bg-transparent"
-                  >
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M20 12H4"
-                      ></path>
-                    </svg>
-                  </button>
-                  <span class="font-bold text-dark-green text-2xl w-12 text-center">{{
-                    form.default_portions
-                  }}</span>
-                  <button
-                    type="button"
-                    @click="form.default_portions < 10 && form.default_portions++"
-                    :disabled="form.default_portions >= 10"
-                    class="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-primary-green hover:bg-bg-cream/50 rounded-xl transition-colors disabled:opacity-30 disabled:hover:bg-transparent"
-                  >
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M12 4v16m8-8H4"
-                      ></path>
-                    </svg>
-                  </button>
+                  <p class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">
+                    {{ $t('profile.allergies', 'Allergien / Unverträglichkeiten') }}
+                  </p>
+                  <div class="flex flex-wrap justify-center gap-2">
+                    <button
+                      v-for="allergy in allergyOptions"
+                      :key="allergy.value"
+                      type="button"
+                      @click="toggleArrayItem('allergies', allergy.value)"
+                      :class="[
+                        'px-4 py-2 rounded-full text-sm font-semibold transition-all border flex items-center gap-2',
+                        form.allergies.includes(allergy.value)
+                          ? 'bg-secondary-rust text-white border-secondary-rust shadow-sm'
+                          : 'bg-white text-dark-green/70 border-gray-200 hover:border-secondary-rust hover:text-secondary-rust',
+                      ]"
+                    >
+                      <span>{{ allergy.icon }}</span>
+                      <span>{{ $t(allergy.labelKey) }}</span>
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          </section>
+            </section>
 
-          <!-- Section 2: Dietary & Allergies -->
-          <section>
-            <h3 class="text-lg font-bold text-dark-green border-b border-gray-100 pb-2 mb-4">
-              {{ $t('profile.dietary_info', 'Ernährung & Allergien') }}
-            </h3>
-            <div class="space-y-4">
-              <div
-                class="p-5 bg-bg-cream/30 rounded-2xl border border-gray-100 flex flex-col items-center text-center"
-              >
-                <p class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">
-                  {{ $t('profile.diet', 'Ernährungsweise') }}
-                </p>
-                <div class="flex flex-wrap justify-center gap-2">
-                  <button
-                    v-for="diet in dietOptions"
-                    :key="diet.value"
-                    type="button"
-                    @click="toggleArrayItem('dietary_preferences', diet.value)"
-                    :class="[
-                      'px-4 py-2 rounded-full text-sm font-semibold transition-all border flex items-center gap-2',
-                      form.dietary_preferences.includes(diet.value)
-                        ? 'bg-primary-green text-white border-primary-green shadow-sm'
-                        : 'bg-white text-dark-green/70 border-gray-200 hover:border-primary-green hover:text-primary-green',
-                    ]"
+            <!-- Right Column: Planning Settings & Controls -->
+            <div class="space-y-8 flex flex-col justify-between">
+              <section class="space-y-6">
+                <h3 class="text-lg font-bold text-dark-green border-b border-gray-100 pb-2">
+                  {{ $t('profile.planning_settings', 'Planungs-Einstellungen') }}
+                </h3>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <!-- Target Meals Stepper -->
+                  <div
+                    class="p-5 bg-bg-cream/30 rounded-2xl border border-gray-100 flex flex-col items-center text-center"
                   >
-                    <span>{{ diet.icon }}</span>
-                    <span>{{ $t(diet.labelKey) }}</span>
+                    <label
+                      class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4 block"
+                    >
+                      {{ $t('profile.target_meals', 'Mahlzeiten pro Woche') }}
+                    </label>
+                    <div
+                      class="flex items-center justify-between w-full max-w-[12rem] bg-white border border-gray-200 rounded-2xl p-1.5 shadow-sm"
+                    >
+                      <button
+                        type="button"
+                        @click="form.target_meals_per_week > 1 && form.target_meals_per_week--"
+                        :disabled="form.target_meals_per_week <= 1"
+                        class="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-primary-green hover:bg-bg-cream/50 rounded-xl transition-colors disabled:opacity-30 disabled:hover:bg-transparent"
+                      >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M20 12H4"
+                          ></path>
+                        </svg>
+                      </button>
+                      <span class="font-bold text-dark-green text-2xl w-12 text-center">{{
+                        form.target_meals_per_week
+                      }}</span>
+                      <button
+                        type="button"
+                        @click="form.target_meals_per_week < 21 && form.target_meals_per_week++"
+                        :disabled="form.target_meals_per_week >= 21"
+                        class="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-primary-green hover:bg-bg-cream/50 rounded-xl transition-colors disabled:opacity-30 disabled:hover:bg-transparent"
+                      >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M12 4v16m8-8H4"
+                          ></path>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Default Portions Stepper -->
+                  <div
+                    class="p-5 bg-bg-cream/30 rounded-2xl border border-gray-100 flex flex-col items-center text-center"
+                  >
+                    <label
+                      class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4 block"
+                    >
+                      {{ $t('profile.default_portions', 'Standard Portionen') }}
+                    </label>
+                    <div
+                      class="flex items-center justify-between w-full max-w-[12rem] bg-white border border-gray-200 rounded-2xl p-1.5 shadow-sm"
+                    >
+                      <button
+                        type="button"
+                        @click="form.default_portions > 1 && form.default_portions--"
+                        :disabled="form.default_portions <= 1"
+                        class="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-primary-green hover:bg-bg-cream/50 rounded-xl transition-colors disabled:opacity-30 disabled:hover:bg-transparent"
+                      >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M20 12H4"
+                          ></path>
+                        </svg>
+                      </button>
+                      <span class="font-bold text-dark-green text-2xl w-12 text-center">{{
+                        form.default_portions
+                      }}</span>
+                      <button
+                        type="button"
+                        @click="form.default_portions < 10 && form.default_portions++"
+                        :disabled="form.default_portions >= 10"
+                        class="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-primary-green hover:bg-bg-cream/50 rounded-xl transition-colors disabled:opacity-30 disabled:hover:bg-transparent"
+                      >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M12 4v16m8-8H4"
+                          ></path>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Food Waste Toggle -->
+                <div
+                  class="p-5 bg-bg-cream/30 rounded-2xl border border-gray-100 flex justify-between items-center text-left gap-4"
+                >
+                  <div>
+                    <p class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-1">
+                      {{ $t('profile.minimize_waste', 'Food Waste minimieren') }}
+                    </p>
+                    <p class="text-sm text-gray-500">
+                      {{
+                        $t(
+                          'profile.minimize_waste_desc',
+                          'Algorithmus bevorzugt Rezepte mit Restzutaten',
+                        )
+                      }}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    @click="form.minimize_food_waste = !form.minimize_food_waste"
+                    class="relative inline-flex h-8 w-14 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-green focus:ring-offset-2"
+                    :class="form.minimize_food_waste ? 'bg-primary-green' : 'bg-gray-300'"
+                  >
+                    <span
+                      class="pointer-events-none inline-block h-7 w-7 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+                      :class="form.minimize_food_waste ? 'translate-x-6' : 'translate-x-0'"
+                    ></span>
                   </button>
                 </div>
-              </div>
+              </section>
 
-              <div
-                class="p-5 bg-bg-cream/30 rounded-2xl border border-gray-100 flex flex-col items-center text-center"
-              >
-                <p class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">
-                  {{ $t('profile.allergies', 'Allergien / Unverträglichkeiten') }}
-                </p>
-                <div class="flex flex-wrap justify-center gap-2">
-                  <button
-                    v-for="allergy in allergyOptions"
-                    :key="allergy.value"
-                    type="button"
-                    @click="toggleArrayItem('allergies', allergy.value)"
-                    :class="[
-                      'px-4 py-2 rounded-full text-sm font-semibold transition-all border flex items-center gap-2',
-                      form.allergies.includes(allergy.value)
-                        ? 'bg-secondary-rust text-white border-secondary-rust shadow-sm'
-                        : 'bg-white text-dark-green/70 border-gray-200 hover:border-secondary-rust hover:text-secondary-rust',
-                    ]"
-                  >
-                    <span>{{ allergy.icon }}</span>
-                    <span>{{ $t(allergy.labelKey) }}</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- Section 3: App Preferences -->
-          <section>
-            <div
-              class="p-5 bg-bg-cream/30 rounded-2xl border border-gray-100 flex flex-col md:flex-row justify-between items-center text-center md:text-left gap-4"
-            >
-              <div>
-                <p class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-1">
-                  {{ $t('profile.minimize_waste', 'Food Waste minimieren') }}
-                </p>
-                <p class="text-sm text-gray-500">
+              <!-- Action Buttons -->
+              <div class="pt-6 border-t border-gray-100 flex flex-col gap-4">
+                <button
+                  type="submit"
+                  :disabled="isSaving || !hasChanges"
+                  :class="[
+                    'w-full py-4 font-bold rounded-xl transition-all flex items-center justify-center gap-2',
+                    hasChanges
+                      ? 'bg-primary-green text-white hover:bg-dark-green shadow-sm'
+                      : 'bg-gray-100 text-gray-400 cursor-not-allowed opacity-70',
+                  ]"
+                >
                   {{
-                    $t(
-                      'profile.minimize_waste_desc',
-                      'Algorithmus bevorzugt Rezepte mit Restzutaten',
-                    )
+                    isSaving
+                      ? $t('common.saving', 'Speichern...')
+                      : $t('profile.save', 'Änderungen speichern')
                   }}
-                </p>
+                </button>
+
+                <button
+                  type="button"
+                  @click="showDeleteModal = true"
+                  class="w-full py-4 bg-white text-secondary-rust font-bold rounded-xl border border-secondary-rust/30 hover:bg-secondary-rust hover:text-white transition-all shadow-sm flex items-center justify-center gap-2"
+                >
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                    ></path>
+                  </svg>
+                  {{ $t('profile.delete_account', 'Konto löschen') }}
+                </button>
               </div>
-              <button
-                type="button"
-                @click="form.minimize_food_waste = !form.minimize_food_waste"
-                class="relative inline-flex h-8 w-14 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-green focus:ring-offset-2"
-                :class="form.minimize_food_waste ? 'bg-primary-green' : 'bg-gray-300'"
-              >
-                <span
-                  class="pointer-events-none inline-block h-7 w-7 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
-                  :class="form.minimize_food_waste ? 'translate-x-6' : 'translate-x-0'"
-                ></span>
-              </button>
             </div>
-          </section>
-
-          <!-- Action Buttons -->
-          <div class="pt-6 border-t border-gray-100 flex flex-col gap-4">
-            <button
-              type="submit"
-              :disabled="isSaving || !hasChanges"
-              :class="[
-                'w-full py-4 font-bold rounded-xl transition-all flex items-center justify-center gap-2',
-                hasChanges
-                  ? 'bg-primary-green text-white hover:bg-dark-green shadow-sm'
-                  : 'bg-gray-100 text-gray-400 cursor-not-allowed opacity-70',
-              ]"
-            >
-              {{
-                isSaving
-                  ? $t('common.saving', 'Speichern...')
-                  : $t('profile.save', 'Änderungen speichern')
-              }}
-            </button>
-
-            <button
-              type="button"
-              @click="showDeleteModal = true"
-              class="w-full py-4 bg-white text-secondary-rust font-bold rounded-xl border border-secondary-rust/30 hover:bg-secondary-rust hover:text-white transition-all shadow-sm flex items-center justify-center gap-2"
-            >
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                ></path>
-              </svg>
-              {{ $t('profile.delete_account', 'Konto löschen') }}
-            </button>
           </div>
         </form>
       </div>
@@ -430,9 +437,9 @@ const saveProfile = () => {
 
   const emailChanged = form.email !== originalState.value.email
   if (emailChanged) {
-    showEmailModal.value = true // Open confirmation if email changed
+    showEmailModal.value = true
   } else {
-    executeSave() // Save directly otherwise
+    executeSave()
   }
 }
 
@@ -471,11 +478,9 @@ const executeSave = async () => {
 
     // 3. Handle successful save flow
     if (emailChanged) {
-      // Log out user as the token/session needs to be re-verified
       await authStore.logout()
       router.push('/login')
     } else {
-      // Reset the pristine state to disable the save button and close edit inputs
       originalState.value = getInitialState()
       isEditingProfile.value = false
     }
