@@ -86,7 +86,13 @@
     "delete_account": "Delete Account",
     "delete_confirm_title": "Really delete account?",
     "delete_confirm_desc": "This action cannot be undone. All your meal plans and favorites will be permanently lost.",
-    "delete_confirm_btn": "Yes, delete permanently"
+    "delete_confirm_btn": "Yes, delete permanently",
+    "account_settings": "Account Settings",
+    "name": "Name",
+    "email": "Email Address",
+    "email_change_title": "Change Email Address?",
+    "email_change_desc": "After changing your email address, you will be logged out for security reasons. You must verify your new address via the provided link before you can log in again.",
+    "email_change_confirm": "Yes, change & log out"
   },
   "common": {
     "yes": "Yes",

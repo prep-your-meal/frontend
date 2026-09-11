@@ -1,8 +1,9 @@
 <template>
   <div class="w-full flex-grow flex flex-col bg-bg-cream/20 relative">
-    <div class="hidden md:block w-full h-24 shrink-0"></div>
+    <!-- Adjusted Top Spacer to exactly match RecipesView.vue -->
+    <div class="w-full h-4 md:h-28 shrink-0"></div>
 
-    <div class="max-w-6xl w-full mx-auto px-4 py-8 md:py-16 flex-grow flex flex-col items-center">
+    <div class="max-w-6xl w-full mx-auto px-4 pb-8 md:pb-16 flex-grow flex flex-col items-center">
       <div
         class="bg-white p-6 md:p-12 rounded-3xl shadow-sm border border-gray-100 max-w-2xl w-full"
       >
@@ -11,20 +12,87 @@
           <div
             class="w-20 h-20 bg-primary-green/10 text-primary-green rounded-full flex items-center justify-center shrink-0 text-3xl font-bold uppercase"
           >
-            {{ authStore.user?.name ? authStore.user.name.charAt(0) : 'U' }}
+            <!-- Reactively show the initial of the current form name -->
+            {{ form.name ? form.name.charAt(0) : 'U' }}
           </div>
           <div class="overflow-hidden">
             <h2 class="text-3xl font-bold text-dark-green capitalize truncate">
-              {{ authStore.user?.name || $t('profile.title', 'Profil') }}
+              {{ form.name || $t('profile.title', 'Profil') }}
             </h2>
             <p class="text-gray-500 mt-1 truncate">
-              {{ authStore.user?.email }}
+              {{ form.email }}
             </p>
           </div>
         </div>
 
         <!-- Settings Form -->
         <form @submit.prevent="saveProfile" class="space-y-8">
+          <!-- Section 0: Account Settings (Name & Email) -->
+          <section>
+            <h3 class="text-lg font-bold text-dark-green border-b border-gray-100 pb-2 mb-4">
+              {{ $t('profile.account_settings', 'Account-Einstellungen') }}
+            </h3>
+            <div class="grid grid-cols-1 gap-4">
+              <!-- Name Input -->
+              <div class="p-5 bg-bg-cream/30 rounded-2xl border border-gray-100 flex flex-col">
+                <label class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-2 block">
+                  {{ $t('profile.name', 'Name') }}
+                </label>
+                <div class="relative flex items-center">
+                  <input
+                    v-model="form.name"
+                    type="text"
+                    required
+                    class="w-full pl-4 pr-12 py-3 rounded-xl border border-gray-200 bg-white text-dark-green font-medium focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-primary-green transition-all shadow-sm"
+                  />
+                  <!-- Edit Pencil Icon -->
+                  <svg
+                    class="w-5 h-5 text-gray-400 absolute right-4 pointer-events-none"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                    ></path>
+                  </svg>
+                </div>
+              </div>
+
+              <!-- Email Input -->
+              <div class="p-5 bg-bg-cream/30 rounded-2xl border border-gray-100 flex flex-col">
+                <label class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-2 block">
+                  {{ $t('profile.email', 'E-Mail Adresse') }}
+                </label>
+                <div class="relative flex items-center">
+                  <input
+                    v-model="form.email"
+                    type="email"
+                    required
+                    class="w-full pl-4 pr-12 py-3 rounded-xl border border-gray-200 bg-white text-dark-green font-medium focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-primary-green transition-all shadow-sm"
+                  />
+                  <!-- Edit Pencil Icon -->
+                  <svg
+                    class="w-5 h-5 text-gray-400 absolute right-4 pointer-events-none"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                    ></path>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </section>
+
           <!-- Section 1: Meal Planning Defaults -->
           <section>
             <h3 class="text-lg font-bold text-dark-green border-b border-gray-100 pb-2 mb-4">
@@ -217,7 +285,6 @@
 
           <!-- Action Buttons -->
           <div class="pt-6 border-t border-gray-100 flex flex-col gap-4">
-            <!-- Smart Save Button: Only active when hasChanges is true -->
             <button
               type="submit"
               :disabled="isSaving || !hasChanges"
@@ -235,7 +302,6 @@
               }}
             </button>
 
-            <!-- Styled Delete Account Button -->
             <button
               type="button"
               @click="showDeleteModal = true"
@@ -256,7 +322,25 @@
       </div>
     </div>
 
-    <!-- Reusable Confirm Modal for Account Deletion -->
+    <!-- Modals -->
+
+    <!-- Email Change Confirm Modal -->
+    <ConfirmModal
+      :show="showEmailModal"
+      :title="$t('profile.email_change_title', 'E-Mail-Adresse ändern?')"
+      :description="
+        $t(
+          'profile.email_change_desc',
+          'Nach dem Ändern deiner E-Mail-Adresse wirst du aus Sicherheitsgründen abgemeldet. Du musst deine neue Adresse über den zugesandten Link verifizieren, bevor du dich wieder einloggen kannst.',
+        )
+      "
+      :confirmText="$t('profile.email_change_confirm', 'Ja, ändern & abmelden')"
+      :cancelText="$t('common.cancel', 'Abbrechen')"
+      @confirm="executeSave"
+      @cancel="showEmailModal = false"
+    />
+
+    <!-- Delete Account Confirm Modal -->
     <ConfirmModal
       :show="showDeleteModal"
       :title="$t('profile.delete_confirm_title', 'Konto wirklich löschen?')"
@@ -278,6 +362,7 @@
 import { ref, onMounted, computed, reactive } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
+import api from '@/services/api'
 import { useCategories } from '@/composables/useCategories'
 import ConfirmModal from '@/components/ui/ConfirmModal.vue'
 
@@ -287,9 +372,10 @@ const { categoryGroups, fetchCategories } = useCategories()
 
 // Function to generate a clean snapshot of the user's data
 const getInitialState = () => ({
+  name: authStore.user?.name || '',
+  email: authStore.user?.email || '',
   target_meals_per_week: authStore.user?.target_meals_per_week || 3,
   default_portions: authStore.user?.default_portions || 2,
-  // Sort arrays to ensure consistent stringification for the dirty-check
   dietary_preferences: [...(authStore.user?.dietary_preferences || [])].sort(),
   allergies: [...(authStore.user?.allergies || [])].sort(),
   minimize_food_waste: authStore.user?.minimize_food_waste ?? true,
@@ -301,8 +387,9 @@ const form = reactive(getInitialState())
 
 const isSaving = ref(false)
 const showDeleteModal = ref(false)
+const showEmailModal = ref(false)
 
-// Computed property checking for any modifications
+// Computed property checking for any modifications across all fields
 const hasChanges = computed(() => {
   const currentState = {
     ...form,
@@ -333,16 +420,65 @@ const toggleArrayItem = (field: 'dietary_preferences' | 'allergies', value: stri
   }
 }
 
-const saveProfile = async () => {
+// Intercepts the save action to check if the email was modified
+const saveProfile = () => {
   if (!hasChanges.value) return
 
-  isSaving.value = true
-  // Assuming authStore.updateProfile returns a success boolean or you await it safely
-  await authStore.updateProfile(form)
+  const emailChanged = form.email !== originalState.value.email
+  if (emailChanged) {
+    showEmailModal.value = true // Open confirmation if email changed
+  } else {
+    executeSave() // Save directly otherwise
+  }
+}
 
-  // Reset the "original" state to the newly saved state so the button disables again
-  originalState.value = getInitialState()
-  isSaving.value = false
+// Helper to extract only the meal planning preferences for comparison
+const getPrefsOnly = (state: typeof form) => ({
+  target_meals_per_week: state.target_meals_per_week,
+  default_portions: state.default_portions,
+  dietary_preferences: state.dietary_preferences,
+  allergies: state.allergies,
+  minimize_food_waste: state.minimize_food_waste,
+})
+
+// Executes the actual API calls
+const executeSave = async () => {
+  showEmailModal.value = false
+  isSaving.value = true
+
+  try {
+    const nameChanged = form.name !== originalState.value.name
+    const emailChanged = form.email !== originalState.value.email
+
+    // Clean, type-safe comparison without unused variables or 'delete' operators
+    const prefsChanged =
+      JSON.stringify(getPrefsOnly(originalState.value)) !== JSON.stringify(getPrefsOnly(form))
+
+    // 1. Update Profile (Name/Email) if needed
+    if (nameChanged || emailChanged) {
+      const res = await api.put('/user/profile', { name: form.name, email: form.email })
+      authStore.user = res.data.data
+    }
+
+    // 2. Update Preferences if needed
+    if (prefsChanged) {
+      await authStore.updateUserPreferences(form)
+    }
+
+    // 3. Handle successful save flow
+    if (emailChanged) {
+      // Log out user as the token/session needs to be re-verified
+      await authStore.logout()
+      router.push('/login')
+    } else {
+      // Reset the pristine state to disable the save button
+      originalState.value = getInitialState()
+    }
+  } catch (err) {
+    console.error('Failed to update profile:', err)
+  } finally {
+    isSaving.value = false
+  }
 }
 
 const confirmDeleteAccount = async () => {

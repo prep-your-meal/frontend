@@ -86,7 +86,13 @@
     "delete_account": "Konto löschen",
     "delete_confirm_title": "Konto wirklich löschen?",
     "delete_confirm_desc": "Diese Aktion kann nicht rückgängig gemacht werden. Alle deine Pläne und Favoriten gehen unwiderruflich verloren.",
-    "delete_confirm_btn": "Ja, endgültig löschen"
+    "delete_confirm_btn": "Ja, endgültig löschen",
+    "account_settings": "Account-Einstellungen",
+    "name": "Name",
+    "email": "E-Mail Adresse",
+    "email_change_title": "E-Mail-Adresse ändern?",
+    "email_change_desc": "Nach dem Ändern deiner E-Mail-Adresse wirst du aus Sicherheitsgründen abgemeldet. Du musst deine neue Adresse über den zugesandten Link verifizieren, bevor du dich wieder einloggen kannst.",
+    "email_change_confirm": "Ja, ändern & abmelden"
   },
   "common": {
     "yes": "Ja",
