@@ -3,9 +3,10 @@
     <!-- Top Spacer to match RecipesView.vue -->
     <div class="w-full h-4 md:h-28 shrink-0"></div>
 
-    <div class="max-w-6xl w-full mx-auto px-4 pb-8 md:pb-16 flex-grow flex flex-col items-center">
-      <!-- Outer Card: max-w-6xl on Desktop to match RecipesView layout -->
-      <div class="bg-white p-6 md:p-12 rounded-3xl shadow-sm border border-gray-100 w-full">
+    <!-- Reduziertes Padding: pb-8 anstatt md:pb-16 -->
+    <div class="max-w-6xl w-full mx-auto px-4 pb-8 flex-grow flex flex-col items-center">
+      <!-- Reduziertes inneres Padding: md:p-8 lg:p-10 anstatt md:p-12 -->
+      <div class="bg-white p-6 md:p-8 lg:p-10 rounded-3xl shadow-sm border border-gray-100 w-full">
         <form @submit.prevent="saveProfile" class="space-y-10">
           <!-- Identity Header (Combined Read & Edit Mode) -->
           <div
@@ -437,9 +438,9 @@ const saveProfile = () => {
 
   const emailChanged = form.email !== originalState.value.email
   if (emailChanged) {
-    showEmailModal.value = true
+    showEmailModal.value = true // Open confirmation if email changed
   } else {
-    executeSave()
+    executeSave() // Save directly otherwise
   }
 }
 
@@ -478,9 +479,11 @@ const executeSave = async () => {
 
     // 3. Handle successful save flow
     if (emailChanged) {
+      // Log out user as the token/session needs to be re-verified
       await authStore.logout()
       router.push('/login')
     } else {
+      // Reset the pristine state to disable the save button and close edit inputs
       originalState.value = getInitialState()
       isEditingProfile.value = false
     }
