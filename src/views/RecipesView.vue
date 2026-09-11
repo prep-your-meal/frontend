@@ -323,11 +323,14 @@ import { getCategoryBadgeClass } from '../utils/theme'
 import LoadingState from '@/components/ui/LoadingState.vue'
 import MobileHeader from '@/components/ui/MobileHeader.vue'
 
+// NEW: Import the extracted logic
+import { useCategories } from '@/composables/useCategories'
+
 // Global Stores
 import { useRecipeStore } from '@/stores/recipes'
 import { useAuthStore } from '@/stores/auth'
 import { storeToRefs } from 'pinia'
-import type { FilterItem, FilterGroup } from '@/stores/recipes'
+import type { FilterItem } from '@/stores/recipes'
 
 const { t, locale } = useI18n()
 const originalTitle = document.title
@@ -340,6 +343,9 @@ const recipeStore = useRecipeStore()
 const authStore = useAuthStore()
 const { recipes, categoryGroups, searchQuery, selectedCategories, hasLoaded } =
   storeToRefs(recipeStore)
+
+// Initialize our composable
+const { categoryGroups: fetchedGroups, fetchCategories: fetchMetaCategories } = useCategories()
 
 const isLoading = ref<boolean>(true)
 const error = ref<string | null>(null)
@@ -376,64 +382,12 @@ const quickFilters = computed(() => {
   return items
 })
 
-const iconMapping: Record<string, string> = {
-  breakfast: '🥐',
-  lunch: '🥪',
-  dinner: '🍽️',
-  snack: '🍎',
-  vegan: '🌱',
-  vegetarian: '🧀',
-  keto: '🥩',
-  'low-carb': '🥑',
-  'gluten-free': '🌾',
-  'dairy-free': '🥛',
-  pescatarian: '🐟',
-  'high-protein': '💪',
-  bulking: '🍚',
-  cutting: '✂️',
-  balanced: '⚖️',
-  'meal-prep-friendly': '🍱',
-  quick: '⏱️',
-  'one-pot': '🥘',
-  'family-friendly': '👨‍👩‍👧‍👦',
-  nuts: '🥜',
-  soy: '🫘',
-  shellfish: '🦐',
-  eggs: '🥚',
-  lactose: '🥛',
-  gluten: '🍞',
-}
-
-const groupKeyMapping: Record<string, string> = {
-  meal_types: 'recipes.filters.groups.meal_types',
-  diets: 'recipes.filters.groups.diets',
-  fitness_profiles: 'recipes.filters.groups.fitness',
-  logistics: 'recipes.filters.groups.logistics',
-  allergies: 'recipes.filters.groups.allergies',
-}
-
-const fetchCategories = async () => {
-  try {
-    const response = await api.get('/meta/categories')
-    const data = response.data.data || response.data
-
-    const groups: FilterGroup[] = []
-
-    for (const [groupKey, itemsArray] of Object.entries(data)) {
-      const mappedItems = (itemsArray as string[]).map((val) => ({
-        labelKey: `categories.${val}`,
-        value: val,
-        icon: iconMapping[val] || '🏷️',
-      }))
-
-      groups.push({
-        titleKey: groupKeyMapping[groupKey] || `recipes.filters.groups.${groupKey}`,
-        items: mappedItems,
-      })
-    }
-    categoryGroups.value = groups
-  } catch (err) {
-    console.error('Failed to fetch meta categories:', err)
+// Replaces the old massive fetchCategories function
+const loadCategories = async () => {
+  if (categoryGroups.value.length === 0) {
+    await fetchMetaCategories()
+    // Sync the data from the composable into the Pinia store for caching
+    categoryGroups.value = fetchedGroups.value
   }
 }
 
@@ -503,8 +457,6 @@ const fetchRecipes = async (payload?: boolean | Event) => {
 // Stub function to handle adding a recipe to favorites
 const toggleFavorite = async (recipeId?: number) => {
   if (!recipeId) return
-
-  // TODO: Implement actual API call to add/remove favorite
   console.info(`Toggle favorite status for recipe ID: ${recipeId}`)
 }
 
@@ -516,18 +468,17 @@ onMounted(() => {
 
     if (hasCache) {
       isLoading.value = false
-      // Restore scroll position after DOM renders cached data
       nextTick(() => {
         window.scrollTo({ top: recipeStore.savedScrollPosition, behavior: 'instant' })
       })
     }
 
-    Promise.all([fetchCategories(), fetchRecipes(hasCache)]).then(() => {
+    // Call our new wrapper function instead of the old local one
+    Promise.all([loadCategories(), fetchRecipes(hasCache)]).then(() => {
       hasLoaded.value = true
     })
   } else {
     isLoading.value = false
-    // Restore scroll position immediately for hot navigation back
     nextTick(() => {
       window.scrollTo({ top: recipeStore.savedScrollPosition, behavior: 'instant' })
     })
@@ -538,7 +489,6 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  // Save current scroll position before leaving the view
   recipeStore.savedScrollPosition = window.scrollY
   document.title = originalTitle
   window.removeEventListener('scroll', handleScroll)

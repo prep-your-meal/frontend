@@ -80,7 +80,11 @@
     "none_set": "None set",
     "minimize_waste": "Minimize Food Waste",
     "minimize_waste_desc": "Algorithm favors recipes using leftover ingredients",
-    "logout": "Log Out"
+    "save": "Save changes",
+    "delete_account": "Delete Account",
+    "delete_confirm_title": "Really delete account?",
+    "delete_confirm_desc": "This action cannot be undone. All your meal plans and favorites will be permanently lost.",
+    "delete_confirm_btn": "Yes, delete permanently"
   },
   "common": {
     "yes": "Yes",
