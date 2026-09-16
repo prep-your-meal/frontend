@@ -3,13 +3,16 @@
     <!-- ==============================================
          AUTHENTICATED STATE (User is logged in)
          ============================================== -->
-    <div v-if="authStore.isAuthenticated" class="w-full flex-grow flex flex-col relative">
+    <div
+      v-if="authStore.isAuthenticated"
+      class="max-w-6xl w-full mx-auto pb-8 flex-grow flex flex-col md:px-4"
+    >
       <!-- Desktop Spacer -->
-      <div class="hidden md:block w-full h-28 shrink-0"></div>
+      <div class="w-full h-4 md:h-28 shrink-0"></div>
 
-      <!-- PAGE TITLE & MOBILE HEADER (Scrolls normally, matches RecipesView) -->
+      <!-- PAGE TITLE & MOBILE HEADER (Matches RecipesView structure) -->
       <div
-        class="px-4 sm:px-10 pt-3 md:pt-10 pb-6 z-10 transition-opacity duration-300 relative flex flex-col items-center text-center md:bg-white md:border-t md:border-x md:border-gray-100 md:rounded-t-3xl max-w-6xl w-full mx-auto"
+        class="px-4 sm:px-10 pt-3 md:pt-10 pb-6 z-10 transition-opacity duration-300 relative flex flex-col items-center text-center md:bg-white md:border-t md:border-x md:border-gray-100 md:rounded-t-3xl"
       >
         <MobileHeader />
 
@@ -25,7 +28,7 @@
 
       <!-- STICKY WEEK NAVIGATION BAR (Matches RecipesView Filter Bar) -->
       <div
-        class="sticky top-0 md:top-[104px] z-40 mb-10 bg-white/95 backdrop-blur-xl px-4 sm:px-6 py-3 transition-all duration-500 shadow-sm border-b border-gray-200 md:border md:border-gray-100 md:shadow-md md:rounded-3xl max-w-6xl mx-auto w-full"
+        class="sticky top-0 md:top-[104px] z-40 mb-10 bg-white/95 backdrop-blur-xl px-4 sm:px-6 py-4 transition-all duration-500 shadow-sm border-b border-gray-200 md:border md:border-gray-100 md:rounded-3xl"
       >
         <div class="max-w-3xl w-full mx-auto">
           <ul class="flex justify-between items-center overflow-x-auto scrollbar-hide gap-2">
@@ -64,12 +67,12 @@
       </div>
 
       <!-- Vertical Feed (The Planner Content) -->
-      <div class="max-w-3xl w-full mx-auto px-4 pb-8 flex-grow flex flex-col gap-12">
+      <div class="max-w-3xl w-full mx-auto px-4 flex-grow flex flex-col gap-12 self-center">
         <section
           v-for="day in weekDays"
           :key="day.id"
           :id="day.id"
-          class="scroll-mt-[180px] md:scroll-mt-[220px] day-section"
+          class="scroll-mt-[140px] md:scroll-mt-[180px] day-section"
         >
           <!-- Day Divider / Header -->
           <div class="flex items-center gap-4 mb-6">
@@ -273,7 +276,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 import { useAuthStore } from '../stores/auth'
 import MobileHeader from '@/components/ui/MobileHeader.vue'
 
@@ -295,11 +298,13 @@ let observer: IntersectionObserver | null = null
 // Generate current week dates (Monday to Sunday)
 const generateCurrentWeek = () => {
   const today = new Date()
+  const todayId = today.toISOString().split('T')[0]
+
   const currentDayOfWeek = today.getDay()
   const distanceToMonday = currentDayOfWeek === 0 ? -6 : 1 - currentDayOfWeek
 
   const monday = new Date(today)
-  monday.setDate(today.getDate() + distanceToMonday)
+  monday.setDate(monday.getDate() + distanceToMonday)
 
   const days = []
   for (let i = 0; i < 7; i++) {
@@ -308,18 +313,20 @@ const generateCurrentWeek = () => {
 
     const id = d.toISOString().split('T')[0]
     const dateFormatted = `${String(d.getDate()).padStart(2, '0')}.${String(d.getMonth() + 1).padStart(2, '0')}.`
+    const isToday = id === todayId
 
     days.push({
       id,
       dateFormatted,
       dateNum: d.getDate(),
       dayOfWeek: d.getDay(),
-      isToday: d.toDateString() === today.toDateString(),
+      isToday,
     })
   }
 
   weekDays.value = days
 
+  // Default highlight state to today (or monday if outside)
   const todayObj = days.find((d) => d.isToday)
   activeDay.value = todayObj ? todayObj.id : days[0].id
 }
@@ -364,12 +371,16 @@ onMounted(() => {
     generateCurrentWeek()
     setupScrollSpy()
 
-    setTimeout(() => {
-      const today = weekDays.value.find((d) => d.isToday)
-      if (today) {
-        scrollToDay(today.id, false)
-      }
-    }, 50)
+    // Start at top (Monday), let user perceive the top briefly, then smoothly glide to today
+    nextTick(() => {
+      setTimeout(() => {
+        const targetDay = weekDays.value.find((d) => d.isToday)
+        // If today is later in the week than Monday, smoothly scroll down to it
+        if (targetDay && targetDay.id !== weekDays.value[0].id) {
+          scrollToDay(targetDay.id, true) // true = smooth scrolling animation
+        }
+      }, 350) // 350ms delay for a natural, elegant feel
+    })
   }
 })
 
