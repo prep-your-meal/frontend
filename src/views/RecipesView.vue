@@ -324,7 +324,7 @@ import { getCategoryBadgeClass } from '../utils/theme'
 import LoadingState from '@/components/ui/LoadingState.vue'
 import MobileHeader from '@/components/ui/MobileHeader.vue'
 
-// NEW: Import the extracted logic
+// Import category composable (The Single Source of Truth!)
 import { useCategories } from '@/composables/useCategories'
 
 // Global Stores
@@ -342,11 +342,12 @@ const updateTitle = () => {
 
 const recipeStore = useRecipeStore()
 const authStore = useAuthStore()
-const { recipes, categoryGroups, searchQuery, selectedCategories, hasLoaded } =
-  storeToRefs(recipeStore)
 
-// Initialize our composable
-const { categoryGroups: fetchedGroups, fetchCategories: fetchMetaCategories } = useCategories()
+// ACHTUNG: categoryGroups aus dem storeToRefs entfernt, um Konflikte zu vermeiden!
+const { recipes, searchQuery, selectedCategories, hasLoaded } = storeToRefs(recipeStore)
+
+// Direkte Nutzung des Composables (wie in der ProfileView)
+const { categoryGroups, fetchCategories } = useCategories()
 
 const isLoading = ref<boolean>(true)
 const error = ref<string | null>(null)
@@ -359,12 +360,22 @@ const isCategoryActive = (value: string) => {
   return selectedCategories.value.includes(value)
 }
 
-const quickFilterKeys = ['vegan', 'high-protein', 'quick', 'meal-prep-friendly']
+// Dynamically compile quick filter keys from user profile + defaults
+const quickFilterKeys = computed(() => {
+  const user = authStore.user as { dietary_preferences?: string[]; allergies?: string[] } | null
+  const userDiets = user?.dietary_preferences || []
+  const userAllergies = user?.allergies || []
+  const defaultKeys = ['vegan', 'high-protein', 'quick', 'meal-prep-friendly']
 
+  return Array.from(new Set([...userDiets, ...userAllergies, ...defaultKeys]))
+})
+
+// Baut die Quick Filters auf Basis der Composable-Daten (reaktiv!)
 const quickFilters = computed(() => {
   const items: FilterItem[] = []
-  const keysToShow = [...quickFilterKeys]
+  const keysToShow = [...quickFilterKeys.value]
 
+  // Ensure active selected filters appear first
   selectedCategories.value.forEach((cat) => {
     if (!keysToShow.includes(cat)) {
       keysToShow.splice(0, 0, cat)
@@ -380,17 +391,9 @@ const quickFilters = computed(() => {
       }
     }
   })
+
   return items
 })
-
-// Replaces the old massive fetchCategories function
-const loadCategories = async () => {
-  if (categoryGroups.value.length === 0) {
-    await fetchMetaCategories()
-    // Sync the data from the composable into the Pinia store for caching
-    categoryGroups.value = fetchedGroups.value
-  }
-}
 
 const toggleCategory = (value: string) => {
   const index = selectedCategories.value.indexOf(value)
@@ -455,7 +458,6 @@ const fetchRecipes = async (payload?: boolean | Event) => {
   }
 }
 
-// Stub function to handle adding a recipe to favorites
 const toggleFavorite = async (recipeId?: number) => {
   if (!recipeId) return
   console.info(`Toggle favorite status for recipe ID: ${recipeId}`)
@@ -464,6 +466,12 @@ const toggleFavorite = async (recipeId?: number) => {
 onMounted(() => {
   updateTitle()
 
+  // 1. Kategorien *immer* laden, falls sie im Composable noch leer sind (unabhängig vom Rezept-Cache)
+  if (categoryGroups.value.length === 0) {
+    fetchCategories()
+  }
+
+  // 2. Rezepte laden
   if (!hasLoaded.value) {
     const hasCache = recipes.value.length > 0
 
@@ -474,8 +482,7 @@ onMounted(() => {
       })
     }
 
-    // Call our new wrapper function instead of the old local one
-    Promise.all([loadCategories(), fetchRecipes(hasCache)]).then(() => {
+    fetchRecipes(hasCache).then(() => {
       hasLoaded.value = true
     })
   } else {
