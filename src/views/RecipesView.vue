@@ -324,7 +324,7 @@ import { getCategoryBadgeClass } from '../utils/theme'
 import LoadingState from '@/components/ui/LoadingState.vue'
 import MobileHeader from '@/components/ui/MobileHeader.vue'
 
-// Import category composable (The Single Source of Truth!)
+// Import category composable
 import { useCategories } from '@/composables/useCategories'
 
 // Global Stores
@@ -342,11 +342,7 @@ const updateTitle = () => {
 
 const recipeStore = useRecipeStore()
 const authStore = useAuthStore()
-
-// ACHTUNG: categoryGroups aus dem storeToRefs entfernt, um Konflikte zu vermeiden!
 const { recipes, searchQuery, selectedCategories, hasLoaded } = storeToRefs(recipeStore)
-
-// Direkte Nutzung des Composables (wie in der ProfileView)
 const { categoryGroups, fetchCategories } = useCategories()
 
 const isLoading = ref<boolean>(true)
@@ -370,7 +366,6 @@ const quickFilterKeys = computed(() => {
   return Array.from(new Set([...userDiets, ...userAllergies, ...defaultKeys]))
 })
 
-// Baut die Quick Filters auf Basis der Composable-Daten (reaktiv!)
 const quickFilters = computed(() => {
   const items: FilterItem[] = []
   const keysToShow = [...quickFilterKeys.value]
@@ -463,16 +458,28 @@ const toggleFavorite = async (recipeId?: number) => {
   console.info(`Toggle favorite status for recipe ID: ${recipeId}`)
 }
 
-onMounted(() => {
+onMounted(async () => {
   updateTitle()
 
-  // 1. Kategorien *immer* laden, falls sie im Composable noch leer sind (unabhängig vom Rezept-Cache)
+  // 1. Fetch categories if they are not already loaded
   if (categoryGroups.value.length === 0) {
-    fetchCategories()
+    await fetchCategories()
   }
 
-  // 2. Rezepte laden
   if (!hasLoaded.value) {
+    // 2. Automatically set user preferences as active filters on initial load
+    if (authStore.isAuthenticated && authStore.user) {
+      const user = authStore.user as { dietary_preferences?: string[]; allergies?: string[] }
+      const userDiets = user.dietary_preferences || []
+      const userAllergies = user.allergies || []
+      const profileFilters = Array.from(new Set([...userDiets, ...userAllergies]))
+
+      // Only apply if the user hasn't manually cleared the filters yet
+      if (selectedCategories.value.length === 0 && profileFilters.length > 0) {
+        selectedCategories.value = profileFilters
+      }
+    }
+
     const hasCache = recipes.value.length > 0
 
     if (hasCache) {
@@ -482,6 +489,7 @@ onMounted(() => {
       })
     }
 
+    // 3. Fetch recipes (now automatically using the newly set filters!)
     fetchRecipes(hasCache).then(() => {
       hasLoaded.value = true
     })
