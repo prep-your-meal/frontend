@@ -458,30 +458,26 @@ const toggleFavorite = async (recipeId?: number) => {
   console.info(`Toggle favorite status for recipe ID: ${recipeId}`)
 }
 
-onMounted(async () => {
-  updateTitle()
+// ------------------------------------------------------------------------
+// SMART PROFILE SYNC & INITIALIZATION
+// ------------------------------------------------------------------------
+const syncProfileFiltersAndInit = () => {
+  const user = authStore.user as { dietary_preferences?: string[]; allergies?: string[] } | null
+  const profileFilters = user
+    ? Array.from(new Set([...(user.dietary_preferences || []), ...(user.allergies || [])]))
+    : []
 
-  // 1. Fetch categories if they are not already loaded
-  if (categoryGroups.value.length === 0) {
-    await fetchCategories()
-  }
+  const currentSignature = profileFilters.sort().join(',')
+  const lastSignature = sessionStorage.getItem('profileSignature')
 
   if (!hasLoaded.value) {
-    // 2. Automatically set user preferences as active filters on initial load
-    if (authStore.isAuthenticated && authStore.user) {
-      const user = authStore.user as { dietary_preferences?: string[]; allergies?: string[] }
-      const userDiets = user.dietary_preferences || []
-      const userAllergies = user.allergies || []
-      const profileFilters = Array.from(new Set([...userDiets, ...userAllergies]))
-
-      // Only apply if the user hasn't manually cleared the filters yet
-      if (selectedCategories.value.length === 0 && profileFilters.length > 0) {
-        selectedCategories.value = profileFilters
-      }
+    // 1. Fresh reload or initial visit: Always enforce profile preferences as the active filters
+    if (authStore.isAuthenticated && user) {
+      selectedCategories.value = [...profileFilters]
+      sessionStorage.setItem('profileSignature', currentSignature)
     }
 
     const hasCache = recipes.value.length > 0
-
     if (hasCache) {
       isLoading.value = false
       nextTick(() => {
@@ -489,15 +485,46 @@ onMounted(async () => {
       })
     }
 
-    // 3. Fetch recipes (now automatically using the newly set filters!)
     fetchRecipes(hasCache).then(() => {
       hasLoaded.value = true
     })
   } else {
+    // 2. SPA Navigation (e.g. going back from a recipe detail page)
+    // Only override the user's manual filter adjustments if they explicitly changed their profile settings
+    if (authStore.isAuthenticated && user && lastSignature !== currentSignature) {
+      selectedCategories.value = [...profileFilters]
+      sessionStorage.setItem('profileSignature', currentSignature)
+      fetchRecipes()
+    }
+
     isLoading.value = false
     nextTick(() => {
       window.scrollTo({ top: recipeStore.savedScrollPosition, behavior: 'instant' })
     })
+  }
+}
+
+onMounted(() => {
+  updateTitle()
+
+  // Load categories in background if missing
+  if (categoryGroups.value.length === 0) {
+    fetchCategories()
+  }
+
+  // Handle SPA race condition: Ensure the auth state is fully resolved before syncing filters
+  if (!authStore.isInitialized) {
+    const unwatch = watch(
+      () => authStore.isInitialized,
+      (isInit) => {
+        if (isInit) {
+          unwatch()
+          syncProfileFiltersAndInit()
+        }
+      },
+    )
+  } else {
+    syncProfileFiltersAndInit()
   }
 
   window.addEventListener('scroll', handleScroll, { passive: true })
