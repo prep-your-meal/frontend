@@ -5,25 +5,30 @@
          ============================================== -->
     <div v-if="authStore.isAuthenticated" class="w-full flex-grow flex flex-col relative">
       <!-- Desktop Spacer -->
-      <div class="hidden md:block w-full h-8 shrink-0"></div>
+      <div class="hidden md:block w-full h-28 shrink-0"></div>
 
-      <!-- Header Section -->
-      <div class="max-w-6xl w-full mx-auto px-4 pt-4 md:pt-8 pb-4 text-center md:text-left">
-        <MobileHeader class="md:hidden mb-4" />
-        <h1 class="text-3xl md:text-4xl font-extrabold text-dark-green mb-2 tracking-tight">
+      <!-- PAGE TITLE & MOBILE HEADER (Scrolls normally, matches RecipesView) -->
+      <div
+        class="px-4 sm:px-10 pt-3 md:pt-10 pb-6 z-10 transition-opacity duration-300 relative flex flex-col items-center text-center md:bg-white md:border-t md:border-x md:border-gray-100 md:rounded-t-3xl max-w-6xl w-full mx-auto"
+      >
+        <MobileHeader />
+
+        <h1
+          class="text-4xl md:text-5xl font-extrabold text-dark-green mb-3 tracking-tight mt-2 md:mt-0"
+        >
           {{ $t('planner.title', 'Wochenplaner') }}
         </h1>
-        <p class="text-dark-green/60 text-base font-medium">
+        <p class="text-dark-green/60 text-lg max-w-xl font-medium">
           {{ $t('planner.subtitle', 'Plane deine Mahlzeiten für die aktuelle Woche.') }}
         </p>
       </div>
 
-      <!-- Sticky Week Navigation Bar -->
+      <!-- STICKY WEEK NAVIGATION BAR (Matches RecipesView Filter Bar) -->
       <div
-        class="sticky top-0 md:top-[80px] z-40 bg-white/90 backdrop-blur-xl border-y border-gray-200 shadow-sm transition-all w-full"
+        class="sticky top-0 md:top-[104px] z-40 mb-10 bg-white/95 backdrop-blur-xl px-4 sm:px-6 py-3 transition-all duration-500 shadow-sm border-b border-gray-200 md:border md:border-gray-100 md:shadow-md md:rounded-3xl max-w-6xl mx-auto w-full"
       >
-        <div class="max-w-3xl mx-auto px-2">
-          <ul class="flex justify-between items-center py-3 overflow-x-auto scrollbar-hide gap-2">
+        <div class="max-w-3xl w-full mx-auto">
+          <ul class="flex justify-between items-center overflow-x-auto scrollbar-hide gap-2">
             <li v-for="day in weekDays" :key="day.id" class="flex-1 shrink-0 min-w-[3rem]">
               <button
                 @click="scrollToDay(day.id)"
@@ -59,12 +64,12 @@
       </div>
 
       <!-- Vertical Feed (The Planner Content) -->
-      <div class="max-w-3xl w-full mx-auto px-4 py-8 flex-grow flex flex-col gap-12">
+      <div class="max-w-3xl w-full mx-auto px-4 pb-8 flex-grow flex flex-col gap-12">
         <section
           v-for="day in weekDays"
           :key="day.id"
           :id="day.id"
-          class="scroll-mt-[140px] md:scroll-mt-[180px] day-section"
+          class="scroll-mt-[180px] md:scroll-mt-[220px] day-section"
         >
           <!-- Day Divider / Header -->
           <div class="flex items-center gap-4 mb-6">
@@ -81,7 +86,7 @@
             </span>
           </div>
 
-          <!-- Meal Slots (Dummy Data for now) -->
+          <!-- Meal Slots (Dummy Data) -->
           <div class="grid grid-cols-1 gap-4">
             <!-- Breakfast Slot -->
             <div
@@ -291,7 +296,6 @@ let observer: IntersectionObserver | null = null
 const generateCurrentWeek = () => {
   const today = new Date()
   const currentDayOfWeek = today.getDay()
-  // Adjust to make Monday = 1, Sunday = 0 logic easier for offset
   const distanceToMonday = currentDayOfWeek === 0 ? -6 : 1 - currentDayOfWeek
 
   const monday = new Date(today)
@@ -302,10 +306,7 @@ const generateCurrentWeek = () => {
     const d = new Date(monday)
     d.setDate(monday.getDate() + i)
 
-    // Format YYYY-MM-DD for ID
     const id = d.toISOString().split('T')[0]
-
-    // Create Date String for header (e.g. 11.09.)
     const dateFormatted = `${String(d.getDate()).padStart(2, '0')}.${String(d.getMonth() + 1).padStart(2, '0')}.`
 
     days.push({
@@ -319,17 +320,19 @@ const generateCurrentWeek = () => {
 
   weekDays.value = days
 
-  // Set initial active day to today (or monday if weekend)
   const todayObj = days.find((d) => d.isToday)
   activeDay.value = todayObj ? todayObj.id : days[0].id
 }
 
 // Scroll to specific day section
-const scrollToDay = (id: string) => {
+const scrollToDay = (id: string, isSmooth = true) => {
   activeDay.value = id
   const el = document.getElementById(id)
   if (el) {
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    el.scrollIntoView({
+      behavior: isSmooth ? 'smooth' : 'auto',
+      block: 'start',
+    })
   }
 }
 
@@ -337,7 +340,7 @@ const scrollToDay = (id: string) => {
 const setupScrollSpy = () => {
   const options = {
     root: null,
-    rootMargin: '-150px 0px -60% 0px', // Adjusts when the section is considered "active"
+    rootMargin: '-150px 0px -60% 0px',
     threshold: 0,
   }
 
@@ -349,12 +352,11 @@ const setupScrollSpy = () => {
     })
   }, options)
 
-  // Observe all day sections
   setTimeout(() => {
     document.querySelectorAll('.day-section').forEach((section) => {
       if (observer) observer.observe(section)
     })
-  }, 100) // Slight delay to ensure DOM is rendered
+  }, 100)
 }
 
 onMounted(() => {
@@ -362,13 +364,12 @@ onMounted(() => {
     generateCurrentWeek()
     setupScrollSpy()
 
-    // Scroll to "Today" immediately if we load the view
     setTimeout(() => {
       const today = weekDays.value.find((d) => d.isToday)
       if (today) {
-        scrollToDay(today.id)
+        scrollToDay(today.id, false)
       }
-    }, 200)
+    }, 50)
   }
 })
 
