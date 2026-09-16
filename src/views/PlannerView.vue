@@ -181,7 +181,6 @@
                     {{ mealPlanData[day.id].recipe.title }}
                   </h3>
 
-                  <!-- Identical Prep/Cook Time Format as RecipesView -->
                   <div
                     v-if="
                       mealPlanData[day.id].recipe.prep_time || mealPlanData[day.id].recipe.cook_time
@@ -244,6 +243,7 @@
                 <!-- Action Buttons (Swap & Delete) -->
                 <div class="absolute top-4 right-4 flex gap-2">
                   <button
+                    v-if="!day.isPast"
                     @click.stop="swapMeal(day.id)"
                     :disabled="isSwapping === day.id"
                     class="text-gray-400 hover:text-primary-green transition-colors bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-sm border border-gray-100 disabled:opacity-50"
@@ -304,10 +304,16 @@
               <!-- If NO meal is planned for this day -->
               <div
                 v-else
-                class="bg-white rounded-3xl p-4 md:p-5 border border-dashed border-gray-300 flex flex-col md:flex-row items-center gap-4 group hover:border-primary-green/50 hover:bg-primary-green/5 transition-all"
+                class="bg-white rounded-3xl p-4 md:p-5 border border-dashed border-gray-300 flex flex-col md:flex-row items-center gap-4 group transition-all"
+                :class="
+                  !day.isPast
+                    ? 'hover:border-primary-green/50 hover:bg-primary-green/5'
+                    : 'opacity-70'
+                "
               >
                 <div
-                  class="w-12 h-12 rounded-2xl bg-bg-cream flex items-center justify-center shrink-0 text-2xl group-hover:bg-white group-hover:shadow-sm transition-all"
+                  class="w-12 h-12 rounded-2xl bg-bg-cream flex items-center justify-center shrink-0 text-2xl transition-all"
+                  :class="!day.isPast ? 'group-hover:bg-white group-hover:shadow-sm' : ''"
                 >
                   🍽️
                 </div>
@@ -316,10 +322,15 @@
                     Mahlzeit
                   </h4>
                   <p class="text-dark-green/50 font-medium">
-                    {{ $t('planner.empty_slot', 'Noch nichts geplant') }}
+                    {{
+                      day.isPast
+                        ? 'Keine Mahlzeit geplant'
+                        : $t('planner.empty_slot', 'Noch nichts geplant')
+                    }}
                   </p>
                 </div>
                 <button
+                  v-if="!day.isPast"
                   @click="openAddModal(day.id)"
                   class="w-full md:w-auto mt-2 md:mt-0 px-5 py-2.5 bg-white border border-gray-200 text-dark-green text-center font-bold rounded-xl hover:text-primary-green hover:border-primary-green transition-all shadow-sm block"
                 >
@@ -469,7 +480,6 @@
       v-else
       class="flex flex-col items-center md:justify-center w-full md:px-4 pt-4 pb-8 md:py-12 flex-grow"
     >
-      <!-- Unchanged ... -->
       <div
         class="w-full max-w-3xl pt-3 pb-10 md:py-10 relative md:bg-white md:px-12 md:rounded-3xl md:shadow-sm md:border md:border-gray-100 md:border-t-[8px] md:border-t-primary-green"
       >
@@ -527,6 +537,7 @@ interface WeekDay {
   dateNum: number
   dayOfWeek: number
   isToday: boolean
+  isPast: boolean
 }
 
 interface Recipe {
@@ -605,7 +616,10 @@ const generateCurrentWeek = () => {
     const dateFormatted = `${String(d.getDate()).padStart(2, '0')}.${String(d.getMonth() + 1).padStart(2, '0')}.`
     const isToday = id === localISOTime
 
-    days.push({ id, dateFormatted, dateNum: d.getDate(), dayOfWeek: d.getDay(), isToday })
+    // Check if the date is in the past by comparing the YYYY-MM-DD strings
+    const isPast = id < localISOTime
+
+    days.push({ id, dateFormatted, dateNum: d.getDate(), dayOfWeek: d.getDay(), isToday, isPast })
   }
 
   weekDays.value = days
@@ -644,14 +658,12 @@ const setupScrollSpy = () => {
 const processPlanResponse = (dataArray: MealPlanItem[]) => {
   const map: Record<string, MealPlanItem> = {}
   dataArray.forEach((item) => {
-    // FIX: Fallback from 'scheduled_for' (GET) to 'date' (POST generate)
     const rawDate = item.scheduled_for || item.date || ''
     if (rawDate) {
       const dateKey = rawDate.split(' ')[0].split('T')[0]
       map[dateKey] = item
     }
   })
-  // Assign completely new object to trigger Vue reactivity instantly
   mealPlanData.value = { ...map }
 }
 
@@ -711,8 +723,6 @@ const openAddModal = async (date: string) => {
   isLoadingAlternatives.value = true
 
   try {
-    // Fetch general recipes.
-    // To support strict Food Waste / Alternatives, we should add an endpoint: GET /plan/alternatives
     const res = await api.get('/recipes?limit=15')
     alternativeRecipes.value = res.data.data.slice(0, 15)
   } catch (e) {
@@ -732,8 +742,8 @@ const closeAddModal = () => {
 const selectRecipeForDate = async (slug: string) => {
   try {
     const date = addModalDate.value
-    closeAddModal() // Close instantly for better UX
-    isSwapping.value = date // Reuse swapping spinner on the main card
+    closeAddModal()
+    isSwapping.value = date
 
     const res = await api.post(`/plan/${date}/add`, { recipe_slug: slug })
     mealPlanData.value = { ...mealPlanData.value, [date]: res.data.data }
@@ -774,21 +784,3 @@ onUnmounted(() => {
   if (observer) observer.disconnect()
 })
 </script>
-
-<style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease;
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-</style>
