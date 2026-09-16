@@ -26,9 +26,14 @@
         </p>
       </div>
 
-      <!-- STICKY WEEK NAVIGATION BAR (Matches RecipesView Filter Bar) -->
+      <!-- STICKY WEEK NAVIGATION BAR (Dynamic rounded corners matching RecipesView) -->
       <div
-        class="sticky top-0 md:top-[104px] z-40 mb-10 bg-white/95 backdrop-blur-xl px-4 sm:px-6 py-4 transition-all duration-500 shadow-sm border-b border-gray-200 md:border md:border-gray-100 md:rounded-3xl"
+        class="sticky top-0 md:top-[104px] z-40 mb-10 bg-white/95 backdrop-blur-xl px-4 sm:px-6 py-4 transition-all duration-500"
+        :class="[
+          isScrolled
+            ? 'md:rounded-3xl border-b border-gray-200 md:border md:border-gray-100 shadow-md md:shadow-xl shadow-dark-green/5'
+            : 'md:rounded-b-3xl border-b border-gray-200 md:border-t-transparent md:border-x md:border-x-gray-100 shadow-sm',
+        ]"
       >
         <div class="max-w-3xl w-full mx-auto">
           <ul class="flex justify-between items-center overflow-x-auto scrollbar-hide gap-2">
@@ -293,7 +298,13 @@ interface WeekDay {
 // State
 const activeDay = ref<string>('')
 const weekDays = ref<WeekDay[]>([])
+const isScrolled = ref(false) // Track scroll state for sticky transition
 let observer: IntersectionObserver | null = null
+
+// Scroll listener matching RecipesView
+const handleScroll = () => {
+  isScrolled.value = window.scrollY > 60
+}
 
 // Generate current week dates (Monday to Sunday)
 const generateCurrentWeek = () => {
@@ -326,7 +337,6 @@ const generateCurrentWeek = () => {
 
   weekDays.value = days
 
-  // Default highlight state to today (or monday if outside)
   const todayObj = days.find((d) => d.isToday)
   activeDay.value = todayObj ? todayObj.id : days[0].id
 }
@@ -371,20 +381,24 @@ onMounted(() => {
     generateCurrentWeek()
     setupScrollSpy()
 
-    // Start at top (Monday), let user perceive the top briefly, then smoothly glide to today
+    // Attach scroll listener
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    handleScroll()
+
+    // Natural entry: starts at top (Monday) and glides smoothly down to today after a brief moment
     nextTick(() => {
       setTimeout(() => {
         const targetDay = weekDays.value.find((d) => d.isToday)
-        // If today is later in the week than Monday, smoothly scroll down to it
         if (targetDay && targetDay.id !== weekDays.value[0].id) {
-          scrollToDay(targetDay.id, true) // true = smooth scrolling animation
+          scrollToDay(targetDay.id, true)
         }
-      }, 350) // 350ms delay for a natural, elegant feel
+      }, 350)
     })
   }
 })
 
 onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
   if (observer) {
     observer.disconnect()
   }
