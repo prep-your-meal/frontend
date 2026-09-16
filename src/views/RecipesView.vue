@@ -15,12 +15,13 @@
       </p>
     </div>
 
+    <!-- STICKY FILTER BAR -->
     <div
-      class="sticky top-0 md:top-[104px] z-40 mb-10 bg-white/95 backdrop-blur-xl px-4 sm:px-6 py-5 transition-all duration-500"
+      class="sticky top-0 md:top-[95px] z-40 mb-10 bg-white/95 backdrop-blur-xl px-4 sm:px-6 py-5 transition-all duration-500 md:rounded-b-3xl md:rounded-t-none"
       :class="[
         isScrolled
-          ? 'md:rounded-3xl border-b border-gray-200 md:border md:border-gray-100 shadow-md md:shadow-xl shadow-dark-green/5'
-          : 'md:rounded-b-3xl border-b border-gray-200 md:border-t-transparent md:border-x md:border-x-gray-100 shadow-sm',
+          ? 'shadow-md md:shadow-xl shadow-dark-green/5 md:border md:border-gray-100'
+          : 'shadow-sm border-b border-gray-200 md:border-x md:border-gray-100 md:border-t-0',
       ]"
     >
       <div class="flex flex-col gap-4 w-full">
