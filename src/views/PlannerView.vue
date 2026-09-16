@@ -10,9 +10,9 @@
       <!-- Desktop Spacer -->
       <div class="w-full h-4 md:h-28 shrink-0"></div>
 
-      <!-- PAGE TITLE & MOBILE HEADER (Matches RecipesView structure) -->
+      <!-- PAGE TITLE & MOBILE HEADER -->
       <div
-        class="px-4 sm:px-10 pt-3 md:pt-10 pb-6 z-10 transition-opacity duration-300 relative flex flex-col items-center text-center md:bg-white md:border-t md:border-x md:border-gray-100 md:rounded-t-3xl"
+        class="px-4 sm:px-10 pt-3 md:pt-10 pb-4 z-10 transition-opacity duration-300 relative flex flex-col items-center text-center md:bg-white md:border-t md:border-x md:border-gray-100 md:rounded-t-3xl"
       >
         <MobileHeader />
 
@@ -26,13 +26,13 @@
         </p>
       </div>
 
-      <!-- STICKY WEEK NAVIGATION BAR (Dynamic rounded corners matching RecipesView) -->
+      <!-- STICKY WEEK NAVIGATION BAR (Island Style mit korrektem Timing) -->
       <div
         class="sticky top-0 md:top-[104px] z-40 mb-10 bg-white/95 backdrop-blur-xl px-4 sm:px-6 py-4 transition-all duration-500"
         :class="[
           isScrolled
-            ? 'md:rounded-3xl border-b border-gray-200 md:border md:border-gray-100 shadow-md md:shadow-xl shadow-dark-green/5'
-            : 'md:rounded-b-3xl border-b border-gray-200 md:border-t-transparent md:border-x md:border-x-gray-100 shadow-sm',
+            ? 'md:rounded-3xl border border-gray-100 shadow-md md:shadow-xl shadow-dark-green/5'
+            : 'md:rounded-b-3xl md:rounded-t-none border-b border-gray-200 md:border-x md:border-gray-100 md:border-t-0 shadow-sm',
         ]"
       >
         <div class="max-w-3xl w-full mx-auto">
@@ -77,7 +77,7 @@
           v-for="day in weekDays"
           :key="day.id"
           :id="day.id"
-          class="scroll-mt-[140px] md:scroll-mt-[180px] day-section"
+          class="scroll-mt-[160px] md:scroll-mt-[200px] day-section"
         >
           <!-- Day Divider / Header -->
           <div class="flex items-center gap-4 mb-6">
@@ -298,12 +298,11 @@ interface WeekDay {
 // State
 const activeDay = ref<string>('')
 const weekDays = ref<WeekDay[]>([])
-const isScrolled = ref(false) // Track scroll state for sticky transition
+const isScrolled = ref(false)
 let observer: IntersectionObserver | null = null
 
-// Scroll listener matching RecipesView
 const handleScroll = () => {
-  isScrolled.value = window.scrollY > 60
+  isScrolled.value = window.scrollY > 180
 }
 
 // Generate current week dates (Monday to Sunday)
@@ -341,7 +340,6 @@ const generateCurrentWeek = () => {
   activeDay.value = todayObj ? todayObj.id : days[0].id
 }
 
-// Scroll to specific day section
 const scrollToDay = (id: string, isSmooth = true) => {
   activeDay.value = id
   const el = document.getElementById(id)
@@ -353,7 +351,6 @@ const scrollToDay = (id: string, isSmooth = true) => {
   }
 }
 
-// Setup Intersection Observer for Scroll Spy
 const setupScrollSpy = () => {
   const options = {
     root: null,
@@ -381,11 +378,9 @@ onMounted(() => {
     generateCurrentWeek()
     setupScrollSpy()
 
-    // Attach scroll listener
     window.addEventListener('scroll', handleScroll, { passive: true })
     handleScroll()
 
-    // Natural entry: starts at top (Monday) and glides smoothly down to today after a brief moment
     nextTick(() => {
       setTimeout(() => {
         const targetDay = weekDays.value.find((d) => d.isToday)

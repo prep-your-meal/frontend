@@ -17,11 +17,11 @@
 
     <!-- STICKY FILTER BAR -->
     <div
-      class="sticky top-0 md:top-[95px] z-40 mb-10 bg-white/95 backdrop-blur-xl px-4 sm:px-6 py-5 transition-all duration-500 md:rounded-b-3xl md:rounded-t-none"
+      class="sticky top-0 md:top-[104px] z-40 mb-10 bg-white/95 backdrop-blur-xl px-4 sm:px-6 py-4 transition-all duration-500"
       :class="[
         isScrolled
-          ? 'shadow-md md:shadow-xl shadow-dark-green/5 md:border md:border-gray-100'
-          : 'shadow-sm border-b border-gray-200 md:border-x md:border-gray-100 md:border-t-0',
+          ? 'md:rounded-3xl border border-gray-100 shadow-md md:shadow-xl shadow-dark-green/5'
+          : 'md:rounded-b-3xl md:rounded-t-none border-b border-gray-200 md:border-x md:border-gray-100 md:border-t-0 shadow-sm',
       ]"
     >
       <div class="flex flex-col gap-4 w-full">
@@ -409,7 +409,7 @@ const resetFilters = () => {
 }
 
 const handleScroll = () => {
-  isScrolled.value = window.scrollY > 60
+  isScrolled.value = window.scrollY > 180
 }
 
 let searchTimeout: ReturnType<typeof setTimeout> | null = null
