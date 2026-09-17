@@ -76,7 +76,23 @@
     "teaser_title": "Your Smart Shopping List",
     "teaser_desc": "Add ingredients from recipes with a single click and check them off at the grocery store. Create a free account to get started.",
     "teaser_register": "Sign up for free",
-    "teaser_login": "Log in"
+    "teaser_login": "Log in",
+    "category_names": {
+      "dairy": "Dairy",
+      "condiments_and_sauces": "Condiments & Sauces",
+      "vegetables": "Vegetables",
+      "canned_goods": "Canned Goods",
+      "fresh_herbs": "Fresh Herbs",
+      "seasoning": "Seasoning",
+      "meat_and_poultry": "Meat & Poultry",
+      "soups_and_broths": "Soups & Broths",
+      "grains": "Grains",
+      "fats_and_oils": "Fats & Oils",
+      "sweets": "Sweets",
+      "nuts_and_seeds": "Nuts & Seeds",
+      "fruits": "Fruits",
+      "asian": "Asian"
+    }
   },
   "profile": {
     "title": "Profile",

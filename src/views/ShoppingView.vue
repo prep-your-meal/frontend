@@ -183,12 +183,12 @@
           <!-- Recipe Ingredients (Categorized) -->
           <template v-else>
             <section
-              v-for="(ingredients, categoryName) in recipeIngredients"
-              :key="categoryName"
+              v-for="(ingredients, categoryKey) in recipeIngredients"
+              :key="categoryKey"
               class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden"
             >
               <div class="bg-primary-green/5 px-6 py-4 border-b border-primary-green/10">
-                <h3 class="font-bold text-dark-green">{{ categoryName }}</h3>
+                <h3 class="font-bold text-dark-green">{{ translateCategory(categoryKey) }}</h3>
               </div>
               <ul class="divide-y divide-gray-100">
                 <li
@@ -224,7 +224,9 @@
                     class="flex-grow transition-all"
                     :class="localCheckedIngredients.has(item.slug) ? 'opacity-40 line-through' : ''"
                   >
-                    <span class="font-medium text-dark-green">{{ item.name }}</span>
+                    <span class="font-medium text-dark-green">{{
+                      getLocalizedName(item.name)
+                    }}</span>
                   </div>
                   <div
                     class="text-sm font-bold text-primary-green bg-primary-green/10 px-3 py-1 rounded-full whitespace-nowrap transition-all"
@@ -290,16 +292,18 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth'
 import MobileHeader from '@/components/ui/MobileHeader.vue'
 import api from '@/services/api'
 
 const authStore = useAuthStore()
+const { locale, t } = useI18n()
 
-// Interfaces matching backend payload structure
+// Interfaces matching backend payload structure (name can be localized object or string)
 interface RecipeIngredient {
   slug: string
-  name: string
+  name: Record<string, string> | string
   unit: string
   category: string
   total_amount: number
@@ -344,6 +348,25 @@ const changeWeek = (offset: number) => {
   const newDate = new Date(currentRefDate.value)
   newDate.setDate(newDate.getDate() + offset * 7)
   currentRefDate.value = newDate
+}
+
+// Helper to translate category keys using i18n
+const translateCategory = (categoryKey: string) => {
+  const normalizedKey = categoryKey
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '')
+  const translationKey = `shopping.category_names.${normalizedKey}`
+  const translated = t(translationKey)
+  // Fallback to original categoryName if no translation key is found
+  return translated !== translationKey ? translated : categoryKey
+}
+
+// Helper to resolve localized ingredient names
+const getLocalizedName = (nameField: Record<string, string> | string) => {
+  if (typeof nameField === 'string') return nameField
+  const currentLang = locale.value as string
+  return nameField[currentLang] || nameField['en'] || Object.values(nameField)[0] || ''
 }
 
 // Data Fetching for shopping list

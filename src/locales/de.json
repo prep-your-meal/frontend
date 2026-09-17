@@ -76,7 +76,23 @@
     "teaser_title": "Deine intelligente Einkaufsliste",
     "teaser_desc": "Füge Zutaten mit einem Klick aus Rezepten hinzu und hake sie direkt im Supermarkt ab. Erstelle einen kostenlosen Account, um loszulegen.",
     "teaser_register": "Kostenlos registrieren",
-    "teaser_login": "Anmelden"
+    "teaser_login": "Anmelden",
+    "category_names": {
+      "dairy": "Milchprodukte",
+      "condiments_and_sauces": "Gewürze & Saucen",
+      "vegetables": "Gemüse",
+      "canned_goods": "Konserven",
+      "fresh_herbs": "Frische Kräuter",
+      "seasoning": "Gewürze",
+      "meat_and_poultry": "Fleisch & Geflügel",
+      "soups_and_broths": "Suppen & Brühen",
+      "grains": "Getreide",
+      "fats_and_oils": "Fette & Öle",
+      "sweets": "Süßwaren",
+      "nuts_and_seeds": "Nüsse & Kerne",
+      "fruits": "Früchte",
+      "asian": "Asiatisch"
+    }
   },
   "profile": {
     "title": "Profil",
