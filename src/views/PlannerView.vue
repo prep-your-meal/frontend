@@ -245,13 +245,13 @@
                 <div class="absolute top-4 right-4 flex gap-2">
                   <button
                     v-if="!day.isPast"
-                    @click.stop="swapMeal(day.id)"
-                    :disabled="isSwapping === day.id"
+                    @click.stop="openAddModal(day.id)"
+                    :disabled="isProcessingAction === day.id"
                     class="text-gray-400 hover:text-primary-green transition-colors bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-sm border border-gray-100 disabled:opacity-50"
                     :title="$t('planner.swap_meal')"
                   >
                     <svg
-                      v-if="isSwapping !== day.id"
+                      v-if="isProcessingAction !== day.id"
                       class="w-4 h-4"
                       fill="none"
                       stroke="currentColor"
@@ -452,7 +452,7 @@ let observer: IntersectionObserver | null = null
 const mealPlanData = ref<Record<string, MealPlanItem>>({})
 const isLoadingPlan = ref(true)
 const isGenerating = ref(false)
-const isSwapping = ref<string | null>(null)
+const isProcessingAction = ref<string | null>(null)
 
 // Modal States
 const isAddModalOpen = ref(false)
@@ -572,18 +572,6 @@ const generatePlan = async () => {
   }
 }
 
-const swapMeal = async (dateKey: string) => {
-  try {
-    isSwapping.value = dateKey
-    const res = await api.put(`/plan/${dateKey}/swap`)
-    mealPlanData.value = { ...mealPlanData.value, [dateKey]: res.data.data }
-  } catch (error) {
-    console.error('Failed to swap meal:', error)
-  } finally {
-    isSwapping.value = null
-  }
-}
-
 const removeMeal = async (dateKey: string) => {
   try {
     await api.delete(`/plan/${dateKey}`)
@@ -624,14 +612,14 @@ const selectRecipeForDate = async (slug: string) => {
   try {
     const date = addModalDate.value
     closeAddModal()
-    isSwapping.value = date
+    isProcessingAction.value = date
 
     const res = await api.post(`/plan/${date}/add`, { recipe_slug: slug })
     mealPlanData.value = { ...mealPlanData.value, [date]: res.data.data }
   } catch (error) {
     console.error('Failed to add recipe:', error)
   } finally {
-    isSwapping.value = null
+    isProcessingAction.value = null
   }
 }
 
@@ -667,6 +655,14 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
