@@ -19,7 +19,7 @@
         <h1
           class="text-4xl md:text-5xl font-extrabold text-dark-green mb-3 tracking-tight mt-2 md:mt-0"
         >
-          {{ $t('shopping.title') }} 🛒
+          {{ $t('shopping.title') }}
         </h1>
         <p class="text-dark-green/60 text-lg max-w-xl font-medium">
           {{ $t('shopping.protected_text') }}
@@ -354,10 +354,13 @@ const changeWeek = (offset: number) => {
 const translateCategory = (categoryKey: string) => {
   const normalizedKey = categoryKey
     .toLowerCase()
+    .replace(/\s*&\s*/g, '_and_') // Explicitly map '&' to '_and_' to match i18n keys
     .replace(/[^a-z0-9]+/g, '_')
     .replace(/^_+|_+$/g, '')
+
   const translationKey = `shopping.category_names.${normalizedKey}`
   const translated = t(translationKey)
+
   // Fallback to original categoryName if no translation key is found
   return translated !== translationKey ? translated : categoryKey
 }
