@@ -64,12 +64,19 @@
   },
   "shopping": {
     "title": "Einkaufsliste",
-    "protected_text": "Hier entsteht deine smarte Einkaufsliste.",
-    "empty_list": "Noch keine Zutaten auf deiner Liste...",
+    "protected_text": "Plane deinen Einkauf wochenweise.",
+    "week": "Woche",
+    "prev_week": "Vorherige Woche",
+    "next_week": "Nächste Woche",
+    "empty_list": "Keine Zutaten für diese Woche geplant.",
+    "recipe_ingredients": "Zutaten aus Rezepten",
+    "custom_items": "Zusätzliche Artikel",
+    "clear_completed": "Erledigte löschen",
+    "add_custom": "Artikel hinzufügen...",
     "teaser_title": "Deine intelligente Einkaufsliste",
     "teaser_desc": "Füge Zutaten mit einem Klick aus Rezepten hinzu und hake sie direkt im Supermarkt ab. Erstelle einen kostenlosen Account, um loszulegen.",
     "teaser_register": "Kostenlos registrieren",
-    "teaser_login": "Ich habe schon einen Account"
+    "teaser_login": "Anmelden"
   },
   "profile": {
     "title": "Profil",
