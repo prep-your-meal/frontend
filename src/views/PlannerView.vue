@@ -19,10 +19,10 @@
         <h1
           class="text-4xl md:text-5xl font-extrabold text-dark-green mb-3 tracking-tight mt-2 md:mt-0"
         >
-          {{ $t('planner.title', 'Wochenplaner') }}
+          {{ $t('planner.title') }}
         </h1>
         <p class="text-dark-green/60 text-lg max-w-xl font-medium">
-          {{ $t('planner.subtitle', 'Plane deine Mahlzeiten für die aktuelle Woche.') }}
+          {{ $t('planner.subtitle') }}
         </p>
       </div>
 
@@ -87,10 +87,11 @@
           class="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm text-center flex flex-col items-center"
         >
           <div class="text-5xl mb-4">✨</div>
-          <h3 class="text-2xl font-bold text-dark-green mb-2">Noch kein Plan für diese Woche?</h3>
+          <h3 class="text-2xl font-bold text-dark-green mb-2">
+            {{ $t('planner.empty_plan_title') }}
+          </h3>
           <p class="text-gray-500 mb-6 max-w-sm">
-            Lass dir mit einem Klick einen smarten Wochenplan generieren, der deine
-            Profil-Präferenzen berücksichtigt und Food-Waste minimiert.
+            {{ $t('planner.empty_plan_desc') }}
           </p>
           <button
             @click="generatePlan"
@@ -104,7 +105,7 @@
                 d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"
               ></path>
             </svg>
-            Plan generieren
+            {{ $t('planner.generate_plan') }}
           </button>
         </div>
 
@@ -113,7 +114,7 @@
           v-else-if="isGenerating"
           class="py-20 flex flex-col items-center justify-center text-center"
         >
-          <LoadingState text="Dein smarter Wochenplan wird generiert..." />
+          <LoadingState :text="$t('planner.generating')" />
         </div>
 
         <!-- The actual days list -->
@@ -135,7 +136,7 @@
                 v-if="day.isToday"
                 class="px-3 py-1 bg-secondary-rust/10 text-secondary-rust text-xs font-bold rounded-full uppercase tracking-wider"
               >
-                Heute
+                {{ $t('planner.today') }}
               </span>
             </div>
 
@@ -173,7 +174,7 @@
                   @click="$router.push(`/recipe/${mealPlanData[day.id].recipe.slug}`)"
                 >
                   <h4 class="text-xs font-bold text-primary-green uppercase tracking-wider mb-1">
-                    {{ mealPlanData[day.id].portions }} Portionen
+                    {{ mealPlanData[day.id].portions }} {{ $t('planner.portions') }}
                   </h4>
                   <h3
                     class="text-lg font-bold text-dark-green line-clamp-1 group-hover:text-primary-green transition-colors"
@@ -247,7 +248,7 @@
                     @click.stop="swapMeal(day.id)"
                     :disabled="isSwapping === day.id"
                     class="text-gray-400 hover:text-primary-green transition-colors bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-sm border border-gray-100 disabled:opacity-50"
-                    title="Mahlzeit austauschen"
+                    :title="$t('planner.swap_meal')"
                   >
                     <svg
                       v-if="isSwapping !== day.id"
@@ -287,7 +288,7 @@
                   <button
                     @click.stop="removeMeal(day.id)"
                     class="text-gray-400 hover:text-red-500 transition-colors bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-sm border border-gray-100"
-                    title="Mahlzeit entfernen"
+                    :title="$t('planner.remove_meal')"
                   >
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
@@ -319,14 +320,10 @@
                 </div>
                 <div class="flex-grow text-center md:text-left">
                   <h4 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-0.5">
-                    Mahlzeit
+                    {{ $t('planner.meal') }}
                   </h4>
                   <p class="text-dark-green/50 font-medium">
-                    {{
-                      day.isPast
-                        ? 'Keine Mahlzeit geplant'
-                        : $t('planner.empty_slot', 'Noch nichts geplant')
-                    }}
+                    {{ day.isPast ? $t('planner.no_meal_planned') : $t('planner.empty_slot') }}
                   </p>
                 </div>
                 <button
@@ -334,7 +331,7 @@
                   @click="openAddModal(day.id)"
                   class="w-full md:w-auto mt-2 md:mt-0 px-5 py-2.5 bg-white border border-gray-200 text-dark-green text-center font-bold rounded-xl hover:text-primary-green hover:border-primary-green transition-all shadow-sm block"
                 >
-                  + {{ $t('planner.add_recipe', 'Hinzufügen') }}
+                  + {{ $t('planner.add_recipe') }}
                 </button>
               </div>
             </div>
@@ -357,7 +354,7 @@
             >
               <div>
                 <h3 class="text-xl font-bold text-dark-green">
-                  {{ $t('planner.add_meal', 'Gericht hinzufügen') }}
+                  {{ $t('planner.add_meal') }}
                 </h3>
                 <p class="text-sm text-gray-500 mt-1">{{ addModalDateFormatted }}</p>
               </div>
@@ -379,17 +376,16 @@
             <!-- Body -->
             <div class="p-5 md:p-6 overflow-y-auto flex-grow bg-white relative">
               <div v-if="isLoadingAlternatives" class="py-12 flex justify-center">
-                <LoadingState text="Suche passende Mahlzeiten..." />
+                <LoadingState :text="$t('planner.searching_alternatives')" />
               </div>
               <div v-else class="flex flex-col gap-4">
-                <!-- Info Notice for upcoming Food-Waste feature -->
+                <!-- Info Notice for active Food-Waste optimization -->
                 <div
                   class="bg-primary-green/10 text-primary-green px-4 py-3 rounded-xl text-sm font-medium mb-2 flex items-start gap-3"
                 >
                   <span class="text-lg">💡</span>
                   <p>
-                    In einem kommenden Update werden diese Vorschläge automatisch deine
-                    Food-Waste-Ziele und deinen Kühlschrank-Inhalt berücksichtigen!
+                    {{ $t('planner.food_waste_notice') }}
                   </p>
                 </div>
 
@@ -488,18 +484,18 @@
           class="flex flex-col items-center justify-center text-center max-w-lg mx-auto py-4 px-4 md:px-0 relative z-10"
         >
           <h2 class="text-3xl font-extrabold text-dark-green mb-4">
-            {{ $t('dashboard.teaser_title', 'Dein persönlicher Wochenplaner') }}
+            {{ $t('dashboard.teaser_title') }}
           </h2>
           <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
             <RouterLink
               to="/register"
               class="flex-1 flex justify-center items-center text-center bg-primary-green text-white font-bold px-8 py-3.5 rounded-xl hover:bg-dark-green transition-colors shadow-sm"
-              >Kostenlos registrieren</RouterLink
+              >{{ $t('dashboard.teaser_register') }}</RouterLink
             >
             <RouterLink
               to="/login"
               class="flex-1 flex justify-center items-center text-center bg-white md:bg-gray-50 text-dark-green font-bold px-8 py-3.5 rounded-xl border border-gray-200 hover:border-primary-green hover:text-primary-green transition-colors shadow-sm"
-              >Anmelden</RouterLink
+              >{{ $t('dashboard.teaser_login') }}</RouterLink
             >
           </div>
         </div>
@@ -524,7 +520,7 @@ const { t, locale } = useI18n()
 // ------------------------------------------------------------------------
 const originalTitle = document.title
 const updateTitle = () => {
-  document.title = `${t('planner.title', 'Wochenplaner')} | PrepYourMeal`
+  document.title = `${t('planner.title')} | PrepYourMeal`
 }
 watch(locale, updateTitle)
 
@@ -723,8 +719,8 @@ const openAddModal = async (date: string) => {
   isLoadingAlternatives.value = true
 
   try {
-    const res = await api.get('/recipes?limit=15')
-    alternativeRecipes.value = res.data.data.slice(0, 15)
+    const res = await api.get(`/plan/${date}/alternatives`)
+    alternativeRecipes.value = res.data.data
   } catch (e) {
     console.error('Failed to fetch alternative recipes:', e)
   } finally {
