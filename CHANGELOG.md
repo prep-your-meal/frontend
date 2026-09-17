@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.31](https://github.com/prep-your-meal/frontend/compare/v0.0.30...v0.0.31) (2026-09-17)
+
+### Features
+
+* **auth:** display success banner after email verification ([d042675](https://github.com/prep-your-meal/frontend/commit/d0426753b6b648d7907c136bc556661e7d4dc4ad))
+* **planner:** implement hybrid scroll-spy layout for weekly planner ([8fd7052](https://github.com/prep-your-meal/frontend/commit/8fd70523aea8cec04924f6480d5d13872ef3b648))
+* **planner:** match header structure with recipes view and implement smooth auto-scroll ([26139d9](https://github.com/prep-your-meal/frontend/commit/26139d94cbbb9c59bd0b2839820a33d9fb2ddf32))
+* **planner:** prevent adding meals to past days in meal plan ([bd78168](https://github.com/prep-your-meal/frontend/commit/bd78168ebab9682ea70cd1f75c6198d4b8cc6f1f))
+* **profile:** allow editing of user name and email ([c6c13d3](https://github.com/prep-your-meal/frontend/commit/c6c13d3185e5550f2aba730a2dfd9b418b501e3c))
+* **profile:** enhance UI with steppers, dirty-state validation, and reusable modal ([bcd1c43](https://github.com/prep-your-meal/frontend/commit/bcd1c433bbe8e52faa59d7d6d55ec8431e8a1a8d))
+* **profile:** implement click-to-edit pattern for account settings ([f5a3447](https://github.com/prep-your-meal/frontend/commit/f5a34477be8f4703b89e9446bb744fc7baeb5334))
+* **profile:** map extensive user details to profile interface ([f24c58b](https://github.com/prep-your-meal/frontend/commit/f24c58b3e68ee1f249b8f7fd6132dd9783c58cfa))
+* **recipes:** automatically apply user dietary preferences as active filters on initial load ([c9e454b](https://github.com/prep-your-meal/frontend/commit/c9e454b98ad89f0aab985e8f0db39c615c309359))
+* **ui:** refine login error handling and styling ([8a82202](https://github.com/prep-your-meal/frontend/commit/8a82202cd3cac40268a745e3340e65d613ae80eb))
+
+### Bug Fixes
+
+* **planner:** extract all hardcoded german strings to translation files ([c324ead](https://github.com/prep-your-meal/frontend/commit/c324ead6239a455ffb638263539a16ac1312a4ef))
+* **recipes:** resolve empty filter pills by establishing composable as single source of truth ([30a4c76](https://github.com/prep-your-meal/frontend/commit/30a4c76ab1a03c6c84ad416b4e0b63cc3d825182))
+
 ## [0.0.30](https://github.com/prep-your-meal/frontend/compare/v0.0.29...v0.0.30) (2026-09-10)
 
 ### Features
