@@ -40,7 +40,7 @@
           <div class="flex items-center justify-between w-full">
             <button
               @click="changeWeek(-1)"
-              class="p-1.5 text-gray-400 hover:text-primary-green transition-colors"
+              class="relative p-1.5 text-gray-400 hover:text-primary-green transition-colors"
             >
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -50,16 +50,25 @@
                   d="M15 19l-7-7 7-7"
                 ></path>
               </svg>
+              <!-- Premium Indicator -->
+              <span
+                v-if="!authStore.user?.is_premium"
+                class="absolute -top-1 -left-1 text-[10px]"
+                title="Premium Feature"
+                >👑</span
+              >
             </button>
+
             <div class="text-center">
               <span class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider">
                 {{ $t('shopping.week') }}
               </span>
               <span class="text-sm font-extrabold text-dark-green">{{ weekLabel }}</span>
             </div>
+
             <button
               @click="changeWeek(1)"
-              class="p-1.5 text-gray-400 hover:text-primary-green transition-colors"
+              class="relative p-1.5 text-gray-400 hover:text-primary-green transition-colors"
             >
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -69,6 +78,13 @@
                   d="M9 5l7 7-7 7"
                 ></path>
               </svg>
+              <!-- Premium Indicator -->
+              <span
+                v-if="!authStore.user?.is_premium"
+                class="absolute -top-1 -right-1 text-[10px]"
+                title="Premium Feature"
+                >👑</span
+              >
             </button>
           </div>
 
@@ -374,7 +390,7 @@
         </template>
       </div>
 
-      <!-- ADD MEAL MODAL -->
+      <!-- MODALS -->
       <RecipeSelectionModal
         :show="isAddModalOpen"
         :title="$t('planner.add_meal')"
@@ -386,6 +402,9 @@
         @close="closeAddModal"
         @select="selectRecipeForDate"
       />
+
+      <!-- Reusable Premium Modal -->
+      <PremiumModal :show="showPremiumModal" @close="showPremiumModal = false" />
     </div>
 
     <!-- ==============================================
@@ -430,6 +449,7 @@ import { useAuthStore } from '../stores/auth'
 import MobileHeader from '@/components/ui/MobileHeader.vue'
 import LoadingState from '@/components/ui/LoadingState.vue'
 import RecipeSelectionModal from '@/components/ui/RecipeSelectionModal.vue'
+import PremiumModal from '@/components/ui/PremiumModal.vue'
 import api from '@/services/api'
 
 const authStore = useAuthStore()
@@ -483,8 +503,9 @@ const weekDays = ref<WeekDay[]>([])
 const isScrolled = ref(false)
 let observer: IntersectionObserver | null = null
 
-// New State for Week Navigation
+// State for Week Navigation & Premium Modal
 const currentRefDate = ref(new Date())
+const showPremiumModal = ref(false)
 
 // API States
 const mealPlanData = ref<Record<string, MealPlanItem>>({})
@@ -512,6 +533,42 @@ const handleScroll = () => {
 }
 
 // ------------------------------------------------------------------------
+// HELPERS
+// ------------------------------------------------------------------------
+// Handle API 403 Premium Errors globally for this view
+const handleApiError = (error: unknown) => {
+  // Cast the unknown error to an expected Axios-like error structure
+  const err = error as {
+    response?: {
+      status?: number
+      data?: { requires_premium?: boolean }
+    }
+  }
+
+  if (err.response?.status === 403 && err.response?.data?.requires_premium) {
+    showPremiumModal.value = true
+  } else {
+    console.error('API Error:', error)
+  }
+}
+
+// Check if a given date falls within the real-world current week (Monday-Sunday)
+const isDateInCurrentWeek = (date: Date) => {
+  const now = new Date()
+  const day = now.getDay()
+  const diffToMonday = now.getDate() - day + (day === 0 ? -6 : 1)
+
+  const startOfCurrentWeek = new Date(now.setDate(diffToMonday))
+  startOfCurrentWeek.setHours(0, 0, 0, 0)
+
+  const endOfCurrentWeek = new Date(startOfCurrentWeek)
+  endOfCurrentWeek.setDate(startOfCurrentWeek.getDate() + 6)
+  endOfCurrentWeek.setHours(23, 59, 59, 999)
+
+  return date >= startOfCurrentWeek && date <= endOfCurrentWeek
+}
+
+// ------------------------------------------------------------------------
 // DATE LOGIC & WEEK NAVIGATION
 // ------------------------------------------------------------------------
 const weekRange = computed(() => {
@@ -534,10 +591,16 @@ const weekLabel = computed(() => {
 const changeWeek = (offset: number) => {
   const newDate = new Date(currentRefDate.value)
   newDate.setDate(newDate.getDate() + offset * 7)
+
+  // Proactive Premium Check: Prevent navigating outside current week if not premium
+  if (!authStore.user?.is_premium && !isDateInCurrentWeek(newDate)) {
+    showPremiumModal.value = true
+    return
+  }
+
   currentRefDate.value = newDate
 }
 
-// Replaces the old generateCurrentWeek
 const generateWeekDays = () => {
   const today = new Date()
   const offsetToday = today.getTimezoneOffset() * 60000
@@ -613,19 +676,16 @@ const fetchPlan = async () => {
 
   try {
     isLoadingPlan.value = true
-
-    // Grab the first and last day of the currently rendered week
     const startDate = weekDays.value[0].id
     const endDate = weekDays.value[6].id
 
-    // Pass the active date range directly to the API
     const res = await api.get('/plan', {
       params: { start_date: startDate, end_date: endDate },
     })
 
     processPlanResponse(res.data.data || [])
   } catch (error) {
-    console.error('Failed to fetch plan:', error)
+    handleApiError(error)
   } finally {
     isLoadingPlan.value = false
   }
@@ -634,23 +694,17 @@ const fetchPlan = async () => {
 const generatePlan = async () => {
   try {
     isGenerating.value = true
-
-    // Check if "today" is part of the currently viewed week
     const todayObj = weekDays.value.find((d) => d.isToday)
-
-    // If today is in this week, start generating from today.
-    // If it's a future (or past) week, start from Monday.
     const startDate = todayObj ? todayObj.id : weekDays.value[0].id
 
     const res = await api.post('/plan/generate', { start_date: startDate })
     processPlanResponse(res.data.data || [])
 
-    // Switch view back to current week if the generated plan is for today
     if (todayObj) {
       currentRefDate.value = new Date()
     }
   } catch (error) {
-    console.error('Failed to generate plan:', error)
+    handleApiError(error)
   } finally {
     isGenerating.value = false
   }
@@ -663,7 +717,7 @@ const removeMeal = async (dateKey: string) => {
     delete updatedPlan[dateKey]
     mealPlanData.value = updatedPlan
   } catch (error) {
-    console.error('Failed to clear date:', error)
+    handleApiError(error)
   }
 }
 
@@ -678,8 +732,9 @@ const openAddModal = async (date: string) => {
   try {
     const res = await api.get(`/plan/${date}/alternatives`)
     alternativeRecipes.value = res.data.data
-  } catch (e) {
-    console.error('Failed to fetch alternative recipes:', e)
+  } catch (error) {
+    handleApiError(error)
+    closeAddModal() // Close modal if API rejected the request due to premium constraints
   } finally {
     isLoadingAlternatives.value = false
   }
@@ -701,7 +756,7 @@ const selectRecipeForDate = async (slug: string) => {
     const res = await api.post(`/plan/${date}/add`, { recipe_slug: slug })
     mealPlanData.value = { ...mealPlanData.value, [date]: res.data.data }
   } catch (error) {
-    console.error('Failed to add recipe:', error)
+    handleApiError(error)
   } finally {
     isProcessingAction.value = null
   }
@@ -710,8 +765,6 @@ const selectRecipeForDate = async (slug: string) => {
 // ------------------------------------------------------------------------
 // WATCHERS & LIFECYCLE
 // ------------------------------------------------------------------------
-
-// Whenever the user switches the week, rebuild the days array and fetch the plan for that range
 watch(currentRefDate, () => {
   generateWeekDays()
   fetchPlan()
@@ -738,7 +791,6 @@ onMounted(() => {
   }
 })
 
-// Triggers every time the user navigates back to this view (e.g. from Shopping List)
 onActivated(() => {
   if (authStore.isAuthenticated) {
     fetchPlan()

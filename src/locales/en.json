@@ -271,5 +271,11 @@
     "title": "Closed-Beta",
     "thanks": "Thank you for your interest! PrepYourMeal is currently in a closed beta phase. To get an account, please send us a short email at:",
     "back_to_login": "Back to Login"
+  },
+  "premium": {
+    "modal_title": "Premium Feature",
+    "modal_desc": "Planning for future or past weeks is an exclusive feature for our Premium members. Upgrade today to unlock full access to advanced planning and shopping tools.",
+    "upgrade_button": "Upgrade to Premium",
+    "cancel_button": "Maybe later"
   }
 }

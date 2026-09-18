@@ -33,12 +33,19 @@
 
           <!-- Actions -->
           <div class="w-full flex flex-col gap-3">
+            <!--
+              [&_a]:text-white zwingt alle eingebetteten Links dazu, weiß zu sein.
+              Zusätzlich ein Slot, um RouterLinks oder andere Tags als Text zu übergeben.
+            -->
             <button
               @click="$emit('confirm')"
-              class="w-full py-3.5 bg-secondary-rust text-white font-bold rounded-xl hover:bg-secondary-rust/90 transition-colors shadow-sm"
+              class="w-full py-3.5 bg-secondary-rust text-white font-bold rounded-xl hover:bg-secondary-rust/90 transition-colors shadow-sm [&_a]:text-white [&_a:hover]:text-white"
             >
-              {{ confirmText }}
+              <slot name="confirm-action">
+                {{ confirmText }}
+              </slot>
             </button>
+
             <button
               @click="$emit('cancel')"
               class="w-full py-3.5 bg-gray-100 text-dark-green font-bold rounded-xl hover:bg-gray-200 transition-colors"

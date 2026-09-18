@@ -33,7 +33,7 @@
         <div class="flex items-center justify-between max-w-sm mx-auto">
           <button
             @click="changeWeek(-1)"
-            class="p-2 text-gray-400 hover:text-primary-green transition-colors"
+            class="relative p-2 text-gray-400 hover:text-primary-green transition-colors"
             :title="$t('shopping.prev_week')"
           >
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -44,16 +44,25 @@
                 d="M15 19l-7-7 7-7"
               ></path>
             </svg>
+            <!-- Premium Indicator -->
+            <span
+              v-if="!authStore.user?.is_premium"
+              class="absolute top-0 left-0 text-[10px]"
+              title="Premium Feature"
+              >👑</span
+            >
           </button>
+
           <div class="text-center">
             <span class="block text-sm font-bold text-gray-400 uppercase tracking-wider mb-0.5">
               {{ $t('shopping.week') }}
             </span>
             <span class="text-lg font-extrabold text-dark-green">{{ weekLabel }}</span>
           </div>
+
           <button
             @click="changeWeek(1)"
-            class="p-2 text-gray-400 hover:text-primary-green transition-colors"
+            class="relative p-2 text-gray-400 hover:text-primary-green transition-colors"
             :title="$t('shopping.next_week')"
           >
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -64,6 +73,13 @@
                 d="M9 5l7 7-7 7"
               ></path>
             </svg>
+            <!-- Premium Indicator -->
+            <span
+              v-if="!authStore.user?.is_premium"
+              class="absolute top-0 right-0 text-[10px]"
+              title="Premium Feature"
+              >👑</span
+            >
           </button>
         </div>
       </div>
@@ -75,7 +91,7 @@
         </div>
 
         <template v-else>
-          <!-- Custom Items Module (Global) -->
+          <!-- Custom Items Module -->
           <section class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
             <div
               class="bg-secondary-rust/5 px-6 py-4 border-b border-secondary-rust/10 flex justify-between items-center"
@@ -240,9 +256,14 @@
           </template>
         </template>
       </div>
+
+      <!-- Reusable Premium Modal -->
+      <PremiumModal :show="showPremiumModal" @close="showPremiumModal = false" />
     </div>
 
-    <!-- GUEST TEASER STATE -->
+    <!-- ==============================================
+         GUEST TEASER STATE
+         ============================================== -->
     <div
       v-else
       class="flex flex-col items-center md:justify-center w-full md:px-4 pt-4 pb-8 md:py-12 flex-grow"
@@ -291,16 +312,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, onActivated, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth'
 import MobileHeader from '@/components/ui/MobileHeader.vue'
+import PremiumModal from '@/components/ui/PremiumModal.vue'
 import api from '@/services/api'
 
 const authStore = useAuthStore()
 const { locale, t } = useI18n()
 
-// Interfaces matching backend payload structure (name can be localized object or string)
+// Interfaces matching backend payload structure
 interface RecipeIngredient {
   slug: string
   name: Record<string, string> | string
@@ -322,11 +344,49 @@ const recipeIngredients = ref<Record<string, RecipeIngredient[]>>({})
 const customItems = ref<CustomItem[]>([])
 const localCheckedIngredients = ref<Set<string>>(new Set())
 
-// Week Navigation
+// Week Navigation & Premium Modal
 const currentRefDate = ref(new Date())
 const newItemName = ref('')
+const showPremiumModal = ref(false)
 
-// Compute start and end of week (Monday to Sunday)
+// ------------------------------------------------------------------------
+// HELPERS
+// ------------------------------------------------------------------------
+// Handle API 403 Premium Errors globally for this view with strict typing
+const handleApiError = (error: unknown) => {
+  const err = error as {
+    response?: {
+      status?: number
+      data?: { requires_premium?: boolean }
+    }
+  }
+
+  if (err.response?.status === 403 && err.response?.data?.requires_premium) {
+    showPremiumModal.value = true
+  } else {
+    console.error('API Error:', error)
+  }
+}
+
+// Check if a given date falls within the real-world current week (Monday-Sunday)
+const isDateInCurrentWeek = (date: Date) => {
+  const now = new Date()
+  const day = now.getDay()
+  const diffToMonday = now.getDate() - day + (day === 0 ? -6 : 1)
+
+  const startOfCurrentWeek = new Date(now.setDate(diffToMonday))
+  startOfCurrentWeek.setHours(0, 0, 0, 0)
+
+  const endOfCurrentWeek = new Date(startOfCurrentWeek)
+  endOfCurrentWeek.setDate(startOfCurrentWeek.getDate() + 6)
+  endOfCurrentWeek.setHours(23, 59, 59, 999)
+
+  return date >= startOfCurrentWeek && date <= endOfCurrentWeek
+}
+
+// ------------------------------------------------------------------------
+// COMPUTED LOGIC
+// ------------------------------------------------------------------------
 const weekRange = computed(() => {
   const date = new Date(currentRefDate.value)
   const day = date.getDay()
@@ -347,32 +407,36 @@ const weekLabel = computed(() => {
 const changeWeek = (offset: number) => {
   const newDate = new Date(currentRefDate.value)
   newDate.setDate(newDate.getDate() + offset * 7)
+
+  // Proactive Premium Check: Prevent navigating outside current week if not premium
+  if (!authStore.user?.is_premium && !isDateInCurrentWeek(newDate)) {
+    showPremiumModal.value = true
+    return
+  }
+
   currentRefDate.value = newDate
 }
 
-// Helper to translate category keys using i18n
 const translateCategory = (categoryKey: string) => {
   const normalizedKey = categoryKey
     .toLowerCase()
-    .replace(/\s*&\s*/g, '_and_') // Explicitly map '&' to '_and_' to match i18n keys
+    .replace(/\s*&\s*/g, '_and_')
     .replace(/[^a-z0-9]+/g, '_')
     .replace(/^_+|_+$/g, '')
-
   const translationKey = `shopping.category_names.${normalizedKey}`
   const translated = t(translationKey)
-
-  // Fallback to original categoryName if no translation key is found
   return translated !== translationKey ? translated : categoryKey
 }
 
-// Helper to resolve localized ingredient names
 const getLocalizedName = (nameField: Record<string, string> | string) => {
   if (typeof nameField === 'string') return nameField
   const currentLang = locale.value as string
   return nameField[currentLang] || nameField['en'] || Object.values(nameField)[0] || ''
 }
 
-// Data Fetching for shopping list
+// ------------------------------------------------------------------------
+// DATA FETCHING & ACTIONS
+// ------------------------------------------------------------------------
 const fetchShoppingList = async () => {
   if (!authStore.isAuthenticated) return
 
@@ -390,23 +454,23 @@ const fetchShoppingList = async () => {
       .split('T')[0]
 
     const res = await api.get('/shopping-list', {
-      params: { start_date: startStr, end_date: endStr },
+      params: {
+        start_date: startStr,
+        end_date: endStr,
+        _t: Date.now(),
+      },
     })
 
-    // Assign categorized recipes and global custom items
     recipeIngredients.value = res.data.data.recipes || {}
     customItems.value = res.data.data.custom_items || []
-
-    // Clear dynamic UI checklist when navigating between weeks
     localCheckedIngredients.value.clear()
   } catch (error) {
-    console.error('Failed to fetch shopping list:', error)
+    handleApiError(error)
   } finally {
     isLoading.value = false
   }
 }
 
-// Dynamic Recipe Checklist (Local State)
 const toggleRecipeIngredient = (slug: string) => {
   if (localCheckedIngredients.value.has(slug)) {
     localCheckedIngredients.value.delete(slug)
@@ -415,7 +479,6 @@ const toggleRecipeIngredient = (slug: string) => {
   }
 }
 
-// Custom Items (Persisted DB State)
 const hasCompletedCustomItems = computed(() => {
   return customItems.value.some((item) => item.is_checked)
 })
@@ -426,25 +489,28 @@ const addCustomItem = async () => {
 
   isAddingCustomItem.value = true
   try {
-    const res = await api.post('/shopping-list/custom', { name })
-    customItems.value.unshift(res.data.data) // Add to top of list
+    const startStr = new Date(
+      weekRange.value.start.getTime() - weekRange.value.start.getTimezoneOffset() * 60000,
+    )
+      .toISOString()
+      .split('T')[0]
+    const res = await api.post('/shopping-list/custom', { name, week_start: startStr })
+    customItems.value.unshift(res.data.data)
     newItemName.value = ''
   } catch (error) {
-    console.error('Failed to add custom item:', error)
+    handleApiError(error)
   } finally {
     isAddingCustomItem.value = false
   }
 }
 
 const toggleCustomItem = async (item: CustomItem) => {
-  // Optimistic UI update
   item.is_checked = !item.is_checked
   try {
     await api.put(`/shopping-list/custom/${item.id}/toggle`)
   } catch (error) {
-    // Revert on failure
-    item.is_checked = !item.is_checked
-    console.error('Failed to toggle custom item:', error)
+    item.is_checked = !item.is_checked // Revert visually on fail
+    handleApiError(error)
   }
 }
 
@@ -453,23 +519,38 @@ const deleteCustomItem = async (id: number) => {
     await api.delete(`/shopping-list/custom/${id}`)
     customItems.value = customItems.value.filter((item) => item.id !== id)
   } catch (error) {
-    console.error('Failed to delete custom item:', error)
+    handleApiError(error)
   }
 }
 
 const clearCompletedCustomItems = async () => {
   try {
-    await api.delete('/shopping-list/custom/completed')
+    const startStr = new Date(
+      weekRange.value.start.getTime() - weekRange.value.start.getTimezoneOffset() * 60000,
+    )
+      .toISOString()
+      .split('T')[0]
+    await api.delete('/shopping-list/custom/completed', {
+      params: { week_start: startStr },
+    })
     customItems.value = customItems.value.filter((item) => !item.is_checked)
   } catch (error) {
-    console.error('Failed to clear completed items:', error)
+    handleApiError(error)
   }
 }
 
-// Watchers & Lifecycle
+// ------------------------------------------------------------------------
+// WATCHERS & LIFECYCLE
+// ------------------------------------------------------------------------
 watch(currentRefDate, fetchShoppingList)
 
 onMounted(() => {
   fetchShoppingList()
+})
+
+onActivated(() => {
+  if (authStore.isAuthenticated) {
+    fetchShoppingList()
+  }
 })
 </script>
