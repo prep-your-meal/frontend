@@ -28,17 +28,52 @@
 
       <!-- STICKY WEEK NAVIGATION BAR -->
       <div
-        class="sticky top-0 md:top-[95px] z-40 mb-10 bg-white/95 backdrop-blur-xl px-4 sm:px-6 py-4 transition-all duration-500 md:rounded-b-3xl md:rounded-t-none"
+        class="sticky top-0 md:top-[95px] z-40 mb-10 bg-white/95 backdrop-blur-xl px-4 sm:px-6 py-3 transition-all duration-500 md:rounded-b-3xl md:rounded-t-none"
         :class="[
           isScrolled
             ? 'shadow-md md:shadow-xl shadow-dark-green/5 md:border md:border-gray-100'
             : 'shadow-sm border-b border-gray-200 md:border-x md:border-gray-100 md:border-t-0',
         ]"
       >
-        <div class="max-w-3xl w-full mx-auto flex items-center justify-between gap-4">
-          <ul
-            class="flex justify-between items-center overflow-x-auto scrollbar-hide gap-2 flex-grow"
-          >
+        <div class="max-w-3xl w-full mx-auto flex flex-col gap-3">
+          <!-- Week Switcher -->
+          <div class="flex items-center justify-between w-full">
+            <button
+              @click="changeWeek(-1)"
+              class="p-1.5 text-gray-400 hover:text-primary-green transition-colors"
+            >
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 19l-7-7 7-7"
+                ></path>
+              </svg>
+            </button>
+            <div class="text-center">
+              <span class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                {{ $t('shopping.week') }}
+              </span>
+              <span class="text-sm font-extrabold text-dark-green">{{ weekLabel }}</span>
+            </div>
+            <button
+              @click="changeWeek(1)"
+              class="p-1.5 text-gray-400 hover:text-primary-green transition-colors"
+            >
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5l7 7-7 7"
+                ></path>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Days Row -->
+          <ul class="flex justify-between items-center overflow-x-auto scrollbar-hide gap-2 w-full">
             <li v-for="day in weekDays" :key="day.id" class="flex-1 shrink-0 min-w-[3rem]">
               <button
                 @click="scrollToDay(day.id)"
@@ -140,7 +175,7 @@
               </span>
             </div>
 
-            <!-- Single Meal Slot (Connected to Backend) -->
+            <!-- Single Meal Slot -->
             <div class="grid grid-cols-1 gap-4">
               <!-- If a meal is planned for this day -->
               <div
@@ -339,7 +374,7 @@
         </template>
       </div>
 
-      <!-- ADD MEAL MODAL (Extracted Component) -->
+      <!-- ADD MEAL MODAL -->
       <RecipeSelectionModal
         :show="isAddModalOpen"
         :title="$t('planner.add_meal')"
@@ -389,7 +424,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, onActivated, nextTick, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '../stores/auth'
 import MobileHeader from '@/components/ui/MobileHeader.vue'
@@ -448,6 +483,9 @@ const weekDays = ref<WeekDay[]>([])
 const isScrolled = ref(false)
 let observer: IntersectionObserver | null = null
 
+// New State for Week Navigation
+const currentRefDate = ref(new Date())
+
 // API States
 const mealPlanData = ref<Record<string, MealPlanItem>>({})
 const isLoadingPlan = ref(true)
@@ -474,20 +512,41 @@ const handleScroll = () => {
 }
 
 // ------------------------------------------------------------------------
-// DATE LOGIC
+// DATE LOGIC & WEEK NAVIGATION
 // ------------------------------------------------------------------------
-const generateCurrentWeek = () => {
+const weekRange = computed(() => {
+  const date = new Date(currentRefDate.value)
+  const day = date.getDay()
+  const diffToMonday = date.getDate() - day + (day === 0 ? -6 : 1)
+
+  const start = new Date(date.setDate(diffToMonday))
+  const end = new Date(new Date(start).setDate(start.getDate() + 6))
+
+  return { start, end }
+})
+
+const weekLabel = computed(() => {
+  const { start, end } = weekRange.value
+  const formatOpts: Intl.DateTimeFormatOptions = { day: '2-digit', month: '2-digit' }
+  return `${start.toLocaleDateString('de-DE', formatOpts)} - ${end.toLocaleDateString('de-DE', formatOpts)}`
+})
+
+const changeWeek = (offset: number) => {
+  const newDate = new Date(currentRefDate.value)
+  newDate.setDate(newDate.getDate() + offset * 7)
+  currentRefDate.value = newDate
+}
+
+// Replaces the old generateCurrentWeek
+const generateWeekDays = () => {
   const today = new Date()
-  const offset = today.getTimezoneOffset() * 60000
-  const localISOTime = new Date(today.getTime() - offset).toISOString().slice(0, 10)
+  const offsetToday = today.getTimezoneOffset() * 60000
+  const localISOToday = new Date(today.getTime() - offsetToday).toISOString().slice(0, 10)
 
-  const currentDayOfWeek = today.getDay()
-  const distanceToMonday = currentDayOfWeek === 0 ? -6 : 1 - currentDayOfWeek
-
-  const monday = new Date(today)
-  monday.setDate(monday.getDate() + distanceToMonday)
-
+  // Start from the calculated Monday of the current week range
+  const monday = new Date(weekRange.value.start)
   const days = []
+
   for (let i = 0; i < 7; i++) {
     const d = new Date(monday)
     d.setDate(monday.getDate() + i)
@@ -495,15 +554,16 @@ const generateCurrentWeek = () => {
     const offsetD = d.getTimezoneOffset() * 60000
     const id = new Date(d.getTime() - offsetD).toISOString().slice(0, 10)
     const dateFormatted = `${String(d.getDate()).padStart(2, '0')}.${String(d.getMonth() + 1).padStart(2, '0')}.`
-    const isToday = id === localISOTime
 
-    // Check if the date is in the past by comparing the YYYY-MM-DD strings
-    const isPast = id < localISOTime
+    const isToday = id === localISOToday
+    const isPast = id < localISOToday
 
     days.push({ id, dateFormatted, dateNum: d.getDate(), dayOfWeek: d.getDay(), isToday, isPast })
   }
 
   weekDays.value = days
+
+  // Select today if it's in the viewed week, otherwise default to Monday
   const todayObj = days.find((d) => d.isToday)
   activeDay.value = todayObj ? todayObj.id : days[0].id
 }
@@ -549,9 +609,20 @@ const processPlanResponse = (dataArray: MealPlanItem[]) => {
 }
 
 const fetchPlan = async () => {
+  if (!authStore.isAuthenticated) return
+
   try {
     isLoadingPlan.value = true
-    const res = await api.get('/plan')
+
+    // Grab the first and last day of the currently rendered week
+    const startDate = weekDays.value[0].id
+    const endDate = weekDays.value[6].id
+
+    // Pass the active date range directly to the API
+    const res = await api.get('/plan', {
+      params: { start_date: startDate, end_date: endDate },
+    })
+
     processPlanResponse(res.data.data || [])
   } catch (error) {
     console.error('Failed to fetch plan:', error)
@@ -563,8 +634,21 @@ const fetchPlan = async () => {
 const generatePlan = async () => {
   try {
     isGenerating.value = true
-    const res = await api.post('/plan/generate')
+
+    // Check if "today" is part of the currently viewed week
+    const todayObj = weekDays.value.find((d) => d.isToday)
+
+    // If today is in this week, start generating from today.
+    // If it's a future (or past) week, start from Monday.
+    const startDate = todayObj ? todayObj.id : weekDays.value[0].id
+
+    const res = await api.post('/plan/generate', { start_date: startDate })
     processPlanResponse(res.data.data || [])
+
+    // Switch view back to current week if the generated plan is for today
+    if (todayObj) {
+      currentRefDate.value = new Date()
+    }
   } catch (error) {
     console.error('Failed to generate plan:', error)
   } finally {
@@ -624,12 +708,19 @@ const selectRecipeForDate = async (slug: string) => {
 }
 
 // ------------------------------------------------------------------------
-// LIFECYCLE
+// WATCHERS & LIFECYCLE
 // ------------------------------------------------------------------------
+
+// Whenever the user switches the week, rebuild the days array and fetch the plan for that range
+watch(currentRefDate, () => {
+  generateWeekDays()
+  fetchPlan()
+})
+
 onMounted(() => {
   updateTitle()
   if (authStore.isAuthenticated) {
-    generateCurrentWeek()
+    generateWeekDays()
     setupScrollSpy()
     fetchPlan()
 
@@ -644,6 +735,13 @@ onMounted(() => {
         }
       }, 350)
     })
+  }
+})
+
+// Triggers every time the user navigates back to this view (e.g. from Shopping List)
+onActivated(() => {
+  if (authStore.isAuthenticated) {
+    fetchPlan()
   }
 })
 
