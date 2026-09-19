@@ -92,6 +92,26 @@
       "nuts_and_seeds": "Nüsse & Kerne",
       "fruits": "Früchte",
       "asian": "Asiatisch"
+    },
+    "units": {
+      "tbsp": "EL",
+      "tsp": "TL",
+      "cup": "Tasse",
+      "cups": "Tassen",
+      "g": "g",
+      "kg": "kg",
+      "ml": "ml",
+      "l": "l",
+      "oz": "Unze(n)",
+      "lb": "Pfund",
+      "pc": "Stück",
+      "pcs": "Stück",
+      "pinch": "Prise",
+      "clove": "Zehe",
+      "cloves": "Zehen",
+      "slice": "Scheibe",
+      "slices": "Scheiben",
+      "handful": "Handvoll"
     }
   },
   "profile": {

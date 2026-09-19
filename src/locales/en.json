@@ -92,6 +92,26 @@
       "nuts_and_seeds": "Nuts & Seeds",
       "fruits": "Fruits",
       "asian": "Asian"
+    },
+    "units": {
+      "tbsp": "tbsp",
+      "tsp": "tsp",
+      "cup": "cup",
+      "cups": "cups",
+      "g": "g",
+      "kg": "kg",
+      "ml": "ml",
+      "l": "l",
+      "oz": "oz",
+      "lb": "lb",
+      "pc": "piece",
+      "pcs": "pieces",
+      "pinch": "pinch",
+      "clove": "clove",
+      "cloves": "cloves",
+      "slice": "slice",
+      "slices": "slices",
+      "handful": "handful"
     }
   },
   "profile": {

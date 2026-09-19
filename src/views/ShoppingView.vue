@@ -1,16 +1,16 @@
 <template>
   <div class="w-full flex-grow flex flex-col bg-bg-cream/20">
     <!-- ==============================================
-         AUTHENTICATED STATE (User is logged in)
+         AUTHENTIFIZIERTER BEREICH (Benutzer ist eingeloggt)
          ============================================== -->
     <div
       v-if="authStore.isAuthenticated"
       class="max-w-4xl w-full mx-auto pb-8 flex-grow flex flex-col md:px-4"
     >
-      <!-- Desktop Spacer -->
+      <!-- Desktop Abstandshalter -->
       <div class="w-full h-4 md:h-28 shrink-0"></div>
 
-      <!-- PAGE TITLE & MOBILE HEADER -->
+      <!-- SEITENTITEL & MOBILE HEADER -->
       <div
         class="px-4 sm:px-10 pt-3 md:pt-10 pb-4 z-10 transition-opacity duration-300 relative flex flex-col items-center text-center md:bg-white md:border-t md:border-x md:border-gray-100 md:rounded-t-3xl"
       >
@@ -26,12 +26,12 @@
         </p>
       </div>
 
-      <!-- WEEK SELECTOR -->
+      <!-- WOCHENAUSWAHL -->
       <div
         class="sticky top-0 md:top-[95px] z-40 mb-8 bg-white/95 backdrop-blur-xl px-4 py-4 shadow-sm border-b border-gray-200 md:border-x md:border-gray-100 md:border-t-0 md:rounded-b-3xl"
       >
         <div class="flex items-center justify-between max-w-sm mx-auto">
-          <!-- Left Navigation (Clean, no badges) -->
+          <!-- Linke Navigation (Clean, ohne Badges) -->
           <button
             @click="changeWeek(-1)"
             class="p-2 text-gray-400 hover:text-primary-green transition-colors"
@@ -54,7 +54,7 @@
             <span class="text-lg font-extrabold text-dark-green">{{ weekLabel }}</span>
           </div>
 
-          <!-- Right Navigation (Clean, no badges) -->
+          <!-- Rechte Navigation (Clean, ohne Badges) -->
           <button
             @click="changeWeek(1)"
             class="p-2 text-gray-400 hover:text-primary-green transition-colors"
@@ -72,14 +72,14 @@
         </div>
       </div>
 
-      <!-- LIST CONTENT -->
+      <!-- LISTENINHALT -->
       <div class="px-4 flex-grow flex flex-col gap-8">
         <div v-if="isLoading" class="py-12 flex justify-center">
           <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-green"></div>
         </div>
 
         <template v-else>
-          <!-- Custom Items Module -->
+          <!-- Modul für eigene Artikel -->
           <section class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
             <div
               class="bg-secondary-rust/5 px-6 py-4 border-b border-secondary-rust/10 flex justify-between items-center"
@@ -173,7 +173,7 @@
             </ul>
           </section>
 
-          <!-- Empty Recipe State -->
+          <!-- Leerer Status für Rezepte -->
           <div
             v-if="Object.keys(recipeIngredients).length === 0"
             class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 text-center mb-12"
@@ -184,7 +184,7 @@
             </p>
           </div>
 
-          <!-- Recipe Ingredients (Categorized) -->
+          <!-- Rezeptzutaten (Kategorisiert) -->
           <template v-else>
             <section
               v-for="(ingredients, categoryKey) in recipeIngredients"
@@ -236,7 +236,8 @@
                     class="text-sm font-bold text-primary-green bg-primary-green/10 px-3 py-1 rounded-full whitespace-nowrap transition-all"
                     :class="localCheckedIngredients.has(item.slug) ? 'opacity-40' : ''"
                   >
-                    {{ item.total_amount }} {{ item.unit }}
+                    <!-- Verwende hier den Helper für die Übersetzung -->
+                    {{ item.total_amount }} {{ getLocalizedUnit(item.unit) }}
                   </div>
                 </li>
               </ul>
@@ -245,12 +246,12 @@
         </template>
       </div>
 
-      <!-- Reusable Premium Modal -->
+      <!-- Wiederverwendbares Premium-Modal -->
       <PremiumModal :show="showPremiumModal" @close="showPremiumModal = false" />
     </div>
 
     <!-- ==============================================
-         GUEST TEASER STATE
+         GAST-TEASER BEREICH
          ============================================== -->
     <div
       v-else
@@ -310,7 +311,7 @@ import api from '@/services/api'
 const authStore = useAuthStore()
 const { locale, t } = useI18n()
 
-// Interfaces matching backend payload structure
+// Interfaces passend zur Backend-Payload-Struktur
 interface RecipeIngredient {
   slug: string
   name: Record<string, string> | string
@@ -325,14 +326,14 @@ interface CustomItem {
   is_checked: boolean
 }
 
-// State
+// State (Zustand)
 const isLoading = ref(true)
 const isAddingCustomItem = ref(false)
 const recipeIngredients = ref<Record<string, RecipeIngredient[]>>({})
 const customItems = ref<CustomItem[]>([])
 const localCheckedIngredients = ref<Set<string>>(new Set())
 
-// Week Navigation & Premium Modal
+// Wochennavigation & Premium-Modal
 const currentRefDate = ref(new Date())
 const newItemName = ref('')
 const showPremiumModal = ref(false)
@@ -340,7 +341,8 @@ const showPremiumModal = ref(false)
 // ------------------------------------------------------------------------
 // HELPERS
 // ------------------------------------------------------------------------
-// Handle API 403 Premium Errors globally for this view with strict typing
+
+// API 403 Premium-Fehler global für diese Ansicht mit strikter Typisierung verarbeiten
 const handleApiError = (error: unknown) => {
   const err = error as {
     response?: {
@@ -356,7 +358,7 @@ const handleApiError = (error: unknown) => {
   }
 }
 
-// Check if a given date falls within the real-world current week (Monday-Sunday)
+// Prüfen, ob ein gegebenes Datum in die tatsächliche aktuelle Woche fällt (Montag-Sonntag)
 const isDateInCurrentWeek = (date: Date) => {
   const now = new Date()
   const day = now.getDay()
@@ -396,7 +398,7 @@ const changeWeek = (offset: number) => {
   const newDate = new Date(currentRefDate.value)
   newDate.setDate(newDate.getDate() + offset * 7)
 
-  // Proactive Premium Check: Prevent navigating outside current week if not premium
+  // Proaktiver Premium-Check: Navigation außerhalb der aktuellen Woche für Basis-Nutzer verhindern
   if (!authStore.user?.is_premium && !isDateInCurrentWeek(newDate)) {
     showPremiumModal.value = true
     return
@@ -420,6 +422,19 @@ const getLocalizedName = (nameField: Record<string, string> | string) => {
   if (typeof nameField === 'string') return nameField
   const currentLang = locale.value as string
   return nameField[currentLang] || nameField['en'] || Object.values(nameField)[0] || ''
+}
+
+// Neuer Helper für die saubere Übersetzung von Einheiten
+const getLocalizedUnit = (unitKey: string) => {
+  if (!unitKey) return ''
+
+  // Einheiten-String für Übersetzungs-Keys normalisieren (z.B. "tbsp" -> "tbsp")
+  const normalizedKey = unitKey.toLowerCase().replace(/[^a-z0-9]+/g, '_')
+  const translationKey = `shopping.units.${normalizedKey}`
+  const translated = t(translationKey)
+
+  // Wenn eine Übersetzung existiert, diese zurückgeben. Ansonsten auf den originalen DB-String zurückgreifen.
+  return translated !== translationKey ? translated : unitKey
 }
 
 // ------------------------------------------------------------------------
@@ -497,7 +512,7 @@ const toggleCustomItem = async (item: CustomItem) => {
   try {
     await api.put(`/shopping-list/custom/${item.id}/toggle`)
   } catch (error) {
-    item.is_checked = !item.is_checked // Revert visually on fail
+    item.is_checked = !item.is_checked // Optisch zurücksetzen, falls fehlgeschlagen
     handleApiError(error)
   }
 }
