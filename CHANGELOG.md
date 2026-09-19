@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.32](https://github.com/prep-your-meal/frontend/compare/v0.0.31...v0.0.32) (2026-09-19)
+
+### Features
+
+* **recipes:** synchronize all profile preferences with recipe filters ([67859f9](https://github.com/prep-your-meal/frontend/commit/67859f91e98af5ae87c82068d24e38d570e639d0))
+* **shopping:** localize ingredient units and translate codebase comments ([2833f26](https://github.com/prep-your-meal/frontend/commit/2833f26fc85752dc9d72d90a9258d707dc6fcac8))
+* **shopping:** support dynamic translation for categories and ingredient names ([a6f86a7](https://github.com/prep-your-meal/frontend/commit/a6f86a71241583eb50ebc13351fdbecbbf78ffdf))
+
+### Bug Fixes
+
+* **planner:** dynamically set start date for meal plan generation ([cefce0b](https://github.com/prep-your-meal/frontend/commit/cefce0b66057e011208ac56551eb40893f9509eb))
+* **shopping:** fix category translation key normalization for ampersands ([30d70dd](https://github.com/prep-your-meal/frontend/commit/30d70dd2adde319960f0e568cbf0628a5266cb35))
+
 ## [0.0.31](https://github.com/prep-your-meal/frontend/compare/v0.0.30...v0.0.31) (2026-09-17)
 
 ### Features
