@@ -36,11 +36,12 @@
         ]"
       >
         <div class="max-w-3xl w-full mx-auto flex flex-col gap-3">
-          <!-- Week Switcher -->
+          <!-- Week Switcher (Clean, no badges) -->
           <div class="flex items-center justify-between w-full">
             <button
               @click="changeWeek(-1)"
-              class="relative p-1.5 text-gray-400 hover:text-primary-green transition-colors"
+              class="p-2 text-gray-400 hover:text-primary-green transition-colors"
+              :title="$t('shopping.prev_week')"
             >
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -50,13 +51,6 @@
                   d="M15 19l-7-7 7-7"
                 ></path>
               </svg>
-              <!-- Premium Indicator -->
-              <span
-                v-if="!authStore.user?.is_premium"
-                class="absolute -top-1 -left-1 text-[10px]"
-                title="Premium Feature"
-                >👑</span
-              >
             </button>
 
             <div class="text-center">
@@ -68,7 +62,8 @@
 
             <button
               @click="changeWeek(1)"
-              class="relative p-1.5 text-gray-400 hover:text-primary-green transition-colors"
+              class="p-2 text-gray-400 hover:text-primary-green transition-colors"
+              :title="$t('shopping.next_week')"
             >
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -78,13 +73,6 @@
                   d="M9 5l7 7-7 7"
                 ></path>
               </svg>
-              <!-- Premium Indicator -->
-              <span
-                v-if="!authStore.user?.is_premium"
-                class="absolute -top-1 -right-1 text-[10px]"
-                title="Premium Feature"
-                >👑</span
-              >
             </button>
           </div>
 
@@ -537,7 +525,6 @@ const handleScroll = () => {
 // ------------------------------------------------------------------------
 // Handle API 403 Premium Errors globally for this view
 const handleApiError = (error: unknown) => {
-  // Cast the unknown error to an expected Axios-like error structure
   const err = error as {
     response?: {
       status?: number

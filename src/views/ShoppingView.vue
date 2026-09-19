@@ -31,9 +31,10 @@
         class="sticky top-0 md:top-[95px] z-40 mb-8 bg-white/95 backdrop-blur-xl px-4 py-4 shadow-sm border-b border-gray-200 md:border-x md:border-gray-100 md:border-t-0 md:rounded-b-3xl"
       >
         <div class="flex items-center justify-between max-w-sm mx-auto">
+          <!-- Left Navigation (Clean, no badges) -->
           <button
             @click="changeWeek(-1)"
-            class="relative p-2 text-gray-400 hover:text-primary-green transition-colors"
+            class="p-2 text-gray-400 hover:text-primary-green transition-colors"
             :title="$t('shopping.prev_week')"
           >
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -44,13 +45,6 @@
                 d="M15 19l-7-7 7-7"
               ></path>
             </svg>
-            <!-- Premium Indicator -->
-            <span
-              v-if="!authStore.user?.is_premium"
-              class="absolute top-0 left-0 text-[10px]"
-              title="Premium Feature"
-              >👑</span
-            >
           </button>
 
           <div class="text-center">
@@ -60,9 +54,10 @@
             <span class="text-lg font-extrabold text-dark-green">{{ weekLabel }}</span>
           </div>
 
+          <!-- Right Navigation (Clean, no badges) -->
           <button
             @click="changeWeek(1)"
-            class="relative p-2 text-gray-400 hover:text-primary-green transition-colors"
+            class="p-2 text-gray-400 hover:text-primary-green transition-colors"
             :title="$t('shopping.next_week')"
           >
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -73,13 +68,6 @@
                 d="M9 5l7 7-7 7"
               ></path>
             </svg>
-            <!-- Premium Indicator -->
-            <span
-              v-if="!authStore.user?.is_premium"
-              class="absolute top-0 right-0 text-[10px]"
-              title="Premium Feature"
-              >👑</span
-            >
           </button>
         </div>
       </div>
