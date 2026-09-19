@@ -356,14 +356,25 @@ const isCategoryActive = (value: string) => {
   return selectedCategories.value.includes(value)
 }
 
-// Dynamically compile quick filter keys from user profile + defaults
+// Dynamically compile quick filter keys from ALL user profile preferences + defaults
 const quickFilterKeys = computed(() => {
-  const user = authStore.user as { dietary_preferences?: string[]; allergies?: string[] } | null
+  const user = authStore.user as {
+    dietary_preferences?: string[]
+    fitness_goals?: string[]
+    logistics_preferences?: string[]
+    allergies?: string[]
+  } | null
+
   const userDiets = user?.dietary_preferences || []
+  const userFitness = user?.fitness_goals || []
+  const userLogistics = user?.logistics_preferences || []
   const userAllergies = user?.allergies || []
+
   const defaultKeys = ['vegan', 'high-protein', 'quick', 'meal-prep-friendly']
 
-  return Array.from(new Set([...userDiets, ...userAllergies, ...defaultKeys]))
+  return Array.from(
+    new Set([...userDiets, ...userFitness, ...userLogistics, ...userAllergies, ...defaultKeys]),
+  )
 })
 
 const quickFilters = computed(() => {
@@ -462,9 +473,23 @@ const toggleFavorite = async (recipeId?: number) => {
 // SMART PROFILE SYNC & INITIALIZATION
 // ------------------------------------------------------------------------
 const syncProfileFiltersAndInit = () => {
-  const user = authStore.user as { dietary_preferences?: string[]; allergies?: string[] } | null
+  const user = authStore.user as {
+    dietary_preferences?: string[]
+    fitness_goals?: string[]
+    logistics_preferences?: string[]
+    allergies?: string[]
+  } | null
+
+  // Extract ALL profile preferences to act as default filters
   const profileFilters = user
-    ? Array.from(new Set([...(user.dietary_preferences || []), ...(user.allergies || [])]))
+    ? Array.from(
+        new Set([
+          ...(user.dietary_preferences || []),
+          ...(user.fitness_goals || []),
+          ...(user.logistics_preferences || []),
+          ...(user.allergies || []),
+        ]),
+      )
     : []
 
   const currentSignature = profileFilters.sort().join(',')
