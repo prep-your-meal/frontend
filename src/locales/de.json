@@ -96,6 +96,8 @@
   },
   "profile": {
     "title": "Profil",
+    "status_premium": "Premium",
+    "status_free": "Basis",
     "planning_settings": "Planungs-Einstellungen",
     "target_meals": "Mahlzeiten pro Woche",
     "default_portions": "Standard Portionen",
